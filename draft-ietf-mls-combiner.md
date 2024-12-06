@@ -18,30 +18,30 @@ keyword:
   - PCS
   - Post-Quantum
 venue:
-  group: "Messaging Layer Security"
-  type: "Working Group"
-  mail: "mls@ietf.org"
-  arch: "https://mailarchive.ietf.org/arch/browse/mls/"
-  github: "mlswg/mls-combiner"
-  latest: "https://mlswg.github.io/mls-combiner/draft-ietf-mls-combiner.html"
+  group: Messaging Layer Security
+  type: Working Group
+  mail: mls@ietf.org
+  arch: https://mailarchive.ietf.org/arch/browse/mls/
+  github: mlswg/mls-combiner
+  latest: https://mlswg.github.io/mls-combiner/draft-ietf-mls-combiner.html
 
 author:
-  - ins: "J. Alwen"
-    name: "Joël Alwen"
-    organization: "AWS"
-    email: alwenjo@amazon.com
-  - ins: "B. Hale"
-    name: "Britta Hale"
-    organization: "Naval Postgraduate School"
-    email: britta.hale@nps.edu
-  - ins: "M. Mularczyk"
-    name: "Marta Mularczyk" 
-    organization: "AWS" 
-    email: mulmarta@amazon.ch
-  - ins: "X. Tian"
-    name: "Xisen Tian"
-    organization: "Naval Postgraduate School"
-    email: xisen.tian1@nps.edu
+- ins: "J. Alwen"
+  name: "Joël Alwen"
+  organization: "AWS"
+  email: alwenjo@amazon.com
+- ins: "B. Hale"
+  name: "Britta Hale"
+  organization: "Naval Postgraduate School"
+  email: britta.hale@nps.edu
+- ins: "M. Mularczyk"
+  name: "Marta Mularczyk" 
+  organization: "AWS" 
+  email: mulmarta@amazon.ch
+- ins: "X. Tian"
+  name: "Xisen Tian"
+  organization: "Naval Postgraduate School"
+  email: xisen.tian1@nps.edu
 
 normative:
 
@@ -97,11 +97,11 @@ PQ/T: : A Post-Quantum and Traditional hybrid (protocol).
 
 The hybrid PQ MLS (HPQMLS) combiner protocol runs two MLS sessions in parallel, synchronizing their group memberships. The two sessions are combined by exporting a secret from the PQ session and importing it as a Pre-Shared Key (PSK) into the traditional session. This combination process is mandatory for Commits of Add and Remove proposals in order to maintain synchronization between the sessions. However, it is optional for any other Commits (e.g. to allow for less computationally expensive traditional key rotations). Due to the higher computational costs and output sizes of PQ KEM (and signature) operations, it may be desirable to issue PQ combined (a.k.a. FULL) Commits less frequently than the traditional-only (a.k.a. PARTIAL) Commits. Since FULL Commits introduce PQ security into the MLS key schedule, the overall key schedule remains PQ-secure even when PARTIAL Commits are used. The FULL Commit rate establishes the post-quantum Post-Compromise Security (PCS) window, while the PARTIAL Commit rate can tighten the traditional PCS window even while maintaining PQ security more generally. The combiner protocol design treats both sessions as black-box interfaces so we only highlight operations requiring synchronizations in this document.
 
-The default way to start a HPQMLS combined session is to create a PQ MLS session and then start a traditional MLS session with the exported PSK from the PQ session, as previously mentioned. Alternatively, a combined session can also be created after a traditional MLS session has already been running. This is done through creating a PQ MLS session with the same group members, sending a Welcome message containing the HPQMLSInfo struct in the GroupContext, and then making a FULL Commit as described in in the {{#commit-flow}} section.
+The default way to start a HPQMLS combined session is to create a PQ MLS session and then start a traditional MLS session with the exported PSK from the PQ session, as previously mentioned. Alternatively, a combined session can also be created after a traditional MLS session has already been running. This is done through creating a PQ MLS session with the same group members, sending a Welcome message containing the HPQMLSInfo struct in the GroupContext, and then making a FULL Commit as described in in the {{commit-flow}} section.
 
 ## Commit Flow {#commit-flow}
 
-Commits to proposals MAY be *PARTIAL* or *FULL*. For a PARTIAL Commit, only the traditional session's epoch is updated following the Propose-Commit sequence from Section 12 of {{RFC9420}}. For a FULL Commit, a Commit is first applied to the PQ session and another Commit is applied to the traditional session using a PSK derived from the PQ session using the DeriveExtensionSecret and `hpqmls_psk` label (see {{#key-schedule}}). To ensure the correct PSK is imported into the traditional session, the sender includes information about the PSK in a PreSharedKey proposal for the traditional session's Commit list of proposals. The information about the exported PSK is captured (shown '=' in the figures below for illustration purposes) by the PreSharedKeyID struct as detailed in {{RFC9420}}. Receivers process the PQ Commit to derive a new epoch in the PQ session and then the traditional Commit (which also includes the PSK proposal) to derive the new epoch in the traditional session.
+Commits to proposals MAY be *PARTIAL* or *FULL*. For a PARTIAL Commit, only the traditional session's epoch is updated following the Propose-Commit sequence from Section 12 of {{RFC9420}}. For a FULL Commit, a Commit is first applied to the PQ session and another Commit is applied to the traditional session using a PSK derived from the PQ session using the DeriveExtensionSecret and `hpqmls_psk` label (see {{key-schedule}}). To ensure the correct PSK is imported into the traditional session, the sender includes information about the PSK in a PreSharedKey proposal for the traditional session's Commit list of proposals. The information about the exported PSK is captured (shown '=' in the figures below for illustration purposes) by the PreSharedKeyID struct as detailed in {{RFC9420}}. Receivers process the PQ Commit to derive a new epoch in the PQ session and then the traditional Commit (which also includes the PSK proposal) to derive the new epoch in the traditional session.
 
 ~~~
                                                                         Group
@@ -243,7 +243,7 @@ The HPQMLSInfo struct conforms to the Safe Extensions API (see {{!I-D.ietf-mls-e
 
 ## Key Schedule {#key-schedule}
 
-The `hpqmls_psk` exporter key derived in the PQ session MUST be derived in accordance with the Safe Extensions API guidance (see 2.1.5 Exporting Secrets in {{I-D.ietf-mls-extensions}}). In particular, it SHALL NOT use the `extension_secret` and MUST be derived from only the `epoch_secret` from the key schedule in {{RFC9420}}. This is to ensure forward secrecy guarantees (see {{#security-considerations}}).
+The `hpqmls_psk` exporter key derived in the PQ session MUST be derived in accordance with the Safe Extensions API guidance (see 2.1.5 Exporting Secrets in {{I-D.ietf-mls-extensions}}). In particular, it SHALL NOT use the `extension_secret` and MUST be derived from only the `epoch_secret` from the key schedule in {{RFC9420}}. This is to ensure forward secrecy guarantees (see {{security-considerations}}).
 
 Even though the `hpqmls_psk` PSK is not sent over the wire, members of the HPQMLS session must agree on the value of which PSK to use. In alignment with the Safe Extensions API policy for PSKs, HPQMLS PSKs used SHALL set `PSKType = 3` and `extension_type = HPQMLS` (see Section 2.1.6 Pre-Shared Keys in {{I-D.ietf-mls-extensions}}).
 
