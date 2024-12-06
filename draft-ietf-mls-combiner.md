@@ -35,8 +35,8 @@ author:
   organization: "Naval Postgraduate School"
   email: britta.hale@nps.edu
 - ins: "M. Mularczyk"
-  name: "Marta Mularczyk" 
-  organization: "AWS" 
+  name: "Marta Mularczyk"
+  organization: "AWS"
   email: mulmarta@amazon.ch
 - ins: "X. Tian"
   name: "Xisen Tian"
@@ -179,7 +179,7 @@ User leaf nodes are first added to the PQ session following the sequence describ
     |                                          |              |  Commit'(Add'(KeyPackageB'))              |
     |                                          |              |  Commit(Add(KeyPackageB), PreSharedKeyID) |
     |<----------------------------------------------------------------------------------------------------+
-    
+
       Figure 2:
       Client A adds client B to the group.
       Messages with ' come from the PQ session. Processing Welcome and Commit in the traditional
@@ -204,8 +204,7 @@ HPQMLS combiner provides PQ security to the traditional MLS session. Application
 
 # Modes of Operation
 
-Security needs vary by organizations and system-specific risk tolerance and/or constraints. While this combiner protocol targets combining a PQ session and a traditional session the degree of PQ security may be tuned depending on the use-case: i.e., as PQ/T Confidentiality Only or both PQ/T Confidentiality and PQ/T Authenticity. For PQ/T Confidentiality Only, the PQ session MUST use a PQ KEM, while for PQ authenticity, the PQ session MUST use both a PQ KEM and a PQ DSA. 
-The modes of operation are specified by the `mode` flag in HPQMLSInfo struct and are listed below.
+Security needs vary by organizations and system-specific risk tolerance and/or constraints. While this combiner protocol targets combining a PQ session and a traditional session the degree of PQ security may be tuned depending on the use-case: i.e., as PQ/T Confidentiality Only or both PQ/T Confidentiality and PQ/T Authenticity. For PQ/T Confidentiality Only, the PQ session MUST use a PQ KEM, while for PQ authenticity, the PQ session MUST use both a PQ KEM and a PQ DSA. The modes of operation are specified by the `mode` flag in HPQMLSInfo struct and are listed below.
 
 ## PQ/T Confidentiality Only
 
