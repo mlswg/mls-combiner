@@ -18,12 +18,12 @@ keyword:
   - PCS
   - Post-Quantum
 venue:
-  group: Messaging Layer Security
-  type: Working Group
-  mail: mls@ietf.org
-  arch: https://mailarchive.ietf.org/arch/browse/mls/
-  github: mlswg/mls-combiner
-  latest: https://mlswg.github.io/mls-combiner/draft-ietf-mls-combiner.html
+  group: "Messaging Layer Security"
+  type: "Working Group"
+  mail: "mls@ietf.org"
+  arch: "https://mailarchive.ietf.org/arch/browse/mls/"
+  github: "mlswg/mls-combiner"
+  latest: "https://mlswg.github.io/mls-combiner/draft-ietf-mls-combiner.html"
 
 author:
 - ins: "J. Alwen"
