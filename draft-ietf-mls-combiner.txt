@@ -5,12 +5,12 @@
 Messaging Layer Security                                        J. Alwen
 Internet-Draft                                                       AWS
 Intended status: Standards Track                                 B. Hale
-Expires: 30 August 2025                        Naval Postgraduate School
+Expires: 11 October 2025                       Naval Postgraduate School
                                                             M. Mularczyk
                                                                      AWS
                                                                  X. Tian
                                                Naval Postgraduate School
-                                                        26 February 2025
+                                                            9 April 2025
 
 
                     Flexible Hybrid PQ MLS Combiner
@@ -62,7 +62,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 August 2025.
+   This Internet-Draft will expire on 11 October 2025.
 
 Copyright Notice
 
@@ -391,6 +391,11 @@ Table of Contents
    This mode does not prevent quantum impersonation attacks by other
    group members.  That is, a group member with a CRQC can successfully
    impersonate another group member.
+
+   Note that an active attacker with access to a CRQC can become a group
+   member by impersonating members in the moment they are added.  As
+   such, the authenticity guarantees outlined above only hold as long as
+   the adversary is passive during the addition of new group members.
 
 5.2.  PQ/T Confidentiality + Authenticity
 
