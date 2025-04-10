@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-08T01:38:29.002941+00:00",
+  "timestamp": "2025-04-10T01:38:35.161732+00:00",
   "repo": "mlswg/mls-combiner",
   "labels": [
     {
@@ -50,5 +50,56 @@
     }
   ],
   "issues": [],
-  "pulls": []
+  "pulls": [
+    {
+      "number": 1,
+      "id": "PR_kwDONZ9R686R86H_",
+      "title": "Qualify limited pq-only authenticity",
+      "url": "https://github.com/mlswg/mls-combiner/pull/1",
+      "state": "MERGED",
+      "author": "kkohbrok",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Since the adversary can forge KeyPackages authenticity in PQ-only mode holds only as long as no one is added (or no one joins) or as long as the adversary is passive during the addition process. The current description is correct, but I feel that this is an important qualification.",
+      "createdAt": "2025-04-09T13:44:18Z",
+      "updatedAt": "2025-04-09T13:51:47Z",
+      "baseRepository": "mlswg/mls-combiner",
+      "baseRefName": "main",
+      "baseRefOid": "ab5f85f32a085db6152ff717aba8f61195e9e2e5",
+      "headRepository": "kkohbrok/mls-combiner",
+      "headRefName": "konrad/authenticity_details",
+      "headRefOid": "dc4b6974c480186c6fcf16a651ddea688854f957",
+      "closedAt": "2025-04-09T13:51:47Z",
+      "mergedAt": "2025-04-09T13:51:46Z",
+      "mergedBy": "br-hale",
+      "mergeCommit": {
+        "oid": "2e0a44f239b666ce1e4da48944d40d3a25d4caa2"
+      },
+      "comments": [
+        {
+          "author": "br-hale",
+          "authorAssociation": "COLLABORATOR",
+          "body": "That is a good clarification point.",
+          "createdAt": "2025-04-09T13:47:49Z",
+          "updatedAt": "2025-04-09T13:47:49Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDONZ9R686kIASp",
+          "commit": {
+            "abbreviatedOid": "dc4b697"
+          },
+          "author": "br-hale",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-04-09T13:49:02Z",
+          "updatedAt": "2025-04-09T13:49:02Z",
+          "comments": []
+        }
+      ]
+    }
+  ]
 }
