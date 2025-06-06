@@ -244,7 +244,7 @@ The HPQMLSInfo struct conforms to the Safe Extensions API (see {{!I-D.ietf-mls-e
 
 ## Key Schedule {#key-schedule}
 
-The `hpqmls_psk` exporter key derived in the PQ session MUST be derived in accordance with the Safe Extensions API guidance (see 2.1.5 Exporting Secrets in {{I-D.ietf-mls-extensions}}). In particular, it SHALL NOT use the `extension_secret` and MUST be derived from only the `epoch_secret` from the key schedule in {{RFC9420}}. This is to ensure forward secrecy guarantees (see {{security-considerations}}).
+The `hpqmls_psk` exporter key derived in the PQ session MUST be derived in accordance with the Safe Extensions API guidance (see Exporting Secrets in {{I-D.ietf-mls-extensions}}). In particular, it SHALL NOT use the `extension_secret` and MUST be derived from only the `epoch_secret` from the key schedule in {{RFC9420}}. This is to ensure forward secrecy guarantees (see {{security-considerations}}).
 
 Even though the `hpqmls_psk` PSK is not sent over the wire, members of the HPQMLS session must agree on the value of which PSK to use. In alignment with the Safe Extensions API policy for PSKs, HPQMLS PSKs used SHALL set `PSKType = 3` and `extension_type = HPQMLS` (see Section 2.1.6 Pre-Shared Keys in {{I-D.ietf-mls-extensions}}).
 
@@ -281,6 +281,20 @@ Even though the `hpqmls_psk` PSK is not sent over the wire, members of the HPQML
     traditional session using the safe extensions API DeriveExtensionSecret.
 ~~~
 
+# Cryptographic Objects
+
+## Cipher Suites
+There are no changes to *how* cipher suites are used to perform group key computations from [RFC9420](https://www.rfc-editor.org/rfc/rfc9420#name-cipher-suites). However, the choice of *which* primitives are used by the traditional and PQ subsessions must be explicitly stated by the CipherSuite objects within `HPQMLSInfo`. So long as the traditional session only uses classical primitives and the PQ session uses PQ primitives for KEM, a HPQMLS session is valid. Specifically, the PQ primitives for HPQMLS must be 'pure' (fully) PQ: PQ cost is already being amoritized at the protocol level so allowing hybrid PQ cipher suites to be used in the PQ session only adds extra overhead and complexity. Furthermore, the `pq_cipher_suite` may contain a classical digital signature algorithm used if `mode` is set to 0 (PQ Confidentiality-Only) but MUST be fully PQ if `mode` is set to 1 (PQ Confidentiality+Authenticity). These cipher suite combinations and modes MUST not be toggled or modified after a HPQMLS session has commenced. Clients MUST reject a HPQMLS session with invalid or duplicate cipher suites (e.g. two traditional cipher suites). 
+
+### Key Encapsulation Mechanism 
+
+For HPQMLS sessions, the PQ subsession MUST use a Key Encapsulation Mechanism (KEM) that is standardized by NIST for post-quantum cryptography. Specifically, only KEMs that have been selected and published by NIST as part of their post-quantum cryptography standardization process (e.g., ML-KEM as specified in FIPS 203) are permitted for use in the PQ session. The use of experimental, non-standardized, or hybrid KEMs in the PQ session is NOT RECOMMENDED and MUST be rejected by compliant clients. This requirement ensures interoperability and a consistent security baseline across all HPQMLS deployments.
+
+### Signing 
+
+For HPQMLS sessions, the choice of digital signature algorithm in the PQ subsession depends on the selected mode of operation. If the `mode` is set to 1 (PQ Confidentiality+Authenticity), the PQ session MUST use a digital signature algorithm that is standardized by NIST for post-quantum cryptography, such as ML-DSA as specified in FIPS 204. The use of experimental, non-standardized, or hybrid signature algorithms in the PQ session is NOT RECOMMENDED and MUST be rejected by compliant clients in this mode. If the `mode` is set to 0 (PQ Confidentiality-Only), the PQ session MAY use a classical digital signature algorithm, but the use of a NIST-standardized PQ signature algorithm is RECOMMENDED. These requirements ensure that the authenticity guarantees of HPQMLS sessions are aligned with the intended security level and provide a consistent baseline for interoperability and security across deployments.
+
+
 # Security Considerations {#security-considerations}
 
 ## FULL Commit Frequency
@@ -295,7 +309,7 @@ If this is a concern, Hybrid PQ DSAs can be used in the traditional session to s
 
 ## Forward Secrecy
 
-Recall that one of the ways MLS achieves forward secrecy is by deleting security sensitive values after they are consumed (e.g. to encrypt or derive other keys/nonces) and the key schedule has entered a new epoch. For example, values such as the `init_secret` or `epoch_secret` are deleted at the *start* of a new epoch. If the MLS `exporter_secret` or the `extension_secret` from the PQ session is used directly as a PSK for the traditional session, against the requirements set above, then there is a potential scenario in which an adversary can break forward secrecy because these keys are derived *during* an epoch and are not deleted. Therefore, the `hpqmls_psk` MUST be derived from the `epoch_secret` of the PQ session (see Figure 3) to ensure forward secrecy.
+Recall that one of the ways MLS achieves forward secrecy is by deleting security sensitive values after they are consumed (e.g. to encrypt or derive other keys/nonces) and the key schedule has entered a new epoch. For example, values such as the `init_secret` or `epoch_secret` are deleted at the *start* of a new epoch. If the MLS `exporter_secret` or the `extension_secret` from the PQ session is used directly as a PSK for the traditional session, against the requirements set above, then there is a potential scenario in which an adversary can break forward secrecy because these keys are derived *during* an epoch and are not deleted. Therefore, the `hpqmls_psk` MUST be derived from the `epoch_secret` created at the *start* of an epoch from the PQ session (see Figure 3) to ensure forward secrecy.
 
 ## Transport Security
 
