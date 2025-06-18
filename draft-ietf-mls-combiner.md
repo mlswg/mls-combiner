@@ -284,13 +284,13 @@ Even though the `hpqmls_psk` PSK is not sent over the wire, members of the HPQML
 # Cryptographic Objects
 
 ## Cipher Suites
-There are no changes to *how* cipher suites are used to perform group key computations from [RFC9420](https://www.rfc-editor.org/rfc/rfc9420#name-cipher-suites). However, the choice of *which* primitives are used by the traditional and PQ subsessions must be explicitly stated by the CipherSuite objects within `HPQMLSInfo`. So long as the traditional session only uses classical primitives and the PQ session uses PQ primitives for KEM, a HPQMLS session is valid. Specifically, the PQ primitives for HPQMLS must be 'pure' (fully) PQ: PQ cost is already being amoritized at the protocol level so allowing hybrid PQ cipher suites to be used in the PQ session only adds extra overhead and complexity. Furthermore, the `pq_cipher_suite` may contain a classical digital signature algorithm used if `mode` is set to 0 (PQ Confidentiality-Only) but MUST be fully PQ if `mode` is set to 1 (PQ Confidentiality+Authenticity). These cipher suite combinations and modes MUST not be toggled or modified after a HPQMLS session has commenced. Clients MUST reject a HPQMLS session with invalid or duplicate cipher suites (e.g. two traditional cipher suites). 
+There are no changes to *how* cipher suites are used to perform group key computations from [RFC9420](https://www.rfc-editor.org/rfc/rfc9420#name-cipher-suites). However, the choice of *which* primitives are used by the traditional and PQ subsessions must be explicitly stated by the CipherSuite objects within `HPQMLSInfo`. So long as the traditional session only uses classical primitives and the PQ session uses PQ primitives for KEM, a HPQMLS session is valid. Specifically, the PQ primitives for HPQMLS must be 'pure' (fully) PQ: PQ cost is already being amoritized at the protocol level so allowing hybrid PQ cipher suites to be used in the PQ session only adds extra overhead and complexity. Furthermore, the `pq_cipher_suite` may contain a classical digital signature algorithm used if `mode` is set to 0 (PQ Confidentiality-Only) but MUST be fully PQ if `mode` is set to 1 (PQ Confidentiality+Authenticity). These cipher suite combinations and modes MUST not be toggled or modified after a HPQMLS session has commenced. Clients MUST reject a HPQMLS session with invalid or duplicate cipher suites (e.g. two traditional cipher suites).
 
-### Key Encapsulation Mechanism 
+### Key Encapsulation Mechanism
 
 For HPQMLS sessions, the PQ subsession MUST use a Key Encapsulation Mechanism (KEM) that is standardized by NIST for post-quantum cryptography. Specifically, only KEMs that have been selected and published by NIST as part of their post-quantum cryptography standardization process (e.g., ML-KEM as specified in FIPS 203) are permitted for use in the PQ session. The use of experimental, non-standardized, or hybrid KEMs in the PQ session is NOT RECOMMENDED and MUST be rejected by compliant clients. This requirement ensures interoperability and a consistent security baseline across all HPQMLS deployments.
 
-### Signing 
+### Signing
 
 For HPQMLS sessions, the choice of digital signature algorithm in the PQ subsession depends on the selected mode of operation. If the `mode` is set to 1 (PQ Confidentiality+Authenticity), the PQ session MUST use a digital signature algorithm that is standardized by NIST for post-quantum cryptography, such as ML-DSA as specified in FIPS 204. The use of experimental, non-standardized, or hybrid signature algorithms in the PQ session is NOT RECOMMENDED and MUST be rejected by compliant clients in this mode. If the `mode` is set to 0 (PQ Confidentiality-Only), the PQ session MAY use a classical digital signature algorithm, but the use of a NIST-standardized PQ signature algorithm is RECOMMENDED. These requirements ensure that the authenticity guarantees of HPQMLS sessions are aligned with the intended security level and provide a consistent baseline for interoperability and security across deployments.
 
@@ -325,3 +325,6 @@ The MLS sessions combined by this protocol conform to the IANA registries listed
 
 ## Contributors
 {:numbered="false"}
+Konrad Kohbrok
+Phoenix R&D
+Email: konrad.kohbrok@datashrine.de
