@@ -5,12 +5,12 @@
 Messaging Layer Security                                        J. Alwen
 Internet-Draft                                                       AWS
 Intended status: Standards Track                                 B. Hale
-Expires: 11 October 2025                       Naval Postgraduate School
+Expires: 20 December 2025                      Naval Postgraduate School
                                                             M. Mularczyk
                                                                      AWS
                                                                  X. Tian
                                                Naval Postgraduate School
-                                                            9 April 2025
+                                                            18 June 2025
 
 
                     Flexible Hybrid PQ MLS Combiner
@@ -20,15 +20,16 @@ Abstract
 
    This document describes a protocol for combining a traditional MLS
    session with a post-quantum (PQ) MLS session to achieve flexible and
-   efficient hybrid PQ security that amortizes the computational cost of
-   PQ Key Encapsulation Mechanisms and Digital Signature Algorithms.
-   Specifically, we describe how to use the exporter secret of a PQ MLS
-   session, i.e. an MLS session using a PQ ciphersuite, to seed PQ
-   guarantees into an MLS session using a traditional ciphersuite.  By
-   supporting on-demand traditional-only key updates (a.k.a. PARTIAL
-   updates) or hybrid-PQ key updates (a.k.a. FULL updates), we can
-   reduce the bandwidth and computational overhead associated with PQ
-   operations while meeting the requirement of frequent key rotations.
+   efficient hybrid PQ confidentiality and authenticity that amortizes
+   the computational cost of PQ Key Encapsulation Mechanisms and Digital
+   Signature Algorithms.  Specifically, we describe how to use the
+   exporter secret of a PQ MLS session, i.e., an MLS session using a PQ
+   ciphersuite, to seed PQ guarantees into an MLS session using a
+   traditional ciphersuite.  By supporting on-demand traditional-only
+   key updates (a.k.a. PARTIAL updates) or hybrid-PQ key updates (a.k.a.
+   FULL updates), we can reduce the bandwidth and computational overhead
+   associated with PQ operations while meeting the requirement of
+   frequent key rotations.
 
 About This Document
 
@@ -62,7 +63,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 11 October 2025.
+   This Internet-Draft will expire on 20 December 2025.
 
 Copyright Notice
 
@@ -95,13 +96,17 @@ Table of Contents
      5.2.  PQ/T Confidentiality + Authenticity
    6.  Extension Requirements to MLS
      6.1.  Key Schedule
-   7.  Security Considerations
-     7.1.  FULL Commit Frequency
-     7.2.  Attacks on Authentication
-     7.3.  Forward Secrecy
-     7.4.  Transport Security
-   8.  IANA Considerations
-   9.  Normative References
+   7.  Cryptographic Objects
+     7.1.  Cipher Suites
+       7.1.1.  Key Encapsulation Mechanism
+       7.1.2.  Signing
+   8.  Security Considerations
+     8.1.  FULL Commit Frequency
+     8.2.  Attacks on Non-Repudiation
+     8.3.  Forward Secrecy
+     8.4.  Transport Security
+   9.  IANA Considerations
+   10. Normative References
    Acknowledgments
      Contributors
    Authors' Addresses
@@ -116,18 +121,24 @@ Table of Contents
    community which have been formally adopted by the National Institute
    of Standards and Technology (NIST), including the Module Lattice KEM
    (ML-KEM) and Module Lattice DSA (ML-DSA) algorithms.  While these
-   provide PQ security, ML-KEM and ML-DSA have significantly worse
-   overhead in terms of public key size, signature size, ciphertext
-   size, and CPU time than their traditional counterparts.  Moreover,
-   research arms on side-channel attacks, etc., have motivated uses of
-   hybrid-PQ combiners that draw security from both the underlying PQ
-   and underlying traditional components.  A variety of hybrid security
-   treatments have arisen across IETF working groups to bridge the gap
-   between performance and security to encourage the adoption of PQ
-   security in existing protocols, including the MLS protocol [RFC9420].
+   provide PQ security, ML-KEM and ML-DSA have significant overhead in
+   terms of public key size, signature size, ciphertext size, and CPU
+   time compared to their traditional counterparts.  This has made
+   achieving PQ entity and data authenticity particularly challenging.
+   The hybrid approach in this draft amortizes the PQ overhead costs
+   enabling practical PQ confidentiality or PQ confidentiality _and_ PQ
+   authenticity.
 
-   Within the MLS working group, there are several topic areas that make
-   use of PQ security extensions:
+   Moreover, research arms on side-channel attacks, etc., have motivated
+   uses of hybrid-PQ combiners that draw security from both the
+   underlying PQ and underlying traditional components.  A variety of
+   hybrid security treatments have arisen across IETF working groups to
+   bridge the gap between performance and security to encourage the
+   adoption of PQ security in existing protocols, including the MLS
+   protocol [RFC9420].
+
+   Within the MLS working group, there are various ways to approach PQ
+   security extensions:
 
    1.  A single MLS ciphersuite for a hybrid post-quantum/traditional
        KEM.  The ciphersuite can act as a drop-in replacement for the
@@ -137,17 +148,13 @@ Table of Contents
        decrypt-later threat model.  However, every key epoch incurs a PQ
        overhead cost.
 
-   2.  Hybrid PQ signature ciphersuites that address hybrid
-       authenticity, including construction and security considerations
-       of hybrid signatures.
-
-   3.  Mechanisms that leverage hybridization as a means to not only
+   2.  Mechanisms that leverage hybridization as a means to not only
        address the security balance between PQ and traditional
        components and achieve resistance to harvest-now / decrypt-later
        attacks, but also use it as a means to improve performance of PQ
-       use.
+       use while achieving PQ authenticity as well.
 
-   This document addresses the third topic of these work items.
+   This document addresses the second topic of these work items.
 
 2.  Terminology
 
@@ -470,11 +477,11 @@ Table of Contents
 6.1.  Key Schedule
 
    The hpqmls_psk exporter key derived in the PQ session MUST be derived
-   in accordance with the Safe Extensions API guidance (see 2.1.5
-   Exporting Secrets in [I-D.ietf-mls-extensions]).  In particular, it
-   SHALL NOT use the extension_secret and MUST be derived from only the
+   in accordance with the Safe Extensions API guidance (see Exporting
+   Secrets in [I-D.ietf-mls-extensions]).  In particular, it SHALL NOT
+   use the extension_secret and MUST be derived from only the
    epoch_secret from the key schedule in [RFC9420].  This is to ensure
-   forward secrecy guarantees (see Section 7).
+   forward secrecy guarantees (see Section 8).
 
    Even though the hpqmls_psk PSK is not sent over the wire, members of
    the HPQMLS session must agree on the value of which PSK to use.  In
@@ -513,9 +520,61 @@ Table of Contents
     Fig 3: The hpqmls_psk of the PQ session is injected into the key schedule of the
     traditional session using the safe extensions API DeriveExtensionSecret.
 
-7.  Security Considerations
+7.  Cryptographic Objects
 
-7.1.  FULL Commit Frequency
+7.1.  Cipher Suites
+
+   There are no changes to _how_ cipher suites are used to perform group
+   key computations from RFC9420 (https://www.rfc-editor.org/rfc/
+   rfc9420#name-cipher-suites).  However, the choice of _which_
+   primitives are used by the traditional and PQ subsessions must be
+   explicitly stated by the CipherSuite objects within HPQMLSInfo.  So
+   long as the traditional session only uses classical primitives and
+   the PQ session uses PQ primitives for KEM, a HPQMLS session is valid.
+   Specifically, the PQ primitives for HPQMLS must be 'pure' (fully) PQ:
+   PQ cost is already being amoritized at the protocol level so allowing
+   hybrid PQ cipher suites to be used in the PQ session only adds extra
+   overhead and complexity.  Furthermore, the pq_cipher_suite may
+   contain a classical digital signature algorithm used if mode is set
+   to 0 (PQ Confidentiality-Only) but MUST be fully PQ if mode is set to
+   1 (PQ Confidentiality+Authenticity).  These cipher suite combinations
+   and modes MUST not be toggled or modified after a HPQMLS session has
+   commenced.  Clients MUST reject a HPQMLS session with invalid or
+   duplicate cipher suites (e.g. two traditional cipher suites).
+
+7.1.1.  Key Encapsulation Mechanism
+
+   For HPQMLS sessions, the PQ subsession MUST use a Key Encapsulation
+   Mechanism (KEM) that is standardized by NIST for post-quantum
+   cryptography.  Specifically, only KEMs that have been selected and
+   published by NIST as part of their post-quantum cryptography
+   standardization process (e.g., ML-KEM as specified in FIPS 203) are
+   permitted for use in the PQ session.  The use of experimental, non-
+   standardized, or hybrid KEMs in the PQ session is NOT RECOMMENDED and
+   MUST be rejected by compliant clients.  This requirement ensures
+   interoperability and a consistent security baseline across all HPQMLS
+   deployments.
+
+7.1.2.  Signing
+
+   For HPQMLS sessions, the choice of digital signature algorithm in the
+   PQ subsession depends on the selected mode of operation.  If the mode
+   is set to 1 (PQ Confidentiality+Authenticity), the PQ session MUST
+   use a digital signature algorithm that is standardized by NIST for
+   post-quantum cryptography, such as ML-DSA as specified in FIPS 204.
+   The use of experimental, non-standardized, or hybrid signature
+   algorithms in the PQ session is NOT RECOMMENDED and MUST be rejected
+   by compliant clients in this mode.  If the mode is set to 0 (PQ
+   Confidentiality-Only), the PQ session MAY use a classical digital
+   signature algorithm, but the use of a NIST-standardized PQ signature
+   algorithm is RECOMMENDED.  These requirements ensure that the
+   authenticity guarantees of HPQMLS sessions are aligned with the
+   intended security level and provide a consistent baseline for
+   interoperability and security across deployments.
+
+8.  Security Considerations
+
+8.1.  FULL Commit Frequency
 
    So long as the FULL Commit flow is followed for group administration
    actions, PQ security is extended to the traditional session.
@@ -542,7 +601,7 @@ Table of Contents
    traditional update authenticity, PQ/traditional PCS, and PQ/
    traditional forward secrecy.
 
-7.2.  Attacks on Authentication
+8.2.  Attacks on Non-Repudiation
 
    While PQ message integrity is provided by the symmetric key used in
    AEAD, attacks on non-repudiation (e.g., source forgery) on
@@ -561,13 +620,13 @@ Table of Contents
    a masquerading or forgery attack, which is beyond the scope of this
    protocol.
 
-   If this is a concern, Hybrid PQ DSAs can be used in the traditional
+   If this is a concern, hybrid PQ DSAs can be used in the traditional
    session to sign application messages.  Since this would negate much
    of the efficiency gains from using this protocol and denial-of-
    service attacks can be achieve through more expeditious means, such a
    option is not considered here.
 
-7.3.  Forward Secrecy
+8.3.  Forward Secrecy
 
    Recall that one of the ways MLS achieves forward secrecy is by
    deleting security sensitive values after they are consumed (e.g. to
@@ -579,20 +638,20 @@ Table of Contents
    requirements set above, then there is a potential scenario in which
    an adversary can break forward secrecy because these keys are derived
    _during_ an epoch and are not deleted.  Therefore, the hpqmls_psk
-   MUST be derived from the epoch_secret of the PQ session (see
-   Figure 3) to ensure forward secrecy.
+   MUST be derived from the epoch_secret created at the _start_ of an
+   epoch from the PQ session (see Figure 3) to ensure forward secrecy.
 
-7.4.  Transport Security
+8.4.  Transport Security
 
    Recommendations for preventing denial-of-service attacks or
    restricting transmitted messages are inherited from MLS.
 
-8.  IANA Considerations
+9.  IANA Considerations
 
    The MLS sessions combined by this protocol conform to the IANA
    registries listed for MLS [RFC9420].
 
-9.  Normative References
+10.  Normative References
 
    [I-D.hale-pquip-hybrid-signature-spectrums]
               Bindel, N., Hale, B., Connolly, D., and F. D, "Hybrid
@@ -641,6 +700,8 @@ Table of Contents
 Acknowledgments
 
 Contributors
+
+   Konrad Kohbrok Phoenix R&D Email: konrad.kohbrok@datashrine.de
 
 Authors' Addresses
 
