@@ -244,7 +244,7 @@ The HPQMLSInfo struct conforms to the Safe Extensions API (see {{!I-D.ietf-mls-e
 
 ## Extension updates and validation
 
-As mentioned in {{welcome-message-validation}}, clients MUST validate that the information in the HPQMLSInfo extensions of both T and PQ group match. As the HPQMLSInfo contains the epoch of both groups, commits in both groups MUST contain an AppDataUpdate proposal with `op` set to `update` and `update`. The `update` payload MUST update the epoch depending on the commit, i.e., if a combined update takes place, both commits MUST update the HPQMLSInfo with the new epochs (note that the extension in the PQ group may increment by more than one if one or more T only updates have been performed in the meantime). If it's a T group update, the commit MUST increment the `t_epoch` by one.
+As mentioned in {{welcome-message-validation}}, clients MUST validate that the information in the HPQMLSInfo extensions of both T and PQ group match. As the HPQMLSInfo contains the epoch of both groups it MUST be updated in both groups when doing a combined commit. When doing a combined commit in both commits MUST contain an AppDataUpdate proposal with `op` set to `update`. The `update` payload MUST update the epochs to the new epochs of both groups (note that the epoch of the T group may increment by more than one if one or more T only commits have been performed in the meantime).
 
 ~~~
 enum {
@@ -262,7 +262,7 @@ struct {
 } HPQMLSInfoUpdateData
 ~~~
 
-Consequently, when processing an update, recipients MUST verify that the epoch set by the HPQMLSInfoUpdateData matches the actual (new) epoch of the group or groups involved.
+Consequently, when processing a commit, recipients MUST verify that the epoch set by the HPQMLSInfoUpdateData matches the actual (new) epoch of the group or groups involved.
 
 ## Key Schedule {#key-schedule}
 
