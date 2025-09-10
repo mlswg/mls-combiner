@@ -45,6 +45,11 @@ author:
 
 normative:
 
+[I-D.mahy-mls-ratchet-tree-options]
+title = "Ways to convey the Ratchet Tree in Messaging Layer Security"
+author = "Rohan Mahy"
+target = "https://datatracker.ietf.org/doc/draft-mahy-mls-ratchet-tree-options/"
+
 informative:
 
 --- abstract
