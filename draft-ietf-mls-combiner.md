@@ -45,10 +45,11 @@ author:
 
 normative:
 
-[I-D.mahy-mls-ratchet-tree-options]
-title = "Ways to convey the Ratchet Tree in Messaging Layer Security"
-author = "Rohan Mahy"
-target = "https://datatracker.ietf.org/doc/draft-mahy-mls-ratchet-tree-options/"
+I-D.mahy-mls-ratchet-tree-options:
+  title: "Ways to convey the Ratchet Tree in Messaging Layer Security"
+  author:
+    - name: "Rohan Mahy"
+  target: "https://datatracker.ietf.org/doc/draft-mahy-mls-ratchet-tree-options/"
 
 informative:
 
@@ -322,7 +323,7 @@ struct {
 } HPQMLSPartialGroupInfo
 ~~~
 
-Where PartialGroupInfo is defined in Section 4 of {{I-D.mahy-mls-ratchet-tree-options}}. Messages in HPQMLSPrivateMessage MUST NOT be of content type `application`.
+Where PartialGroupInfo is defined in Section 4 of {{!I-D.mahy-mls-ratchet-tree-options}}. Messages in HPQMLSPrivateMessage MUST NOT be of content type `application`.
 
 TODO: IANA considerations
 
