@@ -317,7 +317,7 @@ struct {
 } HPQMLSPartialGroupInfo
 ~~~
 
-Where PartialGroupInfo is defined in Section 4 of {{I-D.draft-mahy-mls-ratchet-tree-options}}. Messages in HPQMLSPrivateMessage MUST NOT be of content type `application`.
+Where PartialGroupInfo is defined in Section 4 of {{I-D.mahy-mls-ratchet-tree-options}}. Messages in HPQMLSPrivateMessage MUST NOT be of content type `application`.
 
 TODO: IANA considerations
 
