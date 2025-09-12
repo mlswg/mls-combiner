@@ -291,6 +291,8 @@ DeriveSecret(., "psk")
 
 To signal the injection of the PSK derived from the PQ group into the key schedule of the T group, each T group commit that is part of a FULL commit MUST include a PreSharedKey proposal with `psk_type = application`, `component_id = XXX` and `psk_id = hpqmls_psk_id`.
 
+The `hpqmls_exporter` MUST be deleted after both the `hpqmls_psk_id` and the `hpqmls_psk` were derived.
+
 TODO: Replace occurences of XXX with the Component ID of this combiner.
 
 # Cryptographic Objects
