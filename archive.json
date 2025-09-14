@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-09-11T01:37:28.950201+00:00",
+  "timestamp": "2025-09-14T01:41:24.982122+00:00",
   "repo": "mlswg/mls-combiner",
   "labels": [
     {
@@ -113,7 +113,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2025-09-09T14:55:30Z",
-      "updatedAt": "2025-09-10T06:49:27Z",
+      "updatedAt": "2025-09-12T20:13:48Z",
       "baseRepository": "mlswg/mls-combiner",
       "baseRefName": "main",
       "baseRefOid": "ad18d6a7d6df44bf66d72a59c835db87af414f9e",
@@ -124,7 +124,43 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "bitbltr",
+          "authorAssociation": "NONE",
+          "body": "I implemented this by adding the HPQMLSInfo struct as a GroupInfo extension to both commit messages, just like an external join. Does that suffice without creating new payload types?",
+          "createdAt": "2025-09-12T05:27:49Z",
+          "updatedAt": "2025-09-12T05:27:49Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I'm not sure I understand. Commit messages don't carry GroupInfo extensions. Only GroupInfo and Welcome messages do. The way I understand the (current) MLS extensions draft, AppDataUpdate proposals are the intended way to update GroupContext extensions such as HPQMLSInfo.",
+          "createdAt": "2025-09-12T07:30:38Z",
+          "updatedAt": "2025-09-12T07:30:38Z"
+        },
+        {
+          "author": "bitbltr",
+          "authorAssociation": "NONE",
+          "body": "I'm going to re-read the MLS extensions draft and make sure I'm handling the struct correctly",
+          "createdAt": "2025-09-12T17:47:02Z",
+          "updatedAt": "2025-09-12T17:54:11Z"
+        },
+        {
+          "author": "bitbltr",
+          "authorAssociation": "NONE",
+          "body": "I'm sending the HPQMLS info as both a GroupContextExtensions proposal and in the GroupInfo for welcome messages. So it works out. But using an AppDataUpdate proposal as you have proposed is more efficient than a GroupContextExtensions proposal. With that said, why would you not just include the entire HPQMLSInfo struct in the update? It's small enough, and would future-proof any updates to the struct",
+          "createdAt": "2025-09-12T19:43:22Z",
+          "updatedAt": "2025-09-12T19:43:22Z"
+        },
+        {
+          "author": "bitbltr",
+          "authorAssociation": "NONE",
+          "body": "And now that I think about it, using both group context and group info extensions is redundant",
+          "createdAt": "2025-09-12T20:13:48Z",
+          "updatedAt": "2025-09-12T20:13:48Z"
+        }
+      ],
       "reviews": []
     },
     {
@@ -139,18 +175,47 @@
       "labels": [],
       "body": "",
       "createdAt": "2025-09-10T08:04:25Z",
-      "updatedAt": "2025-09-10T08:04:37Z",
+      "updatedAt": "2025-09-12T19:32:45Z",
       "baseRepository": "mlswg/mls-combiner",
       "baseRefName": "main",
       "baseRefOid": "ad18d6a7d6df44bf66d72a59c835db87af414f9e",
       "headRepository": "kkohbrok/mls-combiner",
       "headRefName": "konrad/psk_id",
-      "headRefOid": "29d61d38506a009e76ca3bebd4f02e48a9634816",
+      "headRefOid": "75019d6ab42f784d1910fd36e670d39e0ce09b5c",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "bitbltr",
+          "authorAssociation": "NONE",
+          "body": "This confused me as well. I had to review and compare previous versions of I-D.ietf-mls-extensions for my current understanding. My implementation is as follows:\r\n\r\n1. The hpqmls_psk exporter key is derived from the epoch_secret on the PQ group, just like all the secrets in Section 8 of RFC 9420 (as labeled DeriveSecret). It is also considered consumed and deleted once used\r\n2. The PSK ID, however, is generated using the SafeExportSecret on the traditional group (using ExtensionType HPQMLS), and encoded as an \"application\" PSK as described in Section 4.5 of I-D.ietf-mls-extension\r\n\r\nThe current draft is confusing, but I believe this implements the intent of the spec.",
+          "createdAt": "2025-09-12T05:48:03Z",
+          "updatedAt": "2025-09-12T05:48:03Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Yes, I think the current version of this draft is essentially referencing an earlier version of MLS extensions. With this PR I try to update the draft to match the new safe extension interface provided by the current version of the MLS extensions document. Concretely, I don't see a reason to derive from the epoch secret directly, as we can achieve the same security guarantees by using SafeExportSecret. Also, I don't believe MLS implementations will provide public access to the epoch secret or a function to derive secrets from it directly.\r\n\r\nI went ahead and added a note mandating the deletion of `hpqmls_exporter` to ensure we get the desired FS guarantees.",
+          "createdAt": "2025-09-12T07:27:43Z",
+          "updatedAt": "2025-09-12T07:27:43Z"
+        },
+        {
+          "author": "bitbltr",
+          "authorAssociation": "NONE",
+          "body": "Either way, I don't think your flow is correct (or maybe I'm reading your flow incorrectly). The PSK ID is not key material. The PSK ID is completely separate and is more like a verifier of state. I derive it from the traditional session because I create a PSK proposal and add it to the commit on the traditional session. I did that because I felt the recipient traditional session needed to be able to generate and verify the PSK ID without introspection into the PQ session. I would love feedback as to whether you think that is correct.",
+          "createdAt": "2025-09-12T17:48:52Z",
+          "updatedAt": "2025-09-12T18:03:33Z"
+        },
+        {
+          "author": "bitbltr",
+          "authorAssociation": "NONE",
+          "body": "After re-reading the draft proposal, I was incorrect and do need to generate the PSK ID from the PQ session using SafeExportSecret (not the traditional session) but I still believe the PSK ID is not used to derive the PSK in the flow. The reason I derived the PSK directly from the epoch_secret is because the DeriveExtensionSecret/DeriveApplicationSecret mechanism has been removed from the latest draft of MLS extensions. So I believe we may need some direction from the author.",
+          "createdAt": "2025-09-12T19:18:33Z",
+          "updatedAt": "2025-09-12T19:32:45Z"
+        }
+      ],
       "reviews": []
     },
     {
@@ -165,7 +230,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2025-09-10T12:33:15Z",
-      "updatedAt": "2025-09-10T13:39:35Z",
+      "updatedAt": "2025-09-12T07:17:13Z",
       "baseRepository": "mlswg/mls-combiner",
       "baseRefName": "main",
       "baseRefOid": "ad18d6a7d6df44bf66d72a59c835db87af414f9e",
@@ -176,7 +241,22 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "bitbltr",
+          "authorAssociation": "NONE",
+          "body": "Based on my own implementation, my opinion is these structures will become inefficient as the tree grows. You're sending the data from both trees to both trees, and while that may simplify the code to keep track of changes, you still have to deliver all the data to both MLS groups. Considering this would only be used for full commits (a relatively low-frequency operation), I feel the existing strategy of separate commits with HPQMLSInfo indicating a need for synchronization is sufficient and keeps the number of wire formats to a minimum",
+          "createdAt": "2025-09-12T05:52:44Z",
+          "updatedAt": "2025-09-12T05:52:44Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I see what you mean. Traditionally, MLSMessages are for use within one MLS group, while the WireFormats I propose are essentially for use with one combined group. My motivation in creating those structs was my assumption that most implementers will want some combined structs. Also, such structs would be very useful for interoperability. But I suppose they can just exist on their own and don't need to be \"official\" wire formats.",
+          "createdAt": "2025-09-12T07:17:00Z",
+          "updatedAt": "2025-09-12T07:17:13Z"
+        }
+      ],
       "reviews": []
     }
   ]
