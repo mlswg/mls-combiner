@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-09-14T01:41:24.982122+00:00",
+  "timestamp": "2025-09-16T01:27:14.383912+00:00",
   "repo": "mlswg/mls-combiner",
   "labels": [
     {
@@ -113,7 +113,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2025-09-09T14:55:30Z",
-      "updatedAt": "2025-09-12T20:13:48Z",
+      "updatedAt": "2025-09-15T06:53:46Z",
       "baseRepository": "mlswg/mls-combiner",
       "baseRefName": "main",
       "baseRefOid": "ad18d6a7d6df44bf66d72a59c835db87af414f9e",
@@ -159,6 +159,13 @@
           "body": "And now that I think about it, using both group context and group info extensions is redundant",
           "createdAt": "2025-09-12T20:13:48Z",
           "updatedAt": "2025-09-12T20:13:48Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I'd prefer to just send the update, but it's not a strong opinion. If you send the whole thing you have to check the static fields everey time to make sure that everything is consistent. That feels like an unnecessary footgun to me. While this document is still a draft, updates are to be expected anyway. I don't think it's really worth making concessions for an update path.",
+          "createdAt": "2025-09-15T06:53:46Z",
+          "updatedAt": "2025-09-15T06:53:46Z"
         }
       ],
       "reviews": []
@@ -175,7 +182,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2025-09-10T08:04:25Z",
-      "updatedAt": "2025-09-12T19:32:45Z",
+      "updatedAt": "2025-09-15T06:58:04Z",
       "baseRepository": "mlswg/mls-combiner",
       "baseRefName": "main",
       "baseRefOid": "ad18d6a7d6df44bf66d72a59c835db87af414f9e",
@@ -214,6 +221,13 @@
           "body": "After re-reading the draft proposal, I was incorrect and do need to generate the PSK ID from the PQ session using SafeExportSecret (not the traditional session) but I still believe the PSK ID is not used to derive the PSK in the flow. The reason I derived the PSK directly from the epoch_secret is because the DeriveExtensionSecret/DeriveApplicationSecret mechanism has been removed from the latest draft of MLS extensions. So I believe we may need some direction from the author.",
           "createdAt": "2025-09-12T19:18:33Z",
           "updatedAt": "2025-09-12T19:32:45Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I don't have a strong opinion on how to derive the PSK ID. It just seemed convenient to derive the PSK and its ID from the same (FS) secret. Functionally it shouldn't matter much, as you rightfully point out that the PSK ID is just an administrative identifier that the group members just need to agree on. Maybe the authors want to weigh in here.",
+          "createdAt": "2025-09-15T06:58:04Z",
+          "updatedAt": "2025-09-15T06:58:04Z"
         }
       ],
       "reviews": []
@@ -230,7 +244,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2025-09-10T12:33:15Z",
-      "updatedAt": "2025-09-12T07:17:13Z",
+      "updatedAt": "2025-09-15T08:35:17Z",
       "baseRepository": "mlswg/mls-combiner",
       "baseRefName": "main",
       "baseRefOid": "ad18d6a7d6df44bf66d72a59c835db87af414f9e",
@@ -255,6 +269,13 @@
           "body": "I see what you mean. Traditionally, MLSMessages are for use within one MLS group, while the WireFormats I propose are essentially for use with one combined group. My motivation in creating those structs was my assumption that most implementers will want some combined structs. Also, such structs would be very useful for interoperability. But I suppose they can just exist on their own and don't need to be \"official\" wire formats.",
           "createdAt": "2025-09-12T07:17:00Z",
           "updatedAt": "2025-09-12T07:17:13Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Some more thoughts on combined wire formats: In all likelihood, an application is going to use both single-group messages (e.g. cheaper, traditional-only updates and application messages), as well as combined messages (e.g. full commits). The application will want to transmit both messages over the same channel. If we don't provide a combined wire format for `PrivateMessage` and `PublicMessage`, applications will always have to create their own wrappers to distinguish the two.\r\n\r\nI agree that the other wrappers might not be necessary, but the wrappers around these two message types are very useful for applications.",
+          "createdAt": "2025-09-15T08:35:17Z",
+          "updatedAt": "2025-09-15T08:35:17Z"
         }
       ],
       "reviews": []
