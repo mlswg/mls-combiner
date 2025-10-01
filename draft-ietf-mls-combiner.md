@@ -248,6 +248,28 @@ The HPQMLSInfo struct conforms to the Safe Extensions API (see {{!I-D.ietf-mls-e
       } HPQMLSInfo
 ~~~
 
+## Extension updates and validation
+
+As mentioned in {{welcome-message-validation}}, clients MUST validate that the information in the HPQMLSInfo extensions of both T and PQ group match. As the HPQMLSInfo contains the epoch of both groups it MUST be updated in both groups when doing a FULL commit. Consequently, when doing a FULL commit in both commits MUST contain an AppDataUpdate proposal with `op` set to `update`. The `update` payload MUST update the epochs to the new epochs of both groups (note that the epoch of the T group may increment by more than one if one or more T only commits have been performed in the meantime).
+
+~~~
+enum {
+  invalid(0),
+  t_epoch(1),
+  pq_epoch(1),
+  (255)
+} HPQMLSInfoUpdate
+
+struct {
+  HPQMLSInfoUpdate update;
+  select (HPQMLSInfoUpdate.update)
+    case epoch:
+       uint64 epoch;
+} HPQMLSInfoUpdateData
+~~~
+
+Consequently, when processing a FULL commit, recipients MUST verify that the epoch set by the HPQMLSInfoUpdateData matches the actual (new) epoch of both groups.
+
 ## Key Schedule {#key-schedule}
 
 The `hpqmls_psk` exporter key derived in the PQ session MUST be derived in accordance with the Safe Extensions API guidance (see Exporting Secrets in {{I-D.ietf-mls-extensions}}). In particular, it SHALL NOT use the `extension_secret` and MUST be derived from only the `epoch_secret` from the key schedule in {{RFC9420}}. This is to ensure forward secrecy guarantees (see {{security-considerations}}).
