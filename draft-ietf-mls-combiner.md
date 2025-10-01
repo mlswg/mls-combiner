@@ -45,6 +45,12 @@ author:
 
 normative:
 
+I-D.mahy-mls-ratchet-tree-options:
+  title: "Ways to convey the Ratchet Tree in Messaging Layer Security"
+  author:
+    - name: "Rohan Mahy"
+  target: "https://datatracker.ietf.org/doc/draft-mahy-mls-ratchet-tree-options/"
+
 informative:
 
 --- abstract
@@ -280,6 +286,46 @@ Even though the `hpqmls_psk` PSK is not sent over the wire, members of the HPQML
     Fig 3: The hpqmls_psk of the PQ session is injected into the key schedule of the
     traditional session using the safe extensions API DeriveExtensionSecret.
 ~~~
+
+# Wire formats
+
+Operating two groups in conjunction requires that certain data are sent over the wire in duplictate, for example, two commit messages in the case of a FULL commit. This is made easier through the following wire formats. The GroupContext of both the PQ and the T group MUST include the `required_wire_formats` extension listing the following wire formats.
+
+~~~
+struct {
+  KeyPackage t_key_package;
+  KeyPackage pq_key_package;
+} HPQMLSKeyPackage
+
+struct {
+  MLSPublicMessage t_message;
+  MLSPublicMessage pq_message;
+} HPQMLSPublicMessage
+
+struct {
+  MLSPrivateMessage t_message;
+  MLSPrivateMessage pq_message;
+} HPQMLSPrivateMessage
+
+struct {
+  Welcome t_welcome;
+  Welcome pq_welcome;
+} HPQMLSWelcome
+
+struct {
+  GroupInfo t_group_info;
+  GroupInfo pq_group_info;
+} HPQMLSGroupInfo
+
+struct {
+  PartialGroupInfo t_group_info;
+  PartialGroupInfo pq_group_info;
+} HPQMLSPartialGroupInfo
+~~~
+
+Where PartialGroupInfo is defined in Section 4 of {{!I-D.mahy-mls-ratchet-tree-options}}. Messages in HPQMLSPrivateMessage MUST NOT be of content type `application`.
+
+TODO: IANA considerations
 
 # Cryptographic Objects
 
