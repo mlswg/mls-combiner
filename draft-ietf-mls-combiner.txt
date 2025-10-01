@@ -95,7 +95,8 @@ Table of Contents
      5.1.  PQ/T Confidentiality Only
      5.2.  PQ/T Confidentiality + Authenticity
    6.  Extension Requirements to MLS
-     6.1.  Key Schedule
+     6.1.  Extension updates and validation
+     6.2.  Key Schedule
    7.  Wire formats
    8.  Cryptographic Objects
      8.1.  Cipher Suites
@@ -239,7 +240,7 @@ Table of Contents
    Commit, a Commit is first applied to the PQ session and another
    Commit is applied to the traditional session using a PSK derived from
    the PQ session using the DeriveExtensionSecret and hpqmls_psk label
-   (see Section 6.1).  To ensure the correct PSK is imported into the
+   (see Section 6.2).  To ensure the correct PSK is imported into the
    traditional session, the sender includes information about the PSK in
    a PreSharedKey proposal for the traditional session's Commit list of
    proposals.  The information about the exported PSK is captured (shown
@@ -475,7 +476,37 @@ Table of Contents
              uint64 pq_epoch;
          } HPQMLSInfo
 
-6.1.  Key Schedule
+6.1.  Extension updates and validation
+
+   As mentioned in Section 4.2.1, clients MUST validate that the
+   information in the HPQMLSInfo extensions of both T and PQ group
+   match.  As the HPQMLSInfo contains the epoch of both groups it MUST
+   be updated in both groups when doing a FULL commit.  Consequently,
+   when doing a FULL commit in both commits MUST contain an
+   AppDataUpdate proposal with op set to update.  The update payload
+   MUST update the epochs to the new epochs of both groups (note that
+   the epoch of the T group may increment by more than one if one or
+   more T only commits have been performed in the meantime).
+
+   enum {
+     invalid(0),
+     t_epoch(1),
+     pq_epoch(1),
+     (255)
+   } HPQMLSInfoUpdate
+
+   struct {
+     HPQMLSInfoUpdate update;
+     select (HPQMLSInfoUpdate.update)
+       case epoch:
+          uint64 epoch;
+   } HPQMLSInfoUpdateData
+
+   Consequently, when processing a FULL commit, recipients MUST verify
+   that the epoch set by the HPQMLSInfoUpdateData matches the actual
+   (new) epoch of both groups.
+
+6.2.  Key Schedule
 
    The hpqmls_psk exporter key derived in the PQ session MUST be derived
    in accordance with the Safe Extensions API guidance (see Exporting
