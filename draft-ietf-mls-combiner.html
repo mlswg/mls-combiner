@@ -12,24 +12,24 @@
 <meta content="
        This document describes a protocol for combining a traditional MLS session with a post-quantum (PQ) MLS session to achieve flexible and efficient hybrid PQ confidentiality and authenticity that amortizes the computational cost of PQ Key Encapsulation Mechanisms and Digital Signature Algorithms. Specifically, we describe how to use the exporter secret of a PQ MLS session, i.e., an MLS session using a PQ ciphersuite, to seed PQ guarantees into an MLS session using a traditional ciphersuite. By supporting on-demand traditional-only key updates (a.k.a. PARTIAL updates) or hybrid-PQ key updates (a.k.a. FULL updates), we can reduce the bandwidth and computational overhead associated with PQ operations while meeting the requirement of frequent key rotations. 
     " name="description">
-<meta content="xml2rfc 3.29.0" name="generator">
+<meta content="xml2rfc 3.30.2" name="generator">
 <meta content="security" name="keyword">
 <meta content="authenticated key exchange" name="keyword">
 <meta content="PCS" name="keyword">
 <meta content="Post-Quantum" name="keyword">
 <meta content="draft-ietf-mls-combiner-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.29.0
+  xml2rfc 3.30.2
     Python 3.12.11
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
     Jinja2 3.1.6
     lxml 5.3.1
-    platformdirs 4.3.8
+    platformdirs 4.4.0
     pycountry 24.6.1
     PyYAML 6.0.2
-    requests 2.32.4
+    requests 2.32.5
     setuptools 80.9.0
     wcwidth 0.2.13
 -->
@@ -1050,11 +1050,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">HPQMLS</td>
-<td class="right">June 2025</td>
+<td class="right">October 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Alwen, et al.</td>
-<td class="center">Expires 20 December 2025</td>
+<td class="center">Expires 4 April 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1067,12 +1067,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-mls-combiner-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-06-18" class="published">18 June 2025</time>
+<time datetime="2025-10-01" class="published">1 October 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-12-20">20 December 2025</time></dd>
+<dd class="expires"><time datetime="2026-04-04">4 April 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1134,7 +1134,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 20 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 4 April 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1217,54 +1217,57 @@ svg :is([fill="white"], [fill^="#fff"]) {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
-            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-cryptographic-objects" class="internal xref">Cryptographic Objects</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
-                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-cipher-suites" class="internal xref">Cipher Suites</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1.2.1">
-                    <p id="section-toc.1-1.7.2.1.2.1.1"><a href="#section-7.1.1" class="auto internal xref">7.1.1</a>.  <a href="#name-key-encapsulation-mechanism" class="internal xref">Key Encapsulation Mechanism</a></p>
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-wire-formats" class="internal xref">Wire formats</a></p>
 </li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1.2.2">
-                    <p id="section-toc.1-1.7.2.1.2.2.1"><a href="#section-7.1.2" class="auto internal xref">7.1.2</a>.  <a href="#name-signing" class="internal xref">Signing</a></p>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-cryptographic-objects" class="internal xref">Cryptographic Objects</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1">
+                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-cipher-suites" class="internal xref">Cipher Suites</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.1">
+                    <p id="section-toc.1-1.8.2.1.2.1.1"><a href="#section-8.1.1" class="auto internal xref">8.1.1</a>.  <a href="#name-key-encapsulation-mechanism" class="internal xref">Key Encapsulation Mechanism</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.2">
+                    <p id="section-toc.1-1.8.2.1.2.2.1"><a href="#section-8.1.2" class="auto internal xref">8.1.2</a>.  <a href="#name-signing" class="internal xref">Signing</a></p>
 </li>
                 </ul>
 </li>
             </ul>
 </li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
-            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1">
-                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-full-commit-frequency" class="internal xref">FULL Commit Frequency</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1">
+                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="auto internal xref">9.1</a>.  <a href="#name-full-commit-frequency" class="internal xref">FULL Commit Frequency</a></p>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2">
-                <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="auto internal xref">8.2</a>.  <a href="#name-attacks-on-non-repudiation" class="internal xref">Attacks on Non-Repudiation</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2">
+                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="auto internal xref">9.2</a>.  <a href="#name-attacks-on-non-repudiation" class="internal xref">Attacks on Non-Repudiation</a></p>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.3">
-                <p id="section-toc.1-1.8.2.3.1"><a href="#section-8.3" class="auto internal xref">8.3</a>.  <a href="#name-forward-secrecy" class="internal xref">Forward Secrecy</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.3">
+                <p id="section-toc.1-1.9.2.3.1"><a href="#section-9.3" class="auto internal xref">9.3</a>.  <a href="#name-forward-secrecy" class="internal xref">Forward Secrecy</a></p>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.4">
-                <p id="section-toc.1-1.8.2.4.1"><a href="#section-8.4" class="auto internal xref">8.4</a>.  <a href="#name-transport-security" class="internal xref">Transport Security</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.4">
+                <p id="section-toc.1-1.9.2.4.1"><a href="#section-9.4" class="auto internal xref">9.4</a>.  <a href="#name-transport-security" class="internal xref">Transport Security</a></p>
 </li>
             </ul>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
-            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
+            <p id="section-toc.1-1.12.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1">
-                <p id="section-toc.1-1.11.2.1.1"><a href="#appendix-A.1" class="auto internal xref"></a><a href="#name-contributors" class="internal xref">Contributors</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.1">
+                <p id="section-toc.1-1.12.2.1.1"><a href="#appendix-A.1" class="auto internal xref"></a><a href="#name-contributors" class="internal xref">Contributors</a></p>
 </li>
             </ul>
 </li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
+            <p id="section-toc.1-1.13.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1512,7 +1515,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
         <h3 id="name-key-schedule">
 <a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-key-schedule" class="section-name selfRef">Key Schedule</a>
         </h3>
-<p id="section-6.1-1">The <code>hpqmls_psk</code> exporter key derived in the PQ session <span class="bcp14">MUST</span> be derived in accordance with the Safe Extensions API guidance (see Exporting Secrets in <span>[<a href="#I-D.ietf-mls-extensions" class="cite xref">I-D.ietf-mls-extensions</a>]</span>). In particular, it <span class="bcp14">SHALL NOT</span> use the <code>extension_secret</code> and <span class="bcp14">MUST</span> be derived from only the <code>epoch_secret</code> from the key schedule in <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>. This is to ensure forward secrecy guarantees (see <a href="#security-considerations" class="auto internal xref">Section 8</a>).<a href="#section-6.1-1" class="pilcrow">¶</a></p>
+<p id="section-6.1-1">The <code>hpqmls_psk</code> exporter key derived in the PQ session <span class="bcp14">MUST</span> be derived in accordance with the Safe Extensions API guidance (see Exporting Secrets in <span>[<a href="#I-D.ietf-mls-extensions" class="cite xref">I-D.ietf-mls-extensions</a>]</span>). In particular, it <span class="bcp14">SHALL NOT</span> use the <code>extension_secret</code> and <span class="bcp14">MUST</span> be derived from only the <code>epoch_secret</code> from the key schedule in <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>. This is to ensure forward secrecy guarantees (see <a href="#security-considerations" class="auto internal xref">Section 9</a>).<a href="#section-6.1-1" class="pilcrow">¶</a></p>
 <p id="section-6.1-2">Even though the <code>hpqmls_psk</code> PSK is not sent over the wire, members of the HPQMLS session must agree on the value of which PSK to use. In alignment with the Safe Extensions API policy for PSKs, HPQMLS PSKs used <span class="bcp14">SHALL</span> set <code>PSKType = 3</code> and <code>extension_type = HPQMLS</code> (see Section 2.1.6 Pre-Shared Keys in <span>[<a href="#I-D.ietf-mls-extensions" class="cite xref">I-D.ietf-mls-extensions</a>]</span>).<a href="#section-6.1-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-6.1-3">
 <pre>
@@ -1552,31 +1555,74 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </div>
 </section>
 </div>
-<div id="cryptographic-objects">
+<div id="wire-formats">
 <section id="section-7">
+      <h2 id="name-wire-formats">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-wire-formats" class="section-name selfRef">Wire formats</a>
+      </h2>
+<p id="section-7-1">Operating two groups in conjunction requires that certain data are sent over the wire in duplictate, for example, two commit messages in the case of a FULL commit. This is made easier through the following wire formats. The GroupContext of both the PQ and the T group <span class="bcp14">MUST</span> include the <code>required_wire_formats</code> extension listing the following wire formats.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-7-2">
+<pre>
+struct {
+  KeyPackage t_key_package;
+  KeyPackage pq_key_package;
+} HPQMLSKeyPackage
+
+struct {
+  MLSPublicMessage t_message;
+  MLSPublicMessage pq_message;
+} HPQMLSPublicMessage
+
+struct {
+  MLSPrivateMessage t_message;
+  MLSPrivateMessage pq_message;
+} HPQMLSPrivateMessage
+
+struct {
+  Welcome t_welcome;
+  Welcome pq_welcome;
+} HPQMLSWelcome
+
+struct {
+  GroupInfo t_group_info;
+  GroupInfo pq_group_info;
+} HPQMLSGroupInfo
+
+struct {
+  PartialGroupInfo t_group_info;
+  PartialGroupInfo pq_group_info;
+} HPQMLSPartialGroupInfo
+</pre><a href="#section-7-2" class="pilcrow">¶</a>
+</div>
+<p id="section-7-3">Where PartialGroupInfo is defined in Section 4 of <span>[<a href="#I-D.mahy-mls-ratchet-tree-options" class="cite xref">I-D.mahy-mls-ratchet-tree-options</a>]</span>. Messages in HPQMLSPrivateMessage <span class="bcp14">MUST NOT</span> be of content type <code>application</code>.<a href="#section-7-3" class="pilcrow">¶</a></p>
+<p id="section-7-4">TODO: IANA considerations<a href="#section-7-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="cryptographic-objects">
+<section id="section-8">
       <h2 id="name-cryptographic-objects">
-<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-cryptographic-objects" class="section-name selfRef">Cryptographic Objects</a>
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-cryptographic-objects" class="section-name selfRef">Cryptographic Objects</a>
       </h2>
 <div id="cipher-suites">
-<section id="section-7.1">
+<section id="section-8.1">
         <h3 id="name-cipher-suites">
-<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-cipher-suites" class="section-name selfRef">Cipher Suites</a>
+<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-cipher-suites" class="section-name selfRef">Cipher Suites</a>
         </h3>
-<p id="section-7.1-1">There are no changes to <em>how</em> cipher suites are used to perform group key computations from <a href="https://www.rfc-editor.org/rfc/rfc9420#name-cipher-suites">RFC9420</a>. However, the choice of <em>which</em> primitives are used by the traditional and PQ subsessions must be explicitly stated by the CipherSuite objects within <code>HPQMLSInfo</code>. So long as the traditional session only uses classical primitives and the PQ session uses PQ primitives for KEM, a HPQMLS session is valid. Specifically, the PQ primitives for HPQMLS must be 'pure' (fully) PQ: PQ cost is already being amoritized at the protocol level so allowing hybrid PQ cipher suites to be used in the PQ session only adds extra overhead and complexity. Furthermore, the <code>pq_cipher_suite</code> may contain a classical digital signature algorithm used if <code>mode</code> is set to 0 (PQ Confidentiality-Only) but <span class="bcp14">MUST</span> be fully PQ if <code>mode</code> is set to 1 (PQ Confidentiality+Authenticity). These cipher suite combinations and modes <span class="bcp14">MUST</span> not be toggled or modified after a HPQMLS session has commenced. Clients <span class="bcp14">MUST</span> reject a HPQMLS session with invalid or duplicate cipher suites (e.g. two traditional cipher suites).<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+<p id="section-8.1-1">There are no changes to <em>how</em> cipher suites are used to perform group key computations from <a href="https://www.rfc-editor.org/rfc/rfc9420#name-cipher-suites">RFC9420</a>. However, the choice of <em>which</em> primitives are used by the traditional and PQ subsessions must be explicitly stated by the CipherSuite objects within <code>HPQMLSInfo</code>. So long as the traditional session only uses classical primitives and the PQ session uses PQ primitives for KEM, a HPQMLS session is valid. Specifically, the PQ primitives for HPQMLS must be 'pure' (fully) PQ: PQ cost is already being amoritized at the protocol level so allowing hybrid PQ cipher suites to be used in the PQ session only adds extra overhead and complexity. Furthermore, the <code>pq_cipher_suite</code> may contain a classical digital signature algorithm used if <code>mode</code> is set to 0 (PQ Confidentiality-Only) but <span class="bcp14">MUST</span> be fully PQ if <code>mode</code> is set to 1 (PQ Confidentiality+Authenticity). These cipher suite combinations and modes <span class="bcp14">MUST</span> not be toggled or modified after a HPQMLS session has commenced. Clients <span class="bcp14">MUST</span> reject a HPQMLS session with invalid or duplicate cipher suites (e.g. two traditional cipher suites).<a href="#section-8.1-1" class="pilcrow">¶</a></p>
 <div id="key-encapsulation-mechanism">
-<section id="section-7.1.1">
+<section id="section-8.1.1">
           <h4 id="name-key-encapsulation-mechanism">
-<a href="#section-7.1.1" class="section-number selfRef">7.1.1. </a><a href="#name-key-encapsulation-mechanism" class="section-name selfRef">Key Encapsulation Mechanism</a>
+<a href="#section-8.1.1" class="section-number selfRef">8.1.1. </a><a href="#name-key-encapsulation-mechanism" class="section-name selfRef">Key Encapsulation Mechanism</a>
           </h4>
-<p id="section-7.1.1-1">For HPQMLS sessions, the PQ subsession <span class="bcp14">MUST</span> use a Key Encapsulation Mechanism (KEM) that is standardized by NIST for post-quantum cryptography. Specifically, only KEMs that have been selected and published by NIST as part of their post-quantum cryptography standardization process (e.g., ML-KEM as specified in FIPS 203) are permitted for use in the PQ session. The use of experimental, non-standardized, or hybrid KEMs in the PQ session is <span class="bcp14">NOT RECOMMENDED</span> and <span class="bcp14">MUST</span> be rejected by compliant clients. This requirement ensures interoperability and a consistent security baseline across all HPQMLS deployments.<a href="#section-7.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-8.1.1-1">For HPQMLS sessions, the PQ subsession <span class="bcp14">MUST</span> use a Key Encapsulation Mechanism (KEM) that is standardized by NIST for post-quantum cryptography. Specifically, only KEMs that have been selected and published by NIST as part of their post-quantum cryptography standardization process (e.g., ML-KEM as specified in FIPS 203) are permitted for use in the PQ session. The use of experimental, non-standardized, or hybrid KEMs in the PQ session is <span class="bcp14">NOT RECOMMENDED</span> and <span class="bcp14">MUST</span> be rejected by compliant clients. This requirement ensures interoperability and a consistent security baseline across all HPQMLS deployments.<a href="#section-8.1.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="signing">
-<section id="section-7.1.2">
+<section id="section-8.1.2">
           <h4 id="name-signing">
-<a href="#section-7.1.2" class="section-number selfRef">7.1.2. </a><a href="#name-signing" class="section-name selfRef">Signing</a>
+<a href="#section-8.1.2" class="section-number selfRef">8.1.2. </a><a href="#name-signing" class="section-name selfRef">Signing</a>
           </h4>
-<p id="section-7.1.2-1">For HPQMLS sessions, the choice of digital signature algorithm in the PQ subsession depends on the selected mode of operation. If the <code>mode</code> is set to 1 (PQ Confidentiality+Authenticity), the PQ session <span class="bcp14">MUST</span> use a digital signature algorithm that is standardized by NIST for post-quantum cryptography, such as ML-DSA as specified in FIPS 204. The use of experimental, non-standardized, or hybrid signature algorithms in the PQ session is <span class="bcp14">NOT RECOMMENDED</span> and <span class="bcp14">MUST</span> be rejected by compliant clients in this mode. If the <code>mode</code> is set to 0 (PQ Confidentiality-Only), the PQ session <span class="bcp14">MAY</span> use a classical digital signature algorithm, but the use of a NIST-standardized PQ signature algorithm is <span class="bcp14">RECOMMENDED</span>. These requirements ensure that the authenticity guarantees of HPQMLS sessions are aligned with the intended security level and provide a consistent baseline for interoperability and security across deployments.<a href="#section-7.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-8.1.2-1">For HPQMLS sessions, the choice of digital signature algorithm in the PQ subsession depends on the selected mode of operation. If the <code>mode</code> is set to 1 (PQ Confidentiality+Authenticity), the PQ session <span class="bcp14">MUST</span> use a digital signature algorithm that is standardized by NIST for post-quantum cryptography, such as ML-DSA as specified in FIPS 204. The use of experimental, non-standardized, or hybrid signature algorithms in the PQ session is <span class="bcp14">NOT RECOMMENDED</span> and <span class="bcp14">MUST</span> be rejected by compliant clients in this mode. If the <code>mode</code> is set to 0 (PQ Confidentiality-Only), the PQ session <span class="bcp14">MAY</span> use a classical digital signature algorithm, but the use of a NIST-standardized PQ signature algorithm is <span class="bcp14">RECOMMENDED</span>. These requirements ensure that the authenticity guarantees of HPQMLS sessions are aligned with the intended security level and provide a consistent baseline for interoperability and security across deployments.<a href="#section-8.1.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1584,57 +1630,57 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </section>
 </div>
 <div id="security-considerations">
-<section id="section-8">
+<section id="section-9">
       <h2 id="name-security-considerations">
-<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
 <div id="full-commit-frequency">
-<section id="section-8.1">
+<section id="section-9.1">
         <h3 id="name-full-commit-frequency">
-<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-full-commit-frequency" class="section-name selfRef">FULL Commit Frequency</a>
+<a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-full-commit-frequency" class="section-name selfRef">FULL Commit Frequency</a>
         </h3>
-<p id="section-8.1-1">So long as the FULL Commit flow is followed for group administration actions, PQ security is extended to the traditional session. Therefore, FULL Commits can occur as frequently or infrequently as desired by any given security policy. This results in a flexible and efficient use of compute, storage, and bandwidth resources for the host by mainly calling partial updates on the traditional MLS session, given that the group membership is stable. Thus, our protocol provides PQ security and can maintain a tighter PCS window against traditional attackers as well as forward secrecy window against traditional or quantum attackers with lower overhead when compared to running a single MLS session that only uses PQ KEMs or PQ KEM/DSAs. Furthermore, the PQ PCS window against quantum attackers can be selected based on an application and even variable over time, ranging from e.g. a single FULL Commit in PQ/T Confidentiality Only mode followed by PARTIAL Commits from that point onwards (enabling general PQ/traditional confidentiality, traditional update authenticity, traditional PCS, and PQ/traditional forward secrecy) to frequent FULL Commits in the same mode (enabling general PQ/traditional confidentiality, traditional update authenticity, PQ/traditional PCS, and PQ/traditional forward secrecy). In PQ/T Confidentiality + Authenticity mode with frequent FULL Commits, the latter case would enable general PQ/traditional confidentiality, PQ/traditional update authenticity, PQ/traditional PCS, and PQ/traditional forward secrecy.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
+<p id="section-9.1-1">So long as the FULL Commit flow is followed for group administration actions, PQ security is extended to the traditional session. Therefore, FULL Commits can occur as frequently or infrequently as desired by any given security policy. This results in a flexible and efficient use of compute, storage, and bandwidth resources for the host by mainly calling partial updates on the traditional MLS session, given that the group membership is stable. Thus, our protocol provides PQ security and can maintain a tighter PCS window against traditional attackers as well as forward secrecy window against traditional or quantum attackers with lower overhead when compared to running a single MLS session that only uses PQ KEMs or PQ KEM/DSAs. Furthermore, the PQ PCS window against quantum attackers can be selected based on an application and even variable over time, ranging from e.g. a single FULL Commit in PQ/T Confidentiality Only mode followed by PARTIAL Commits from that point onwards (enabling general PQ/traditional confidentiality, traditional update authenticity, traditional PCS, and PQ/traditional forward secrecy) to frequent FULL Commits in the same mode (enabling general PQ/traditional confidentiality, traditional update authenticity, PQ/traditional PCS, and PQ/traditional forward secrecy). In PQ/T Confidentiality + Authenticity mode with frequent FULL Commits, the latter case would enable general PQ/traditional confidentiality, PQ/traditional update authenticity, PQ/traditional PCS, and PQ/traditional forward secrecy.<a href="#section-9.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="attacks-on-non-repudiation">
-<section id="section-8.2">
+<section id="section-9.2">
         <h3 id="name-attacks-on-non-repudiation">
-<a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-attacks-on-non-repudiation" class="section-name selfRef">Attacks on Non-Repudiation</a>
+<a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-attacks-on-non-repudiation" class="section-name selfRef">Attacks on Non-Repudiation</a>
         </h3>
-<p id="section-8.2-1">While PQ message integrity is provided by the symmetric key used in AEAD, attacks on non-repudiation (e.g., source forgery) on application messages may still be possible by a CRQC adversary since only traditional signatures on used after the AEAD. However, in terms of group key agreement, this is insufficient to mount anything more than a denial-of-service attack (e.g. via group state desynchronization). In terms of application messages, a traditional DSA signature may be forged by an external CRQC adversary, but the content (including sender information) is still protected by AEAD which uses the symmetric group key. Thus, an external CRQC adversary can only conduct a false-framing attack, where group members are assured of the authenticity of a message being sent by a group member for the adversary has changed the signature to imply a different sender; it would require an insider CRQC adversary to actually mount a masquerading or forgery attack, which is beyond the scope of this protocol.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
-<p id="section-8.2-2">If this is a concern, hybrid PQ DSAs can be used in the traditional session to sign application messages. Since this would negate much of the efficiency gains from using this protocol and denial-of-service attacks can be achieve through more expeditious means, such a option is not considered here.<a href="#section-8.2-2" class="pilcrow">¶</a></p>
+<p id="section-9.2-1">While PQ message integrity is provided by the symmetric key used in AEAD, attacks on non-repudiation (e.g., source forgery) on application messages may still be possible by a CRQC adversary since only traditional signatures on used after the AEAD. However, in terms of group key agreement, this is insufficient to mount anything more than a denial-of-service attack (e.g. via group state desynchronization). In terms of application messages, a traditional DSA signature may be forged by an external CRQC adversary, but the content (including sender information) is still protected by AEAD which uses the symmetric group key. Thus, an external CRQC adversary can only conduct a false-framing attack, where group members are assured of the authenticity of a message being sent by a group member for the adversary has changed the signature to imply a different sender; it would require an insider CRQC adversary to actually mount a masquerading or forgery attack, which is beyond the scope of this protocol.<a href="#section-9.2-1" class="pilcrow">¶</a></p>
+<p id="section-9.2-2">If this is a concern, hybrid PQ DSAs can be used in the traditional session to sign application messages. Since this would negate much of the efficiency gains from using this protocol and denial-of-service attacks can be achieve through more expeditious means, such a option is not considered here.<a href="#section-9.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="forward-secrecy">
-<section id="section-8.3">
+<section id="section-9.3">
         <h3 id="name-forward-secrecy">
-<a href="#section-8.3" class="section-number selfRef">8.3. </a><a href="#name-forward-secrecy" class="section-name selfRef">Forward Secrecy</a>
+<a href="#section-9.3" class="section-number selfRef">9.3. </a><a href="#name-forward-secrecy" class="section-name selfRef">Forward Secrecy</a>
         </h3>
-<p id="section-8.3-1">Recall that one of the ways MLS achieves forward secrecy is by deleting security sensitive values after they are consumed (e.g. to encrypt or derive other keys/nonces) and the key schedule has entered a new epoch. For example, values such as the <code>init_secret</code> or <code>epoch_secret</code> are deleted at the <em>start</em> of a new epoch. If the MLS <code>exporter_secret</code> or the <code>extension_secret</code> from the PQ session is used directly as a PSK for the traditional session, against the requirements set above, then there is a potential scenario in which an adversary can break forward secrecy because these keys are derived <em>during</em> an epoch and are not deleted. Therefore, the <code>hpqmls_psk</code> <span class="bcp14">MUST</span> be derived from the <code>epoch_secret</code> created at the <em>start</em> of an epoch from the PQ session (see Figure 3) to ensure forward secrecy.<a href="#section-8.3-1" class="pilcrow">¶</a></p>
+<p id="section-9.3-1">Recall that one of the ways MLS achieves forward secrecy is by deleting security sensitive values after they are consumed (e.g. to encrypt or derive other keys/nonces) and the key schedule has entered a new epoch. For example, values such as the <code>init_secret</code> or <code>epoch_secret</code> are deleted at the <em>start</em> of a new epoch. If the MLS <code>exporter_secret</code> or the <code>extension_secret</code> from the PQ session is used directly as a PSK for the traditional session, against the requirements set above, then there is a potential scenario in which an adversary can break forward secrecy because these keys are derived <em>during</em> an epoch and are not deleted. Therefore, the <code>hpqmls_psk</code> <span class="bcp14">MUST</span> be derived from the <code>epoch_secret</code> created at the <em>start</em> of an epoch from the PQ session (see Figure 3) to ensure forward secrecy.<a href="#section-9.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="transport-security">
-<section id="section-8.4">
+<section id="section-9.4">
         <h3 id="name-transport-security">
-<a href="#section-8.4" class="section-number selfRef">8.4. </a><a href="#name-transport-security" class="section-name selfRef">Transport Security</a>
+<a href="#section-9.4" class="section-number selfRef">9.4. </a><a href="#name-transport-security" class="section-name selfRef">Transport Security</a>
         </h3>
-<p id="section-8.4-1">Recommendations for preventing denial-of-service attacks or restricting transmitted messages are inherited from MLS.<a href="#section-8.4-1" class="pilcrow">¶</a></p>
+<p id="section-9.4-1">Recommendations for preventing denial-of-service attacks or restricting transmitted messages are inherited from MLS.<a href="#section-9.4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="iana-considerations">
-<section id="section-9">
+<section id="section-10">
       <h2 id="name-iana-considerations">
-<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<p id="section-9-1">The MLS sessions combined by this protocol conform to the IANA registries listed for MLS <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>.<a href="#section-9-1" class="pilcrow">¶</a></p>
+<p id="section-10-1">The MLS sessions combined by this protocol conform to the IANA registries listed for MLS <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>.<a href="#section-10-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-normative-references">
-<section id="section-10">
+<section id="section-11">
       <h2 id="name-normative-references">
-<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
       </h2>
 <dl class="references">
 <dt id="I-D.hale-pquip-hybrid-signature-spectrums">[I-D.hale-pquip-hybrid-signature-spectrums]</dt>
@@ -1643,11 +1689,15 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <dd class="break"></dd>
 <dt id="I-D.ietf-mls-extensions">[I-D.ietf-mls-extensions]</dt>
       <dd>
-<span class="refAuthor">Robert, R.</span>, <span class="refTitle">"The Messaging Layer Security (MLS) Extensions"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-mls-extensions-06</span>, <time datetime="2025-02-19" class="refDate">19 February 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-mls-extensions-06">https://datatracker.ietf.org/doc/html/draft-ietf-mls-extensions-06</a>&gt;</span>. </dd>
+<span class="refAuthor">Robert, R.</span>, <span class="refTitle">"The Messaging Layer Security (MLS) Extensions"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-mls-extensions-08</span>, <time datetime="2025-07-21" class="refDate">21 July 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-mls-extensions-08">https://datatracker.ietf.org/doc/html/draft-ietf-mls-extensions-08</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-pquip-pqt-hybrid-terminology">[I-D.ietf-pquip-pqt-hybrid-terminology]</dt>
       <dd>
 <span class="refAuthor">D, F.</span>, <span class="refAuthor">P, M.</span>, and <span class="refAuthor">B. Hale</span>, <span class="refTitle">"Terminology for Post-Quantum Traditional Hybrid Schemes"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-pquip-pqt-hybrid-terminology-06</span>, <time datetime="2025-01-10" class="refDate">10 January 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-pquip-pqt-hybrid-terminology-06">https://datatracker.ietf.org/doc/html/draft-ietf-pquip-pqt-hybrid-terminology-06</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.mahy-mls-ratchet-tree-options">[I-D.mahy-mls-ratchet-tree-options]</dt>
+      <dd>
+<span class="refAuthor">Mahy, R.</span>, <span class="refTitle">"Ways to convey the Ratchet Tree in Messaging Layer Security"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-mahy-mls-ratchet-tree-options-02</span>, <time datetime="2025-04-22" class="refDate">22 April 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-mahy-mls-ratchet-tree-options-02">https://datatracker.ietf.org/doc/html/draft-mahy-mls-ratchet-tree-options-02</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
       <dd>
