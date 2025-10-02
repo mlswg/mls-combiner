@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-09-30T01:34:56.129143+00:00",
+  "timestamp": "2025-10-02T01:27:37.130677+00:00",
   "repo": "mlswg/mls-combiner",
   "labels": [
     {
@@ -106,24 +106,26 @@
       "id": "PR_kwDONZ9R686noMJf",
       "title": "Update and verify HPQMLSInfo when doing a full commit",
       "url": "https://github.com/mlswg/mls-combiner/pull/2",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "kkohbrok",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2025-09-09T14:55:30Z",
-      "updatedAt": "2025-09-15T06:53:46Z",
+      "updatedAt": "2025-10-01T14:34:13Z",
       "baseRepository": "mlswg/mls-combiner",
       "baseRefName": "main",
       "baseRefOid": "ad18d6a7d6df44bf66d72a59c835db87af414f9e",
       "headRepository": "kkohbrok/mls-combiner",
       "headRefName": "konrad/extension_update",
       "headRefOid": "b104e2b22881867c4ca13dcac998bf8e07ab22b4",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-10-01T14:34:13Z",
+      "mergedAt": "2025-10-01T14:34:13Z",
+      "mergedBy": "br-hale",
+      "mergeCommit": {
+        "oid": "ad7aa13be027f1b88a9f80dcc0780594c2411399"
+      },
       "comments": [
         {
           "author": "bitbltr",
@@ -237,24 +239,26 @@
       "id": "PR_kwDONZ9R686nzu1n",
       "title": "Add combined wire formats",
       "url": "https://github.com/mlswg/mls-combiner/pull/4",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "kkohbrok",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2025-09-10T12:33:15Z",
-      "updatedAt": "2025-09-26T16:46:30Z",
+      "updatedAt": "2025-10-01T14:33:36Z",
       "baseRepository": "mlswg/mls-combiner",
       "baseRefName": "main",
       "baseRefOid": "ad18d6a7d6df44bf66d72a59c835db87af414f9e",
       "headRepository": "kkohbrok/mls-combiner",
       "headRefName": "konrad/wire_formats",
       "headRefOid": "769e75313574e6b42d5b820458d027c5706eb52b",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-10-01T14:33:36Z",
+      "mergedAt": "2025-10-01T14:33:36Z",
+      "mergedBy": "br-hale",
+      "mergeCommit": {
+        "oid": "486008198cb19becbf766b0c18d0c95395f52d45"
+      },
       "comments": [
         {
           "author": "bitbltr",
