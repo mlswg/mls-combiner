@@ -272,19 +272,27 @@ Consequently, when processing a FULL commit, recipients MUST verify that the epo
 
 ## Key Schedule {#key-schedule}
 
-The `hpqmls_psk` exporter key derived in the PQ session MUST be derived in accordance with the Safe Extensions API guidance (see Exporting Secrets in {{I-D.ietf-mls-extensions}}). In particular, it SHALL NOT use the `extension_secret` and MUST be derived from only the `epoch_secret` from the key schedule in {{RFC9420}}. This is to ensure forward secrecy guarantees (see {{security-considerations}}).
+The `hpqmls_psk` exporter key derived in the PQ session MUST be derived in accordance with the Safe Extensions API guidance (see Exporting Secrets in {{I-D.ietf-mls-extensions}}). In particular, it SHALL NOT use the `extension_secret` and MUST be derived using the SafeExportSecret function as defined in Section 4.4 Pre-Shared Keys of {{I-D.ietf-mls-extensions}}. This is to ensure forward secrecy guarantees (see {{security-considerations}}).
 
-Even though the `hpqmls_psk` PSK is not sent over the wire, members of the HPQMLS session must agree on the value of which PSK to use. In alignment with the Safe Extensions API policy for PSKs, HPQMLS PSKs used SHALL set `PSKType = 3` and `extension_type = HPQMLS` (see Section 2.1.6 Pre-Shared Keys in {{I-D.ietf-mls-extensions}}).
+Even though the `hpqmls_psk` PSK is not sent over the wire, members of the HPQMLS session must agree on the value of which PSK to use. In alignment with the Safe Extensions API policy for PSKs, HPQMLS PSKs used SHALL set `PSKType = 3` and `component_id = XXX` (see Section 4.5 Pre-Shared Keys of {{I-D.ietf-mls-extensions}}).
 
 ~~~
       PQ Session                       Traditional Session
       ----------                       -------------------
 
         [...]
-    DeriveExtensionSecret(epoch_secret,
-          |            "hpqmls_export")
-          | = hpqmls_psk                      [...]
-          |                               joiner_secret
+  SafeExportSecret(XXX)
+          |
+          V
+    hpqmls_exporter
+          |
+          +--> DeriveSecret(., "psk_id")
+          |    = hpqmls_psk_id
+          V
+DeriveSecret(., "psk")
+          |
+          V                                   [...]
+     hpqmls_psk                           joiner_secret
           |                                     |
           |                                     |
           |                                     V
@@ -308,6 +316,13 @@ Even though the `hpqmls_psk` PSK is not sent over the wire, members of the HPQML
     Fig 3: The hpqmls_psk of the PQ session is injected into the key schedule of the
     traditional session using the safe extensions API DeriveExtensionSecret.
 ~~~
+
+
+To signal the injection of the PSK derived from the PQ group into the key schedule of the T group, each T group commit that is part of a FULL commit MUST include a PreSharedKey proposal with `psk_type = application`, `component_id = XXX` and `psk_id = hpqmls_psk_id`.
+
+The `hpqmls_exporter` MUST be deleted after both the `hpqmls_psk_id` and the `hpqmls_psk` were derived.
+
+TODO: Replace occurences of XXX with the Component ID of this combiner.
 
 # Wire formats
 
