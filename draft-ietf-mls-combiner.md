@@ -45,6 +45,12 @@ author:
 
 normative:
 
+I-D.mahy-mls-ratchet-tree-options:
+  title: "Ways to convey the Ratchet Tree in Messaging Layer Security"
+  author:
+    - name: "Rohan Mahy"
+  target: "https://datatracker.ietf.org/doc/draft-mahy-mls-ratchet-tree-options/"
+
 informative:
 
 --- abstract
@@ -242,6 +248,28 @@ The HPQMLSInfo struct conforms to the Safe Extensions API (see {{!I-D.ietf-mls-e
       } HPQMLSInfo
 ~~~
 
+## Extension updates and validation
+
+As mentioned in {{welcome-message-validation}}, clients MUST validate that the information in the HPQMLSInfo extensions of both T and PQ group match. As the HPQMLSInfo contains the epoch of both groups it MUST be updated in both groups when doing a FULL commit. Consequently, when doing a FULL commit in both commits MUST contain an AppDataUpdate proposal with `op` set to `update`. The `update` payload MUST update the epochs to the new epochs of both groups (note that the epoch of the T group may increment by more than one if one or more T only commits have been performed in the meantime).
+
+~~~
+enum {
+  invalid(0),
+  t_epoch(1),
+  pq_epoch(1),
+  (255)
+} HPQMLSInfoUpdate
+
+struct {
+  HPQMLSInfoUpdate update;
+  select (HPQMLSInfoUpdate.update)
+    case epoch:
+       uint64 epoch;
+} HPQMLSInfoUpdateData
+~~~
+
+Consequently, when processing a FULL commit, recipients MUST verify that the epoch set by the HPQMLSInfoUpdateData matches the actual (new) epoch of both groups.
+
 ## Key Schedule {#key-schedule}
 
 The `hpqmls_psk` exporter key derived in the PQ session MUST be derived in accordance with the Safe Extensions API guidance (see Exporting Secrets in {{I-D.ietf-mls-extensions}}). In particular, it SHALL NOT use the `extension_secret` and MUST be derived using the SafeExportSecret function as defined in Section 4.4 Pre-Shared Keys of {{I-D.ietf-mls-extensions}}. This is to ensure forward secrecy guarantees (see {{security-considerations}}).
@@ -289,11 +317,52 @@ DeriveSecret(., "psk")
     traditional session using the safe extensions API DeriveExtensionSecret.
 ~~~
 
+
 To signal the injection of the PSK derived from the PQ group into the key schedule of the T group, each T group commit that is part of a FULL commit MUST include a PreSharedKey proposal with `psk_type = application`, `component_id = XXX` and `psk_id = hpqmls_psk_id`.
 
 The `hpqmls_exporter` MUST be deleted after both the `hpqmls_psk_id` and the `hpqmls_psk` were derived.
 
 TODO: Replace occurences of XXX with the Component ID of this combiner.
+
+# Wire formats
+
+Operating two groups in conjunction requires that certain data are sent over the wire in duplictate, for example, two commit messages in the case of a FULL commit. This is made easier through the following wire formats. The GroupContext of both the PQ and the T group MUST include the `required_wire_formats` extension listing the following wire formats.
+
+~~~
+struct {
+  KeyPackage t_key_package;
+  KeyPackage pq_key_package;
+} HPQMLSKeyPackage
+
+struct {
+  MLSPublicMessage t_message;
+  MLSPublicMessage pq_message;
+} HPQMLSPublicMessage
+
+struct {
+  MLSPrivateMessage t_message;
+  MLSPrivateMessage pq_message;
+} HPQMLSPrivateMessage
+
+struct {
+  Welcome t_welcome;
+  Welcome pq_welcome;
+} HPQMLSWelcome
+
+struct {
+  GroupInfo t_group_info;
+  GroupInfo pq_group_info;
+} HPQMLSGroupInfo
+
+struct {
+  PartialGroupInfo t_group_info;
+  PartialGroupInfo pq_group_info;
+} HPQMLSPartialGroupInfo
+~~~
+
+Where PartialGroupInfo is defined in Section 4 of {{!I-D.mahy-mls-ratchet-tree-options}}. Messages in HPQMLSPrivateMessage MUST NOT be of content type `application`.
+
+TODO: IANA considerations
 
 # Cryptographic Objects
 
