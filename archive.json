@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-10-02T01:27:37.130677+00:00",
+  "timestamp": "2025-10-05T01:44:13.553727+00:00",
   "repo": "mlswg/mls-combiner",
   "labels": [
     {
@@ -49,7 +49,64 @@
       "color": "ffffff"
     }
   ],
-  "issues": [],
+  "issues": [
+    {
+      "number": 5,
+      "id": "I_kwDONZ9R687PQ-mA",
+      "title": "\"combiner\" is very confusing in the context of traditional and PQ algorithms",
+      "url": "https://github.com/mlswg/mls-combiner/issues/5",
+      "state": "OPEN",
+      "author": "rohanmahy",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "In the context of traditional and PQ KEMs and signature algorithms, a \"combiner\" is already strongly associated with a single algorithm which present a single algorithm (ex: a KEM) which combiners both a traditional and a PQ algorithm within a single MLS group. \n\nI suggest \"group hybridizer\".",
+      "createdAt": "2025-10-02T12:27:40Z",
+      "updatedAt": "2025-10-02T16:15:04Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "xisentian",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Very much agree with the sentiment and we do intend to change the name. \n\nAt the last IETF, others suggested 'Flexible Amortized Combiner' and 'MLS Combiner'. We can add 'group hybridizer' to the list for consideration by the WG. ",
+          "createdAt": "2025-10-02T16:15:04Z",
+          "updatedAt": "2025-10-02T16:15:04Z"
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "id": "I_kwDONZ9R687PUTZZ",
+      "title": "Extension updates inconsistent with draft proposal",
+      "url": "https://github.com/mlswg/mls-combiner/issues/6",
+      "state": "OPEN",
+      "author": "bitbltr",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "I don't believe the section [Extension updates and validation](https://github.com/mlswg/mls-combiner/blob/main/draft-ietf-mls-combiner.md) is consistent with the AppDataUpdate proposal logic outlined in   https://datatracker.ietf.org/doc/draft-ietf-mls-extensions/\n\nPer Section 4.7 of draft-ietf-mls-extensions: \"The application logic returns either an opaque value new_data that will be stored as the new application data for this component, or else an indication that it considers this update invalid.\"\n\nI read this as the AppDataUpdate contains an opaque value that replaces the entire value for that Component ID. Whereas this proposal includes application logic to update just a particular field within the opaque value. This will necessitate special-casing of this data update logic, rather than the consistent behavior of replacing the opaque value.\n\nTo be consistent, the full HPQMLSInfo struct should be contained in the AppDataUpdate for the Component ID.",
+      "createdAt": "2025-10-02T16:50:32Z",
+      "updatedAt": "2025-10-02T16:50:32Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 7,
+      "id": "I_kwDONZ9R687PU1u4",
+      "title": "Secret used in PSK derivation",
+      "url": "https://github.com/mlswg/mls-combiner/issues/7",
+      "state": "OPEN",
+      "author": "xisentian",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Reminder to revisit the use of `epoch_secret` to derive the PSK as it is usually not directly accessible (see PR #3). ",
+      "createdAt": "2025-10-02T17:35:10Z",
+      "updatedAt": "2025-10-02T17:35:10Z",
+      "closedAt": null,
+      "comments": []
+    }
+  ],
   "pulls": [
     {
       "number": 1,
@@ -177,24 +234,26 @@
       "id": "PR_kwDONZ9R686nwu-S",
       "title": "Describe how PSK and PSK ID are derived",
       "url": "https://github.com/mlswg/mls-combiner/pull/3",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "kkohbrok",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2025-09-10T08:04:25Z",
-      "updatedAt": "2025-09-15T06:58:04Z",
+      "updatedAt": "2025-10-02T17:33:03Z",
       "baseRepository": "mlswg/mls-combiner",
       "baseRefName": "main",
-      "baseRefOid": "ad18d6a7d6df44bf66d72a59c835db87af414f9e",
+      "baseRefOid": "ad7aa13be027f1b88a9f80dcc0780594c2411399",
       "headRepository": "kkohbrok/mls-combiner",
       "headRefName": "konrad/psk_id",
-      "headRefOid": "75019d6ab42f784d1910fd36e670d39e0ce09b5c",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "41080422183a213e2f79f12488c95c7276f14933",
+      "closedAt": "2025-10-02T16:42:32Z",
+      "mergedAt": "2025-10-02T16:42:32Z",
+      "mergedBy": "xisentian",
+      "mergeCommit": {
+        "oid": "c9d30d3c581e28f2ec3db21f2637f2e43132e8d7"
+      },
       "comments": [
         {
           "author": "bitbltr",
@@ -230,9 +289,30 @@
           "body": "I don't have a strong opinion on how to derive the PSK ID. It just seemed convenient to derive the PSK and its ID from the same (FS) secret. Functionally it shouldn't matter much, as you rightfully point out that the PSK ID is just an administrative identifier that the group members just need to agree on. Maybe the authors want to weigh in here.",
           "createdAt": "2025-09-15T06:58:04Z",
           "updatedAt": "2025-09-15T06:58:04Z"
+        },
+        {
+          "author": "xisentian",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I agree that the PSK should be derived from a secret other than `epoch_secret` too - commenting here as a reminder to address this. ",
+          "createdAt": "2025-10-02T17:33:03Z",
+          "updatedAt": "2025-10-02T17:33:03Z"
         }
       ],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDONZ9R687Ea-dw",
+          "commit": {
+            "abbreviatedOid": "75019d6"
+          },
+          "author": "xisentian",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Agree with changes, the nomenclature used to describe PSK generation is based on an older version of MLS Safe Extensions draft. ",
+          "createdAt": "2025-10-02T16:23:51Z",
+          "updatedAt": "2025-10-02T16:23:51Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 4,
