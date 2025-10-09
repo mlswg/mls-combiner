@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-10-07T01:36:12.831345+00:00",
+  "timestamp": "2025-10-09T01:36:47.076551+00:00",
   "repo": "mlswg/mls-combiner",
   "labels": [
     {
@@ -86,7 +86,7 @@
       "labels": [],
       "body": "I don't believe the section [Extension updates and validation](https://github.com/mlswg/mls-combiner/blob/main/draft-ietf-mls-combiner.md) is consistent with the AppDataUpdate proposal logic outlined in   https://datatracker.ietf.org/doc/draft-ietf-mls-extensions/\n\nPer Section 4.7 of draft-ietf-mls-extensions: \"The application logic returns either an opaque value new_data that will be stored as the new application data for this component, or else an indication that it considers this update invalid.\"\n\nI read this as the AppDataUpdate contains an opaque value that replaces the entire value for that Component ID. Whereas this proposal includes application logic to update just a particular field within the opaque value. This will necessitate special-casing of this data update logic, rather than the consistent behavior of replacing the opaque value.\n\nTo be consistent, the full HPQMLSInfo struct should be contained in the AppDataUpdate for the Component ID.",
       "createdAt": "2025-10-02T16:50:32Z",
-      "updatedAt": "2025-10-06T06:34:53Z",
+      "updatedAt": "2025-10-08T06:18:34Z",
       "closedAt": null,
       "comments": [
         {
@@ -95,6 +95,20 @@
           "body": "I don't believe that's correct. To purpose of AppDataUpdate as specified in Section 4.7 of the extension draft is exactly to avoid having to send the entire content of the extension. From the second paragraph of said section:\n\n> The AppDataUpdate proposal allows the app_data_dictionary extension to be updated without these costs. Instead of sending the whole value of the extension, it sends only an update, which is interpreted by the application to provide the new content for the app_data_dictionary extension.\n\nThe idea is that the application gets the content of the proposal from which it creates the new content of the extension. If the proposal always contained the complete extension data we wouldn't need any extension logic.\n\nIf course in this particular case we could still decide that we always want to send the whole HPQMLSInfo struct, but that just seems unnecessary. Even sending the PQ epoch is technically unnecessary as it always just increases by one.\n\nThe logic of updating the epoch of HPQMLSInfo is simple enough. Can you help me understand why you'd want to always replace the whole struct?",
           "createdAt": "2025-10-06T06:34:53Z",
           "updatedAt": "2025-10-06T06:34:53Z"
+        },
+        {
+          "author": "bitbltr",
+          "authorAssociation": "NONE",
+          "body": "I disagree with the level of granularity you're proposing. It would lead to a cardinality explosion of logic for every Component. The way I read it is the app_data_dictionary is a collection of entries, and the AppDataUpdate is a way to update individual entries instead of having to send the entire dictionary collection. You're taking it a step further and trying to update sub-entries within an individual entry, which I believe is untenable and not the intended scope.",
+          "createdAt": "2025-10-07T15:31:26Z",
+          "updatedAt": "2025-10-07T15:31:26Z"
+        },
+        {
+          "author": "kkohbrok",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I agree that it can be interpreted both ways. Since we're arguing about the content of another draft at this point, I propose we continue the discussion there. I filed an issue in the corresponding GH repo: https://github.com/mlswg/mls-extensions/issues/74",
+          "createdAt": "2025-10-08T06:18:34Z",
+          "updatedAt": "2025-10-08T06:18:34Z"
         }
       ]
     },
