@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta content="Common,Latin" name="scripts">
 <meta content="initial-scale=1.0" name="viewport">
-<title>Flexible Hybrid PQ MLS Combiner</title>
+<title>Amortized PQ MLS Combiner</title>
 <meta content="Joël Alwen" name="author">
 <meta content="Britta Hale" name="author">
 <meta content="Marta Mularczyk" name="author">
 <meta content="Xisen Tian" name="author">
 <meta content="
-       This document describes a protocol for combining a traditional MLS session with a post-quantum (PQ) MLS session to achieve flexible and efficient hybrid PQ confidentiality and authenticity that amortizes the computational cost of PQ Key Encapsulation Mechanisms and Digital Signature Algorithms. Specifically, we describe how to use the exporter secret of a PQ MLS session, i.e., an MLS session using a PQ ciphersuite, to seed PQ guarantees into an MLS session using a traditional ciphersuite. By supporting on-demand traditional-only key updates (a.k.a. PARTIAL updates) or hybrid-PQ key updates (a.k.a. FULL updates), we can reduce the bandwidth and computational overhead associated with PQ operations while meeting the requirement of frequent key rotations. 
+       This document describes a protocol for combining a traditional MLS session with a post-quantum (PQ) MLS session to achieve flexible and efficient amortized PQ confidentiality and authenticity that amortizes the computational cost of PQ Key Encapsulation Mechanisms and Digital Signature Algorithms. Specifically, we describe how to use the exporter secret of a PQ MLS session, i.e., an MLS session using a PQ ciphersuite, to seed PQ guarantees into an MLS session using a traditional ciphersuite. By supporting on-demand traditional-only key updates (a.k.a. PARTIAL updates) or hybrid-PQ key updates (a.k.a. FULL updates), we can reduce the bandwidth and computational overhead associated with PQ operations while meeting the requirement of frequent key rotations. 
     " name="description">
 <meta content="xml2rfc 3.30.2" name="generator">
 <meta content="security" name="keyword">
@@ -31,7 +31,7 @@
     PyYAML 6.0.2
     requests 2.32.5
     setuptools 80.9.0
-    wcwidth 0.2.13
+    wcwidth 0.2.14
 -->
 <link href="draft-ietf-mls-combiner.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1049,12 +1049,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <table class="ears">
 <thead><tr>
 <td class="left">Internet-Draft</td>
-<td class="center">HPQMLS</td>
+<td class="center">APQ-MLS</td>
 <td class="right">October 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Alwen, et al.</td>
-<td class="center">Expires 5 April 2026</td>
+<td class="center">Expires 15 April 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1067,12 +1067,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-mls-combiner-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-10-02" class="published">2 October 2025</time>
+<time datetime="2025-10-12" class="published">12 October 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-04-05">5 April 2026</time></dd>
+<dd class="expires"><time datetime="2026-04-15">15 April 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1094,10 +1094,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </dd>
 </dl>
 </div>
-<h1 id="title">Flexible Hybrid PQ MLS Combiner</h1>
+<h1 id="title">Amortized PQ MLS Combiner</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">This document describes a protocol for combining a traditional MLS session with a post-quantum (PQ) MLS session to achieve flexible and efficient hybrid PQ confidentiality and authenticity that amortizes the computational cost of PQ Key Encapsulation Mechanisms and Digital Signature Algorithms. Specifically, we describe how to use the exporter secret of a PQ MLS session, i.e., an MLS session using a PQ ciphersuite, to seed PQ guarantees into an MLS session using a traditional ciphersuite. By supporting on-demand traditional-only key updates (a.k.a. PARTIAL updates) or hybrid-PQ key updates (a.k.a. FULL updates), we can reduce the bandwidth and computational overhead associated with PQ operations while meeting the requirement of frequent key rotations.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">This document describes a protocol for combining a traditional MLS session with a post-quantum (PQ) MLS session to achieve flexible and efficient amortized PQ confidentiality and authenticity that amortizes the computational cost of PQ Key Encapsulation Mechanisms and Digital Signature Algorithms. Specifically, we describe how to use the exporter secret of a PQ MLS session, i.e., an MLS session using a PQ ciphersuite, to seed PQ guarantees into an MLS session using a traditional ciphersuite. By supporting on-demand traditional-only key updates (a.k.a. PARTIAL updates) or hybrid-PQ key updates (a.k.a. FULL updates), we can reduce the bandwidth and computational overhead associated with PQ operations while meeting the requirement of frequent key rotations.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1134,7 +1134,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 5 April 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 15 April 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1327,14 +1327,14 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
       <h2 id="name-the-combiner-protocol-execu">
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-the-combiner-protocol-execu" class="section-name selfRef">The Combiner Protocol Execution</a>
       </h2>
-<p id="section-4-1">The hybrid PQ MLS (HPQMLS) combiner protocol runs two MLS sessions in parallel, synchronizing their group memberships. The two sessions are combined by exporting a secret from the PQ session and importing it as a Pre-Shared Key (PSK) into the traditional session. This combination process is mandatory for Commits of Add and Remove proposals in order to maintain synchronization between the sessions. However, it is optional for any other Commits (e.g. to allow for less computationally expensive traditional key rotations). Due to the higher computational costs and output sizes of PQ KEM (and signature) operations, it may be desirable to issue PQ combined (a.k.a. FULL) Commits less frequently than the traditional-only (a.k.a. PARTIAL) Commits. Since FULL Commits introduce PQ security into the MLS key schedule, the overall key schedule remains PQ-secure even when PARTIAL Commits are used. The FULL Commit rate establishes the post-quantum Post-Compromise Security (PCS) window, while the PARTIAL Commit rate can tighten the traditional PCS window even while maintaining PQ security more generally. The combiner protocol design treats both sessions as black-box interfaces so we only highlight operations requiring synchronizations in this document.<a href="#section-4-1" class="pilcrow">¶</a></p>
-<p id="section-4-2">The default way to start a HPQMLS combined session is to create a PQ MLS session and then start a traditional MLS session with the exported PSK from the PQ session, as previously mentioned. Alternatively, a combined session can also be created after a traditional MLS session has already been running. This is done through creating a PQ MLS session with the same group members, sending a Welcome message containing the HPQMLSInfo struct in the GroupContext, and then making a FULL Commit as described in in the <a href="#commit-flow" class="auto internal xref">Section 4.1</a> section.<a href="#section-4-2" class="pilcrow">¶</a></p>
+<p id="section-4-1">The Amortized PQ MLS (APQ-MLS) combiner protocol runs two MLS sessions in parallel, synchronizing their group memberships. The two sessions are combined by exporting a secret from the PQ session and importing it as a Pre-Shared Key (PSK) into the traditional session. This combination process is mandatory for Commits of Add and Remove proposals in order to maintain synchronization between the sessions. However, it is optional for any other Commits (e.g. to allow for less computationally expensive traditional key rotations). Due to the higher computational costs and output sizes of PQ KEM (and signature) operations, it may be desirable to issue PQ combined (a.k.a. FULL) Commits less frequently than the traditional-only (a.k.a. PARTIAL) Commits. Since FULL Commits introduce PQ security into the MLS key schedule, the overall key schedule remains PQ-secure even when PARTIAL Commits are used. The FULL Commit rate establishes the post-quantum Post-Compromise Security (PCS) window, while the PARTIAL Commit rate can tighten the traditional PCS window even while maintaining PQ security more generally. The combiner protocol design treats both sessions as black-box interfaces so we only highlight operations requiring synchronizations in this document.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-2">The default way to start a APQ-MLS combined session is to create a PQ MLS session and then start a traditional MLS session with the exported PSK from the PQ session, as previously mentioned. Alternatively, a combined session can also be created after a traditional MLS session has already been running. This is done through creating a PQ MLS session with the same group members, sending a Welcome message containing the APQInfo struct in the GroupContext, and then making a FULL Commit as described in in the <a href="#commit-flow" class="auto internal xref">Section 4.1</a> section.<a href="#section-4-2" class="pilcrow">¶</a></p>
 <div id="commit-flow">
 <section id="section-4.1">
         <h3 id="name-commit-flow">
 <a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-commit-flow" class="section-name selfRef">Commit Flow</a>
         </h3>
-<p id="section-4.1-1">Commits to proposals <span class="bcp14">MAY</span> be <em>PARTIAL</em> or <em>FULL</em>. For a PARTIAL Commit, only the traditional session's epoch is updated following the Propose-Commit sequence from Section 12 of <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>. For a FULL Commit, a Commit is first applied to the PQ session and another Commit is applied to the traditional session using a PSK derived from the PQ session using the DeriveExtensionSecret and <code>hpqmls_psk</code> label (see <a href="#key-schedule" class="auto internal xref">Section 6.2</a>). To ensure the correct PSK is imported into the traditional session, the sender includes information about the PSK in a PreSharedKey proposal for the traditional session's Commit list of proposals. The information about the exported PSK is captured (shown '=' in the figures below for illustration purposes) by the PreSharedKeyID struct as detailed in <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>. Receivers process the PQ Commit to derive a new epoch in the PQ session and then the traditional Commit (which also includes the PSK proposal) to derive the new epoch in the traditional session.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1-1">Commits to proposals <span class="bcp14">MAY</span> be <em>PARTIAL</em> or <em>FULL</em>. For a PARTIAL Commit, only the traditional session's epoch is updated following the Propose-Commit sequence from Section 12 of <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>. For a FULL Commit, a Commit is first applied to the PQ session and another Commit is applied to the traditional session using a PSK derived from the PQ session using the DeriveExtensionSecret and <code>apq_psk</code> label (see <a href="#key-schedule" class="auto internal xref">Section 6.2</a>). To ensure the correct PSK is imported into the traditional session, the sender includes information about the PSK in a PreSharedKey proposal for the traditional session's Commit list of proposals. The information about the exported PSK is captured (shown '=' in the figures below for illustration purposes) by the PreSharedKeyID struct as detailed in <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>. Receivers process the PQ Commit to derive a new epoch in the PQ session and then the traditional Commit (which also includes the PSK proposal) to derive the new epoch in the traditional session.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-4.1-2">
 <pre>
                                                                         Group
@@ -1342,7 +1342,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
     |                                        |                            |
     | Commit'()                              |                            |
     |    PresharedKeyID =                    |                            |
-    |    DeriveExtensionSecret('hpqmls_psk') |                            |
+    |    DeriveExtensionSecret('apq_psk') |                            |
     | Commit(PreSharedKeyID)                 |                            |
     |--------------------------------------------------------------------&gt;|
     |                                        |                            |
@@ -1374,7 +1374,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
     |                                        |                                |
     | Commit'(Upd')                          |                                |
     |    PresharedKeyID =                    |                                |
-    |    DeriveExtensionSecret('hpqmls_psk') |                                |
+    |    DeriveExtensionSecret('apq_psk') |                                |
     | Commit(Upd, PreSharedKeyID)            |                                |
     |------------------------------------------------------------------------&gt;|
     |                                        |                                |
@@ -1408,7 +1408,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
     |                                          |              |                                           |
     | Commit'(Add'(KeyPackageB'))              |              |                                           |
     |   PresharedKeyID =                       |              |                                           |
-    |   DeriveExtensionSecret('hpqmls_psk')    |              |                                           |
+    |   DeriveExtensionSecret('apq_psk')    |              |                                           |
     | Commit(Add(KeyPackageB), PreSharedKeyID) |              |                                           |
     +----------------------------------------------------------------------------------------------------&gt;|
     |                                          |              |                                           |
@@ -1431,7 +1431,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           <h4 id="name-welcome-message-validation">
 <a href="#section-4.2.1" class="section-number selfRef">4.2.1. </a><a href="#name-welcome-message-validation" class="section-name selfRef">Welcome Message Validation</a>
           </h4>
-<p id="section-4.2.1-1">Since a client must join two sessions, the Welcome messages it receives to each session must indicate that it is not sufficient to join only one or the other. Therefore, the HPQMLSInfo struct indicating the GroupID and ciphersuites of the two sessions <span class="bcp14">MUST</span> be included in the Welcome message via serialization as a GroupContext Extension in order to validate joining the combined sessions. All members <span class="bcp14">MUST</span> verify group membership is consistent in both sessions after a join and the new member <span class="bcp14">MUST</span> issue a FULL Commit as described in Fig 1b.<a href="#section-4.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.1-1">Since a client must join two sessions, the Welcome messages it receives to each session must indicate that it is not sufficient to join only one or the other. Therefore, the APQInfo struct indicating the GroupID and ciphersuites of the two sessions <span class="bcp14">MUST</span> be included in the Welcome message via serialization as a GroupContext Extension in order to validate joining the combined sessions. All members <span class="bcp14">MUST</span> verify group membership is consistent in both sessions after a join and the new member <span class="bcp14">MUST</span> issue a FULL Commit as described in Fig 1b.<a href="#section-4.2.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="external-joins">
@@ -1439,7 +1439,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           <h4 id="name-external-joins">
 <a href="#section-4.2.2" class="section-number selfRef">4.2.2. </a><a href="#name-external-joins" class="section-name selfRef">External Joins</a>
           </h4>
-<p id="section-4.2.2-1">External joins are used by members who join a group without being explicitly added (via an Add-Commit sequence) by another existing member. The external user <span class="bcp14">MUST</span> join both the PQ session and the traditional session. As stated previously, the GroupInfo used to create the External Commit <span class="bcp14">MUST</span> contain the HPQMLSInfo struct. After joining, the new member <span class="bcp14">MUST</span> issue a FULL Commit as described in Fig 1b.<a href="#section-4.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.2-1">External joins are used by members who join a group without being explicitly added (via an Add-Commit sequence) by another existing member. The external user <span class="bcp14">MUST</span> join both the PQ session and the traditional session. As stated previously, the GroupInfo used to create the External Commit <span class="bcp14">MUST</span> contain the APQInfo struct. After joining, the new member <span class="bcp14">MUST</span> issue a FULL Commit as described in Fig 1b.<a href="#section-4.2.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1457,7 +1457,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
         <h3 id="name-application-messages">
 <a href="#section-4.4" class="section-number selfRef">4.4. </a><a href="#name-application-messages" class="section-name selfRef">Application Messages</a>
         </h3>
-<p id="section-4.4-1">HPQMLS combiner provides PQ security to the traditional MLS session. Application messages are therefore only sent in the traditional session using the <code>encryption_secret</code> provided by the key schedule of the traditional session according to Section 15 of <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
+<p id="section-4.4-1">APQ-MLS combiner provides PQ security to the traditional MLS session. Application messages are therefore only sent in the traditional session using the <code>encryption_secret</code> provided by the key schedule of the traditional session according to Section 15 of <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1467,7 +1467,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
       <h2 id="name-modes-of-operation">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-modes-of-operation" class="section-name selfRef">Modes of Operation</a>
       </h2>
-<p id="section-5-1">Security needs vary by organizations and system-specific risk tolerance and/or constraints. While this combiner protocol targets combining a PQ session and a traditional session the degree of PQ security may be tuned depending on the use-case: i.e., as PQ/T Confidentiality Only or both PQ/T Confidentiality and PQ/T Authenticity. For PQ/T Confidentiality Only, the PQ session <span class="bcp14">MUST</span> use a PQ KEM, while for PQ authenticity, the PQ session <span class="bcp14">MUST</span> use both a PQ KEM and a PQ DSA. The modes of operation are specified by the <code>mode</code> flag in HPQMLSInfo struct and are listed below.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-1">Security needs vary by organizations and system-specific risk tolerance and/or constraints. While this combiner protocol targets combining a PQ session and a traditional session the degree of PQ security may be tuned depending on the use-case: i.e., as PQ/T Confidentiality Only or both PQ/T Confidentiality and PQ/T Authenticity. For PQ/T Confidentiality Only, the PQ session <span class="bcp14">MUST</span> use a PQ KEM, while for PQ authenticity, the PQ session <span class="bcp14">MUST</span> use both a PQ KEM and a PQ DSA. The modes of operation are specified by the <code>mode</code> flag in APQInfo struct and are listed below.<a href="#section-5-1" class="pilcrow">¶</a></p>
 <div id="pqt-confidentiality-only">
 <section id="section-5.1">
         <h3 id="name-pq-t-confidentiality-only">
@@ -1493,12 +1493,12 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
       <h2 id="name-extension-requirements-to-m">
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-extension-requirements-to-m" class="section-name selfRef">Extension Requirements to MLS</a>
       </h2>
-<p id="section-6-1">The HPQMLSInfo struct contains characterizing information to signal to users that they are participating in a hybrid session. This is necessary both functionally to allow for group synchronization and as a security measure to prevent downgrading attacks to coax users into parcipating in just one of the two sessions. The <code>group_id</code>, <code>cipher_suite</code>, and <code>epoch</code> from both sessions (<code>t</code> for the traditional session and <code>pq</code> for the PQ session) are used as bookkeeping values to validate and synchronize group operations. The <code>mode</code> is a boolean value: <code>0</code> for the default PQ/T Confidentiality Only mode and <code>1</code> for the PQ/T Confidentiality + Authenticity mode.<a href="#section-6-1" class="pilcrow">¶</a></p>
-<p id="section-6-2">The HPQMLSInfo struct conforms to the Safe Extensions API (see <span>[<a href="#I-D.ietf-mls-extensions" class="cite xref">I-D.ietf-mls-extensions</a>]</span>). Recall that an extension is called <em>safe</em> if it does not modify base MLS protocol or other MLS extensions beyond using components of the Safe Extension API. This allows security analysis of our HPQMLS Combiner protocol in isolation of the security guarantees of the base MLS protocol to enable composability of guarantees. The HPMLSInfo extension struct <span class="bcp14">SHALL</span> be in the following format:<a href="#section-6-2" class="pilcrow">¶</a></p>
+<p id="section-6-1">The APQInfo struct contains characterizing information to signal to users that they are participating in a hybrid session. This is necessary both functionally to allow for group synchronization and as a security measure to prevent downgrading attacks to coax users into parcipating in just one of the two sessions. The <code>group_id</code>, <code>cipher_suite</code>, and <code>epoch</code> from both sessions (<code>t</code> for the traditional session and <code>pq</code> for the PQ session) are used as bookkeeping values to validate and synchronize group operations. The <code>mode</code> is a boolean value: <code>0</code> for the default PQ/T Confidentiality Only mode and <code>1</code> for the PQ/T Confidentiality + Authenticity mode.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-2">The APQInfo struct conforms to the Safe Extensions API (see <span>[<a href="#I-D.ietf-mls-extensions" class="cite xref">I-D.ietf-mls-extensions</a>]</span>). Recall that an extension is called <em>safe</em> if it does not modify base MLS protocol or other MLS extensions beyond using components of the Safe Extension API. This allows security analysis of our APQ-MLS Combiner protocol in isolation of the security guarantees of the base MLS protocol to enable composability of guarantees. The HPMLSInfo extension struct <span class="bcp14">SHALL</span> be in the following format:<a href="#section-6-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-6-3">
 <pre>
       struct{
-          ExtensionType HPQMLS;
+          ExtensionType APQ;
           opaque extension_data&lt;V&gt;;
           } ExtensionContent;
 
@@ -1510,7 +1510,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           CipherSuite pq_cipher_suite;
           uint64 t_epoch;
           uint64 pq_epoch;
-      } HPQMLSInfo
+      } APQInfo
 </pre><a href="#section-6-3" class="pilcrow">¶</a>
 </div>
 <div id="extension-updates-and-validation">
@@ -1518,7 +1518,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
         <h3 id="name-extension-updates-and-valid">
 <a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-extension-updates-and-valid" class="section-name selfRef">Extension updates and validation</a>
         </h3>
-<p id="section-6.1-1">As mentioned in <a href="#welcome-message-validation" class="auto internal xref">Section 4.2.1</a>, clients <span class="bcp14">MUST</span> validate that the information in the HPQMLSInfo extensions of both T and PQ group match. As the HPQMLSInfo contains the epoch of both groups it <span class="bcp14">MUST</span> be updated in both groups when doing a FULL commit. Consequently, when doing a FULL commit in both commits <span class="bcp14">MUST</span> contain an AppDataUpdate proposal with <code>op</code> set to <code>update</code>. The <code>update</code> payload <span class="bcp14">MUST</span> update the epochs to the new epochs of both groups (note that the epoch of the T group may increment by more than one if one or more T only commits have been performed in the meantime).<a href="#section-6.1-1" class="pilcrow">¶</a></p>
+<p id="section-6.1-1">As mentioned in <a href="#welcome-message-validation" class="auto internal xref">Section 4.2.1</a>, clients <span class="bcp14">MUST</span> validate that the information in the APQInfo extensions of both T and PQ group match. As the HPQMLSInfo contains the epoch of both groups it <span class="bcp14">MUST</span> be updated in both groups when doing a FULL commit. Consequently, when doing a FULL commit in both commits <span class="bcp14">MUST</span> contain an AppDataUpdate proposal with <code>op</code> set to <code>update</code>. The <code>update</code> payload <span class="bcp14">MUST</span> update the epochs to the new epochs of both groups (note that the epoch of the T group may increment by more than one if one or more T only commits have been performed in the meantime).<a href="#section-6.1-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-6.1-2">
 <pre>
 enum {
@@ -1526,17 +1526,17 @@ enum {
   t_epoch(1),
   pq_epoch(1),
   (255)
-} HPQMLSInfoUpdate
+} APQInfoUpdate
 
 struct {
-  HPQMLSInfoUpdate update;
-  select (HPQMLSInfoUpdate.update)
+  APQInfoUpdate update;
+  select (APQInfoUpdate.update)
     case epoch:
        uint64 epoch;
-} HPQMLSInfoUpdateData
+} APQInfoUpdateData
 </pre><a href="#section-6.1-2" class="pilcrow">¶</a>
 </div>
-<p id="section-6.1-3">Consequently, when processing a FULL commit, recipients <span class="bcp14">MUST</span> verify that the epoch set by the HPQMLSInfoUpdateData matches the actual (new) epoch of both groups.<a href="#section-6.1-3" class="pilcrow">¶</a></p>
+<p id="section-6.1-3">Consequently, when processing a FULL commit, recipients <span class="bcp14">MUST</span> verify that the epoch set by the APQInfoUpdateData matches the actual (new) epoch of both groups.<a href="#section-6.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="key-schedule">
@@ -1544,8 +1544,8 @@ struct {
         <h3 id="name-key-schedule">
 <a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-key-schedule" class="section-name selfRef">Key Schedule</a>
         </h3>
-<p id="section-6.2-1">The <code>hpqmls_psk</code> exporter key derived in the PQ session <span class="bcp14">MUST</span> be derived in accordance with the Safe Extensions API guidance (see Exporting Secrets in <span>[<a href="#I-D.ietf-mls-extensions" class="cite xref">I-D.ietf-mls-extensions</a>]</span>). In particular, it <span class="bcp14">SHALL NOT</span> use the <code>extension_secret</code> and <span class="bcp14">MUST</span> be derived using the SafeExportSecret function as defined in Section 4.4 Pre-Shared Keys of <span>[<a href="#I-D.ietf-mls-extensions" class="cite xref">I-D.ietf-mls-extensions</a>]</span>. This is to ensure forward secrecy guarantees (see <a href="#security-considerations" class="auto internal xref">Section 9</a>).<a href="#section-6.2-1" class="pilcrow">¶</a></p>
-<p id="section-6.2-2">Even though the <code>hpqmls_psk</code> PSK is not sent over the wire, members of the HPQMLS session must agree on the value of which PSK to use. In alignment with the Safe Extensions API policy for PSKs, HPQMLS PSKs used <span class="bcp14">SHALL</span> set <code>PSKType = 3</code> and <code>component_id = XXX</code> (see Section 4.5 Pre-Shared Keys of <span>[<a href="#I-D.ietf-mls-extensions" class="cite xref">I-D.ietf-mls-extensions</a>]</span>).<a href="#section-6.2-2" class="pilcrow">¶</a></p>
+<p id="section-6.2-1">The <code>apq_psk</code> exporter key derived in the PQ session <span class="bcp14">MUST</span> be derived in accordance with the Safe Extensions API guidance (see Exporting Secrets in <span>[<a href="#I-D.ietf-mls-extensions" class="cite xref">I-D.ietf-mls-extensions</a>]</span>). In particular, it <span class="bcp14">SHALL NOT</span> use the <code>extension_secret</code> and <span class="bcp14">MUST</span> be derived using the SafeExportSecret function as defined in Section 4.4 Pre-Shared Keys of <span>[<a href="#I-D.ietf-mls-extensions" class="cite xref">I-D.ietf-mls-extensions</a>]</span>. This is to ensure forward secrecy guarantees (see <a href="#security-considerations" class="auto internal xref">Section 9</a>).<a href="#section-6.2-1" class="pilcrow">¶</a></p>
+<p id="section-6.2-2">Even though the <code>apq_psk</code> PSK is not sent over the wire, members of the APQ-MLS session must agree on the value of which PSK to use. In alignment with the Safe Extensions API policy for PSKs, APQ-MLS PSKs used <span class="bcp14">SHALL</span> set <code>PSKType = 3</code> and <code>component_id = XXX</code> (see Section 4.5 Pre-Shared Keys of <span>[<a href="#I-D.ietf-mls-extensions" class="cite xref">I-D.ietf-mls-extensions</a>]</span>).<a href="#section-6.2-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-6.2-3">
 <pre>
       PQ Session                       Traditional Session
@@ -1555,15 +1555,15 @@ struct {
   SafeExportSecret(XXX)
           |
           V
-    hpqmls_exporter
+    apq_exporter
           |
           +--&gt; DeriveSecret(., "psk_id")
-          |    = hpqmls_psk_id
+          |    = apq_psk_id
           V
 DeriveSecret(., "psk")
           |
           V                                   [...]
-     hpqmls_psk                           joiner_secret
+       apq_psk                            joiner_secret
           |                                     |
           |                                     |
           |                                     V
@@ -1584,12 +1584,12 @@ DeriveSecret(., "psk")
                                                 +--&gt; DeriveSecret(., &lt;label&gt;)
                                                 |    = &lt;secret&gt;
                                               [...]
-    Fig 3: The hpqmls_psk of the PQ session is injected into the key schedule of the
+    Fig 3: The apq_psk of the PQ session is injected into the key schedule of the
     traditional session using the safe extensions API DeriveExtensionSecret.
 </pre><a href="#section-6.2-3" class="pilcrow">¶</a>
 </div>
-<p id="section-6.2-4">To signal the injection of the PSK derived from the PQ group into the key schedule of the T group, each T group commit that is part of a FULL commit <span class="bcp14">MUST</span> include a PreSharedKey proposal with <code>psk_type = application</code>, <code>component_id = XXX</code> and <code>psk_id = hpqmls_psk_id</code>.<a href="#section-6.2-4" class="pilcrow">¶</a></p>
-<p id="section-6.2-5">The <code>hpqmls_exporter</code> <span class="bcp14">MUST</span> be deleted after both the <code>hpqmls_psk_id</code> and the <code>hpqmls_psk</code> were derived.<a href="#section-6.2-5" class="pilcrow">¶</a></p>
+<p id="section-6.2-4">To signal the injection of the PSK derived from the PQ group into the key schedule of the T group, each T group commit that is part of a FULL commit <span class="bcp14">MUST</span> include a PreSharedKey proposal with <code>psk_type = application</code>, <code>component_id = XXX</code> and <code>psk_id = apq_psk_id</code>.<a href="#section-6.2-4" class="pilcrow">¶</a></p>
+<p id="section-6.2-5">The <code>apq_exporter</code> <span class="bcp14">MUST</span> be deleted after both the <code>apq_psk_id</code> and the <code>apq_psk</code> were derived.<a href="#section-6.2-5" class="pilcrow">¶</a></p>
 <p id="section-6.2-6">TODO: Replace occurences of XXX with the Component ID of this combiner.<a href="#section-6.2-6" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1606,35 +1606,35 @@ DeriveSecret(., "psk")
 struct {
   KeyPackage t_key_package;
   KeyPackage pq_key_package;
-} HPQMLSKeyPackage
+} APQKeyPackage
 
 struct {
   MLSPublicMessage t_message;
   MLSPublicMessage pq_message;
-} HPQMLSPublicMessage
+} APQPublicMessage
 
 struct {
   MLSPrivateMessage t_message;
   MLSPrivateMessage pq_message;
-} HPQMLSPrivateMessage
+} APQPrivateMessage
 
 struct {
   Welcome t_welcome;
   Welcome pq_welcome;
-} HPQMLSWelcome
+} APQWelcome
 
 struct {
   GroupInfo t_group_info;
   GroupInfo pq_group_info;
-} HPQMLSGroupInfo
+} APQGroupInfo
 
 struct {
   PartialGroupInfo t_group_info;
   PartialGroupInfo pq_group_info;
-} HPQMLSPartialGroupInfo
+} APQPartialGroupInfo
 </pre><a href="#section-7-2" class="pilcrow">¶</a>
 </div>
-<p id="section-7-3">Where PartialGroupInfo is defined in Section 4 of <span>[<a href="#I-D.mahy-mls-ratchet-tree-options" class="cite xref">I-D.mahy-mls-ratchet-tree-options</a>]</span>. Messages in HPQMLSPrivateMessage <span class="bcp14">MUST NOT</span> be of content type <code>application</code>.<a href="#section-7-3" class="pilcrow">¶</a></p>
+<p id="section-7-3">Where PartialGroupInfo is defined in Section 4 of <span>[<a href="#I-D.mahy-mls-ratchet-tree-options" class="cite xref">I-D.mahy-mls-ratchet-tree-options</a>]</span>. Messages in APQPrivateMessage <span class="bcp14">MUST NOT</span> be of content type <code>application</code>.<a href="#section-7-3" class="pilcrow">¶</a></p>
 <p id="section-7-4">TODO: IANA considerations<a href="#section-7-4" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1648,13 +1648,13 @@ struct {
         <h3 id="name-cipher-suites">
 <a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-cipher-suites" class="section-name selfRef">Cipher Suites</a>
         </h3>
-<p id="section-8.1-1">There are no changes to <em>how</em> cipher suites are used to perform group key computations from <a href="https://www.rfc-editor.org/rfc/rfc9420#name-cipher-suites">RFC9420</a>. However, the choice of <em>which</em> primitives are used by the traditional and PQ subsessions must be explicitly stated by the CipherSuite objects within <code>HPQMLSInfo</code>. So long as the traditional session only uses classical primitives and the PQ session uses PQ primitives for KEM, a HPQMLS session is valid. Specifically, the PQ primitives for HPQMLS must be 'pure' (fully) PQ: PQ cost is already being amoritized at the protocol level so allowing hybrid PQ cipher suites to be used in the PQ session only adds extra overhead and complexity. Furthermore, the <code>pq_cipher_suite</code> may contain a classical digital signature algorithm used if <code>mode</code> is set to 0 (PQ Confidentiality-Only) but <span class="bcp14">MUST</span> be fully PQ if <code>mode</code> is set to 1 (PQ Confidentiality+Authenticity). These cipher suite combinations and modes <span class="bcp14">MUST</span> not be toggled or modified after a HPQMLS session has commenced. Clients <span class="bcp14">MUST</span> reject a HPQMLS session with invalid or duplicate cipher suites (e.g. two traditional cipher suites).<a href="#section-8.1-1" class="pilcrow">¶</a></p>
+<p id="section-8.1-1">There are no changes to <em>how</em> cipher suites are used to perform group key computations from <a href="https://www.rfc-editor.org/rfc/rfc9420#name-cipher-suites">RFC9420</a>. However, the choice of <em>which</em> primitives are used by the traditional and PQ subsessions must be explicitly stated by the CipherSuite objects within <code>APQInfo</code>. So long as the traditional session only uses classical primitives and the PQ session uses PQ primitives for KEM, a APQ-MLS session is valid. Specifically, the PQ primitives for APQ-MLS must be 'pure' (fully) PQ: PQ cost is already being amoritized at the protocol level so allowing hybrid PQ cipher suites to be used in the PQ session only adds extra overhead and complexity. Furthermore, the <code>pq_cipher_suite</code> may contain a classical digital signature algorithm used if <code>mode</code> is set to 0 (PQ Confidentiality-Only) but <span class="bcp14">MUST</span> be fully PQ if <code>mode</code> is set to 1 (PQ Confidentiality+Authenticity). These cipher suite combinations and modes <span class="bcp14">MUST</span> not be toggled or modified after a APQ-MLS session has commenced. Clients <span class="bcp14">MUST</span> reject a APQ-MLS session with invalid or duplicate cipher suites (e.g. two traditional cipher suites).<a href="#section-8.1-1" class="pilcrow">¶</a></p>
 <div id="key-encapsulation-mechanism">
 <section id="section-8.1.1">
           <h4 id="name-key-encapsulation-mechanism">
 <a href="#section-8.1.1" class="section-number selfRef">8.1.1. </a><a href="#name-key-encapsulation-mechanism" class="section-name selfRef">Key Encapsulation Mechanism</a>
           </h4>
-<p id="section-8.1.1-1">For HPQMLS sessions, the PQ subsession <span class="bcp14">MUST</span> use a Key Encapsulation Mechanism (KEM) that is standardized by NIST for post-quantum cryptography. Specifically, only KEMs that have been selected and published by NIST as part of their post-quantum cryptography standardization process (e.g., ML-KEM as specified in FIPS 203) are permitted for use in the PQ session. The use of experimental, non-standardized, or hybrid KEMs in the PQ session is <span class="bcp14">NOT RECOMMENDED</span> and <span class="bcp14">MUST</span> be rejected by compliant clients. This requirement ensures interoperability and a consistent security baseline across all HPQMLS deployments.<a href="#section-8.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-8.1.1-1">For APQ-MLS sessions, the PQ subsession <span class="bcp14">MUST</span> use a Key Encapsulation Mechanism (KEM) that is standardized by NIST for post-quantum cryptography. Specifically, only KEMs that have been selected and published by NIST as part of their post-quantum cryptography standardization process (e.g., ML-KEM as specified in FIPS 203) are permitted for use in the PQ session. The use of experimental, non-standardized, or hybrid KEMs in the PQ session is <span class="bcp14">NOT RECOMMENDED</span> and <span class="bcp14">MUST</span> be rejected by compliant clients. This requirement ensures interoperability and a consistent security baseline across all APQ-MLS deployments.<a href="#section-8.1.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="signing">
@@ -1662,7 +1662,7 @@ struct {
           <h4 id="name-signing">
 <a href="#section-8.1.2" class="section-number selfRef">8.1.2. </a><a href="#name-signing" class="section-name selfRef">Signing</a>
           </h4>
-<p id="section-8.1.2-1">For HPQMLS sessions, the choice of digital signature algorithm in the PQ subsession depends on the selected mode of operation. If the <code>mode</code> is set to 1 (PQ Confidentiality+Authenticity), the PQ session <span class="bcp14">MUST</span> use a digital signature algorithm that is standardized by NIST for post-quantum cryptography, such as ML-DSA as specified in FIPS 204. The use of experimental, non-standardized, or hybrid signature algorithms in the PQ session is <span class="bcp14">NOT RECOMMENDED</span> and <span class="bcp14">MUST</span> be rejected by compliant clients in this mode. If the <code>mode</code> is set to 0 (PQ Confidentiality-Only), the PQ session <span class="bcp14">MAY</span> use a classical digital signature algorithm, but the use of a NIST-standardized PQ signature algorithm is <span class="bcp14">RECOMMENDED</span>. These requirements ensure that the authenticity guarantees of HPQMLS sessions are aligned with the intended security level and provide a consistent baseline for interoperability and security across deployments.<a href="#section-8.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-8.1.2-1">For APQ-MLS sessions, the choice of digital signature algorithm in the PQ subsession depends on the selected mode of operation. If the <code>mode</code> is set to 1 (PQ Confidentiality+Authenticity), the PQ session <span class="bcp14">MUST</span> use a digital signature algorithm that is standardized by NIST for post-quantum cryptography, such as ML-DSA as specified in FIPS 204. The use of experimental, non-standardized, or hybrid signature algorithms in the PQ session is <span class="bcp14">NOT RECOMMENDED</span> and <span class="bcp14">MUST</span> be rejected by compliant clients in this mode. If the <code>mode</code> is set to 0 (PQ Confidentiality-Only), the PQ session <span class="bcp14">MAY</span> use a classical digital signature algorithm, but the use of a NIST-standardized PQ signature algorithm is <span class="bcp14">RECOMMENDED</span>. These requirements ensure that the authenticity guarantees of APQ-MLS sessions are aligned with the intended security level and provide a consistent baseline for interoperability and security across deployments.<a href="#section-8.1.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1696,7 +1696,7 @@ struct {
         <h3 id="name-forward-secrecy">
 <a href="#section-9.3" class="section-number selfRef">9.3. </a><a href="#name-forward-secrecy" class="section-name selfRef">Forward Secrecy</a>
         </h3>
-<p id="section-9.3-1">Recall that one of the ways MLS achieves forward secrecy is by deleting security sensitive values after they are consumed (e.g. to encrypt or derive other keys/nonces) and the key schedule has entered a new epoch. For example, values such as the <code>init_secret</code> or <code>epoch_secret</code> are deleted at the <em>start</em> of a new epoch. If the MLS <code>exporter_secret</code> or the <code>extension_secret</code> from the PQ session is used directly as a PSK for the traditional session, against the requirements set above, then there is a potential scenario in which an adversary can break forward secrecy because these keys are derived <em>during</em> an epoch and are not deleted. Therefore, the <code>hpqmls_psk</code> <span class="bcp14">MUST</span> be derived from the <code>epoch_secret</code> created at the <em>start</em> of an epoch from the PQ session (see Figure 3) to ensure forward secrecy.<a href="#section-9.3-1" class="pilcrow">¶</a></p>
+<p id="section-9.3-1">Recall that one of the ways MLS achieves forward secrecy is by deleting security sensitive values after they are consumed (e.g. to encrypt or derive other keys/nonces) and the key schedule has entered a new epoch. For example, values such as the <code>init_secret</code> or <code>epoch_secret</code> are deleted at the <em>start</em> of a new epoch. If the MLS <code>exporter_secret</code> or the <code>extension_secret</code> from the PQ session is used directly as a PSK for the traditional session, against the requirements set above, then there is a potential scenario in which an adversary can break forward secrecy because these keys are derived <em>during</em> an epoch and are not deleted. Therefore, the <code>apq_psk</code> <span class="bcp14">MUST</span> be derived from the <code>epoch_secret</code> created at the <em>start</em> of an epoch from the PQ session (see Figure 3) to ensure forward secrecy.<a href="#section-9.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="transport-security">
