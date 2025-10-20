@@ -92,7 +92,7 @@ Key Derivation Function (KDF): A Hashed Message Authentication Code (HMAC)-based
 
 Key Encapsulation Mechanism (KEM): A key transport protocol that allows two parties to obtain a shared secret based on the receiver's public key.
 
-Post-Quantum (PQ) MLS Session: An MLS session that uses a PQ-KEM construction, such as described by FIPS 203 from NIST. It may optionally also use a PQ-DSA construction, such as described by FIPS 204 from NIST.
+Post-Quantum (PQ) MLS Session: An MLS session that uses a PQ-KEM construction. It may optionally also use a PQ-DSA construction.
 
 Traditional MLS Session: An MLS session that uses a Diffie-Hellman (DH) based KEM as described in {{!RFC9180}}.
 
@@ -103,7 +103,7 @@ PQ/T: A Post-Quantum and Traditional hybrid (protocol).
 
 The Amortized PQ MLS (APQ-MLS) combiner protocol runs two MLS sessions in parallel, synchronizing their group memberships. The two sessions are combined by exporting a secret from the PQ session and importing it as a Pre-Shared Key (PSK) into the traditional session. This combination process is mandatory for Commits of Add and Remove proposals in order to maintain synchronization between the sessions. However, it is optional for any other Commits (e.g. to allow for less computationally expensive traditional key rotations). Due to the higher computational costs and output sizes of PQ KEM (and signature) operations, it may be desirable to issue PQ combined (a.k.a. FULL) Commits less frequently than the traditional-only (a.k.a. PARTIAL) Commits. Since FULL Commits introduce PQ security into the MLS key schedule, the overall key schedule remains PQ-secure even when PARTIAL Commits are used. The FULL Commit rate establishes the post-quantum Post-Compromise Security (PCS) window, while the PARTIAL Commit rate can tighten the traditional PCS window even while maintaining PQ security more generally. The combiner protocol design treats both sessions as black-box interfaces so we only highlight operations requiring synchronizations in this document.
 
-The default way to start a APQ-MLS combined session is to create a PQ MLS session and then start a traditional MLS session with the exported PSK from the PQ session, as previously mentioned. Alternatively, a combined session can also be created after a traditional MLS session has already been running. This is done through creating a PQ MLS session with the same group members, sending a Welcome message containing the APQInfo struct in the GroupContext, and then making a FULL Commit as described in the {{commit-flow}}.
+The default way to start a APQ-MLS combined session is to create a PQ MLS session and then start a traditional MLS session with the exported PSK from the PQ session, as previously mentioned. Alternatively, a combined session can also be created after a traditional MLS session has already been running. This is done through creating a PQ MLS session with the same group members, sending a Welcome message containing the APQInfo struct in the GroupContext, and then making a FULL Commit as described in {{commit-flow}}.
 
 ## Commit Flow {#commit-flow}
 
@@ -189,7 +189,7 @@ User leaf nodes are first added to the PQ session following the sequence describ
       Figure 2:
       Client A adds client B to the group.
       Messages with ' come from the PQ session. Processing Welcome and Commit in the traditional
-      sessio requires the PSK exported exported from the PQ session.
+      session requires the PSK exported from the PQ session.
 ~~~
 
 ### Welcome Message Validation
@@ -371,11 +371,11 @@ There are no changes to *how* cipher suites are used to perform group key comput
 
 ### Key Encapsulation Mechanism
 
-For APQ-MLS sessions, the PQ subsession MUST use a Key Encapsulation Mechanism (KEM) that is standardized by NIST for post-quantum cryptography. Specifically, only KEMs that have been selected and published by NIST as part of their post-quantum cryptography standardization process (e.g., ML-KEM as specified in FIPS 203) are permitted for use in the PQ session. The use of experimental, non-standardized, or hybrid KEMs in the PQ session is NOT RECOMMENDED and MUST be rejected by compliant clients. This requirement ensures interoperability and a consistent security baseline across all APQ-MLS deployments.
+For APQ-MLS sessions, the PQ subsession MUST use a Key Encapsulation Mechanism (KEM) that is standardized for post-quantum cryptography. The use of experimental, non-standardized, or hybrid KEMs in the PQ session is NOT RECOMMENDED and MUST be rejected by compliant clients. This requirement ensures interoperability and a consistent security baseline across all APQ-MLS deployments.
 
 ### Signing
 
-For APQ-MLS sessions, the choice of digital signature algorithm in the PQ subsession depends on the selected mode of operation. If the `mode` is set to 1 (PQ Confidentiality+Authenticity), the PQ session MUST use a digital signature algorithm that is standardized by NIST for post-quantum cryptography, such as ML-DSA as specified in FIPS 204. The use of experimental, non-standardized, or hybrid signature algorithms in the PQ session is NOT RECOMMENDED and MUST be rejected by compliant clients in this mode. If the `mode` is set to 0 (PQ Confidentiality-Only), the PQ session MAY use a classical digital signature algorithm, but the use of a NIST-standardized PQ signature algorithm is RECOMMENDED. These requirements ensure that the authenticity guarantees of APQ-MLS sessions are aligned with the intended security level and provide a consistent baseline for interoperability and security across deployments.
+For APQ-MLS sessions, the choice of digital signature algorithm in the PQ subsession depends on the selected mode of operation. If the `mode` is set to 1 (PQ Confidentiality+Authenticity), the PQ session MUST use a digital signature algorithm that is standardized for post-quantum cryptography, such as ML-DSA as specified in FIPS 204. The use of experimental, non-standardized, or hybrid signature algorithms in the PQ session is NOT RECOMMENDED and MUST be rejected by compliant clients in this mode. If the `mode` is set to 0 (PQ Confidentiality-Only), the PQ session MAY use a standardized classical digital signature algorithm. These requirements ensure that the authenticity guarantees of APQ-MLS sessions are aligned with the intended security level and provide a consistent baseline for interoperability and security across deployments.
 
 # Security Considerations {#security-considerations}
 
