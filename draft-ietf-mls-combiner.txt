@@ -5,12 +5,12 @@
 Messaging Layer Security                                        J. Alwen
 Internet-Draft                                                       AWS
 Intended status: Standards Track                                 B. Hale
-Expires: 15 April 2026                         Naval Postgraduate School
+Expires: 23 April 2026                         Naval Postgraduate School
                                                             M. Mularczyk
                                                                      AWS
                                                                  X. Tian
                                                Naval Postgraduate School
-                                                         12 October 2025
+                                                         20 October 2025
 
 
                        Amortized PQ MLS Combiner
@@ -63,7 +63,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 15 April 2026.
+   This Internet-Draft will expire on 23 April 2026.
 
 Copyright Notice
 
@@ -116,20 +116,20 @@ Table of Contents
 1.  Introduction
 
    A fully capable quantum adversary has the ability to break
-   fundamental underlying cryptographic assumptions of traditional Key
-   Encapsulation Mechanisms (KEMs) and Digital Signature Algorithms
-   (DSAs).  This has led to the development of post-quantum (PQ)
-   cryptographically secure KEMs and DSAs by the cryptographic research
-   community which have been formally adopted by the National Institute
-   of Standards and Technology (NIST), including the Module Lattice KEM
-   (ML-KEM) and Module Lattice DSA (ML-DSA) algorithms.  While these
-   provide PQ security, ML-KEM and ML-DSA have significant overhead in
-   terms of public key size, signature size, ciphertext size, and CPU
-   time compared to their traditional counterparts.  This has made
-   achieving PQ entity and data authenticity particularly challenging.
-   The hybrid approach in this draft amortizes the PQ overhead costs
-   enabling practical PQ confidentiality or PQ confidentiality _and_ PQ
-   authenticity.
+   fundamental underlying cryptographic assumptions of traditional
+   asymmetric cryptography.  This has led to the development of post-
+   quantum (PQ) cryptographically secure Key Encapsulation Mechanisms
+   (KEMs) and digital signature algorithms (DSAs) by the cryptographic
+   research community which have been formally adopted by the National
+   Institute of Standards and Technology (NIST), including the Module
+   Lattice KEM (ML-KEM) and Module Lattice DSA (ML-DSA) algorithms.
+   While these provide PQ security, ML-KEM and ML-DSA have significant
+   overhead in terms of public key size, signature size, ciphertext
+   size, and CPU time compared to their traditional counterparts.  This
+   has made achieving PQ entity and data authenticity particularly
+   challenging.  The hybrid approach in this draft amortizes the PQ
+   overhead costs enabling practical PQ confidentiality or PQ
+   confidentiality _and_ PQ authenticity.
 
    Moreover, research arms on side-channel attacks, etc., have motivated
    uses of hybrid-PQ combiners that draw security from both the
@@ -177,28 +177,28 @@ Table of Contents
    [I-D.ietf-pquip-pqt-hybrid-terminology].  Below, we have restated
    relevant terms and define new ones:
 
-   Application Message: : A PrivateMessage carrying application data.
+   Application Message: A PrivateMessage carrying application data.
 
-   Handshake Message: : A PublicMessage or PrivateMessage carrying an
-   MLS Proposal or Commit object, as opposed to application data.
+   Handshake Message: A PublicMessage or PrivateMessage carrying an MLS
+   Proposal or Commit object, as opposed to application data.
 
-   Key Derivation Function (KDF): : A Hashed Message Authentication Code
+   Key Derivation Function (KDF): A Hashed Message Authentication Code
    (HMAC)-based expand-and-extract key derivation function (HKDF) as
    described in [RFC5869].
 
-   Key Encapsulation Mechanism (KEM): : A key transport protocol that
+   Key Encapsulation Mechanism (KEM): A key transport protocol that
    allows two parties to obtain a shared secret based on the receiver's
    public key.
 
-   Post-Quantum (PQ) MLS Session: : An MLS session that uses a PQ-KEM
+   Post-Quantum (PQ) MLS Session: An MLS session that uses a PQ-KEM
    construction, such as described by FIPS 203 from NIST.  It may
    optionally also use a PQ-DSA construction, such as described by FIPS
    204 from NIST.
 
-   Traditional MLS Session: : An MLS session that uses a Diffie-Hellman
+   Traditional MLS Session: An MLS session that uses a Diffie-Hellman
    (DH) based KEM as described in [RFC9180].
 
-   PQ/T: : A Post-Quantum and Traditional hybrid (protocol).
+   PQ/T: A Post-Quantum and Traditional hybrid (protocol).
 
 4.  The Combiner Protocol Execution
 
@@ -229,8 +229,8 @@ Table of Contents
    traditional MLS session has already been running.  This is done
    through creating a PQ MLS session with the same group members,
    sending a Welcome message containing the APQInfo struct in the
-   GroupContext, and then making a FULL Commit as described in in the
-   Section 4.1 section.
+   GroupContext, and then making a FULL Commit as described in the
+   Section 4.1.
 
 4.1.  Commit Flow
 
@@ -774,9 +774,9 @@ DeriveSecret(., "psk")
    [I-D.mahy-mls-ratchet-tree-options]
               Mahy, R., "Ways to convey the Ratchet Tree in Messaging
               Layer Security", Work in Progress, Internet-Draft, draft-
-              mahy-mls-ratchet-tree-options-02, 22 April 2025,
+              mahy-mls-ratchet-tree-options-03, 16 October 2025,
               <https://datatracker.ietf.org/doc/html/draft-mahy-mls-
-              ratchet-tree-options-02>.
+              ratchet-tree-options-03>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
