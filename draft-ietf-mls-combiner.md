@@ -26,10 +26,10 @@ venue:
   latest: "https://mlswg.github.io/mls-combiner/draft-ietf-mls-combiner.html"
 
 author:
-- ins: "J. Alwen"
-  name: "Joël Alwen"
-  organization: "AWS"
-  email: alwenjo@amazon.com
+- ins: "X. Tian"
+  name: "Xisen Tian"
+  organization: "Naval Postgraduate School"
+  email: xisen.tian1@nps.edu
 - ins: "B. Hale"
   name: "Britta Hale"
   organization: "Naval Postgraduate School"
@@ -38,10 +38,10 @@ author:
   name: "Marta Mularczyk"
   organization: "AWS"
   email: mulmarta@amazon.ch
-- ins: "X. Tian"
-  name: "Xisen Tian"
-  organization: "Naval Postgraduate School"
-  email: xisen.tian1@nps.edu
+- ins: "J. Alwen"
+  name: "Joël Alwen"
+  organization: "AWS"
+  email: alwenjo@amazon.com
 
 normative:
 
