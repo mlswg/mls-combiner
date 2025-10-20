@@ -293,28 +293,28 @@ Even though the `apq_psk` PSK is not sent over the wire, members of the APQ-MLS 
           V
 DeriveSecret(., "psk")
           |
-          V                                   [...]
-       apq_psk                            joiner_secret
-          |                                     |
-          |                                     |
-          |                                     V
-          +----------> <psk_secret (or 0)> --> KDF.Extract
-        [...]                                   |
-                                                |
-                                                +--> DeriveSecret(., "welcome")
-                                                |    = welcome_secret
-                                                |
-                                                V
-                                        ExpandWithLabel(., "epoch", GroupContext_[n], KDF.Nh)
-                                                |
-                                                |
-                                                V
-                                          epoch_secret
-                                                |
-                                                |
-                                                +--> DeriveSecret(., <label>)
-                                                |    = <secret>
-                                              [...]
+          V              [...]
+       apq_psk       joiner_secret
+          |                |
+          |                |
+          |                V
+          +----> <psk_secret (or 0)> --> KDF.Extract
+        [...]              |
+                           |
+                           +--> DeriveSecret(., "welcome")
+                           |    = welcome_secret
+                           |
+                           V
+                    ExpandWithLabel(., "epoch", GroupContext_[n], KDF.Nh)
+                           |
+                           |
+                           V
+                      epoch_secret
+                           |
+                           |
+                           +--> DeriveSecret(., <label>)
+                           |    = <secret>
+                         [...]
     Fig 3: The apq_psk of the PQ session is injected into the key schedule of the
     traditional session using the safe extensions API DeriveExtensionSecret.
 ~~~
