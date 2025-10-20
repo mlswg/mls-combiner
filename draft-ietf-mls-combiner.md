@@ -62,7 +62,7 @@ This document describes a protocol for combining a traditional MLS session with 
 
 # Introduction
 
-A fully capable quantum adversary has the ability to break fundamental underlying cryptographic assumptions of traditional Key Encapsulation Mechanisms (KEMs) and Digital Signature Algorithms (DSAs). This has led to the development of post-quantum (PQ) cryptographically secure KEMs and DSAs by the cryptographic research community which have been formally adopted by the National Institute of Standards and Technology (NIST), including the Module Lattice KEM (ML-KEM) and Module Lattice DSA (ML-DSA) algorithms. While these provide PQ security, ML-KEM and ML-DSA have significant overhead in terms of public key size, signature size, ciphertext size, and CPU time compared to their traditional counterparts. This has made achieving PQ entity and data authenticity particularly challenging. The hybrid approach in this draft amortizes the PQ overhead costs enabling practical PQ confidentiality or PQ confidentiality *and* PQ authenticity.
+A fully capable quantum adversary has the ability to break fundamental underlying cryptographic assumptions of traditional asymmetric cryptography. This has led to the development of post-quantum (PQ) cryptographically secure Key Encapsulation Mechanisms (KEMs) and digital signature algorithms (DSAs) by the cryptographic research community which have been formally adopted by the National Institute of Standards and Technology (NIST), including the Module Lattice KEM (ML-KEM) and Module Lattice DSA (ML-DSA) algorithms. While these provide PQ security, ML-KEM and ML-DSA have significant overhead in terms of public key size, signature size, ciphertext size, and CPU time compared to their traditional counterparts. This has made achieving PQ entity and data authenticity particularly challenging. The hybrid approach in this draft amortizes the PQ overhead costs enabling practical PQ confidentiality or PQ confidentiality *and* PQ authenticity.
 
 Moreover, research arms on side-channel attacks, etc., have motivated uses of hybrid-PQ combiners that draw security from both the underlying PQ and underlying traditional components. A variety of hybrid security treatments have arisen across IETF working groups to bridge the gap between performance and security to encourage the adoption of PQ security in existing protocols, including the MLS protocol {{!RFC9420}}.
 
@@ -84,26 +84,26 @@ The terms MLS client, MLS member, MLS group, Leaf Node, GroupContext, KeyPackage
 
 We use terms from from MLS {{RFC9420}} and PQ Hybrid Terminology {{!I-D.ietf-pquip-pqt-hybrid-terminology}}. Below, we have restated relevant terms and define new ones:
 
-Application Message: : A PrivateMessage carrying application data.
+Application Message: A PrivateMessage carrying application data.
 
-Handshake Message: : A PublicMessage or PrivateMessage carrying an MLS Proposal or Commit object, as opposed to application data.
+Handshake Message: A PublicMessage or PrivateMessage carrying an MLS Proposal or Commit object, as opposed to application data.
 
-Key Derivation Function (KDF): : A Hashed Message Authentication Code (HMAC)-based expand-and-extract key derivation function (HKDF) as described in {{!RFC5869}}.
+Key Derivation Function (KDF): A Hashed Message Authentication Code (HMAC)-based expand-and-extract key derivation function (HKDF) as described in {{!RFC5869}}.
 
-Key Encapsulation Mechanism (KEM): : A key transport protocol that allows two parties to obtain a shared secret based on the receiver's public key.
+Key Encapsulation Mechanism (KEM): A key transport protocol that allows two parties to obtain a shared secret based on the receiver's public key.
 
-Post-Quantum (PQ) MLS Session: : An MLS session that uses a PQ-KEM construction, such as described by FIPS 203 from NIST. It may optionally also use a PQ-DSA construction, such as described by FIPS 204 from NIST.
+Post-Quantum (PQ) MLS Session: An MLS session that uses a PQ-KEM construction, such as described by FIPS 203 from NIST. It may optionally also use a PQ-DSA construction, such as described by FIPS 204 from NIST.
 
-Traditional MLS Session: : An MLS session that uses a Diffie-Hellman (DH) based KEM as described in {{!RFC9180}}.
+Traditional MLS Session: An MLS session that uses a Diffie-Hellman (DH) based KEM as described in {{!RFC9180}}.
 
-PQ/T: : A Post-Quantum and Traditional hybrid (protocol).
+PQ/T: A Post-Quantum and Traditional hybrid (protocol).
 
 
 # The Combiner Protocol Execution
 
 The Amortized PQ MLS (APQ-MLS) combiner protocol runs two MLS sessions in parallel, synchronizing their group memberships. The two sessions are combined by exporting a secret from the PQ session and importing it as a Pre-Shared Key (PSK) into the traditional session. This combination process is mandatory for Commits of Add and Remove proposals in order to maintain synchronization between the sessions. However, it is optional for any other Commits (e.g. to allow for less computationally expensive traditional key rotations). Due to the higher computational costs and output sizes of PQ KEM (and signature) operations, it may be desirable to issue PQ combined (a.k.a. FULL) Commits less frequently than the traditional-only (a.k.a. PARTIAL) Commits. Since FULL Commits introduce PQ security into the MLS key schedule, the overall key schedule remains PQ-secure even when PARTIAL Commits are used. The FULL Commit rate establishes the post-quantum Post-Compromise Security (PCS) window, while the PARTIAL Commit rate can tighten the traditional PCS window even while maintaining PQ security more generally. The combiner protocol design treats both sessions as black-box interfaces so we only highlight operations requiring synchronizations in this document.
 
-The default way to start a APQ-MLS combined session is to create a PQ MLS session and then start a traditional MLS session with the exported PSK from the PQ session, as previously mentioned. Alternatively, a combined session can also be created after a traditional MLS session has already been running. This is done through creating a PQ MLS session with the same group members, sending a Welcome message containing the APQInfo struct in the GroupContext, and then making a FULL Commit as described in in the {{commit-flow}} section.
+The default way to start a APQ-MLS combined session is to create a PQ MLS session and then start a traditional MLS session with the exported PSK from the PQ session, as previously mentioned. Alternatively, a combined session can also be created after a traditional MLS session has already been running. This is done through creating a PQ MLS session with the same group members, sending a Welcome message containing the APQInfo struct in the GroupContext, and then making a FULL Commit as described in the {{commit-flow}}.
 
 ## Commit Flow {#commit-flow}
 
