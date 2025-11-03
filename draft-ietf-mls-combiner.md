@@ -51,6 +51,12 @@ I-D.mahy-mls-ratchet-tree-options:
     - name: "Rohan Mahy"
   target: "https://datatracker.ietf.org/doc/draft-mahy-mls-ratchet-tree-options/"
 
+I-D.ietf-mls-pq-ciphersuites:
+  title: "ML-KEM and Hybrid Cipher Suites for Messaging Layer Security"
+  author:
+    - name: "Rohan Mahy and Richard Barnes"
+  target: https://datatracker.ietf.org/doc/draft-ietf-mls-pq-ciphersuites/
+
 informative:
 
 --- abstract
@@ -94,16 +100,9 @@ the adoption of PQ security in existing protocols, including the MLS protocol
 Within the MLS working group, there are various ways to approach PQ security 
 extensions:
 
-1. A single MLS ciphersuite for a hybrid post-quantum/traditional KEM.  The
-2. ciphersuite can act as a drop-in replacement for the KEM, focusing on hybrid
-3. confidentiality but not authenticity, and does not incur changes elsewhere in
-4. the MLS stack. As a confidentiality focus, it addresses the the harvest-now /
-5. decrypt-later threat model. However, every key epoch incurs a PQ overhead cost.
+1. A single MLS ciphersuite for a hybrid post-quantum/traditional KEM.  The ciphersuite can act as a drop-in replacement for the KEM, focusing on hybrid confidentiality but not authenticity, and does not incur changes elsewhere in the MLS stack. As a confidentiality focus, it addresses the the harvest-now/decrypt-later threat model. However, every key epoch incurs a PQ overhead cost.
 
-6. Mechanisms that leverage hybridization as a means to not only address the
-7. security balance between PQ and traditional components and achieve resistance
-8. to harvest-now / decrypt-later attacks, but also use it as a means to improve
-9. performance of PQ use while achieving PQ authenticity as well.
+2. Mechanisms that leverage hybridization as a means to not only address the security balance between PQ and traditional components and achieve resistance to harvest-now / decrypt-later attacks, but also use it as a means to improve performance of PQ use while achieving PQ authenticity as well.
 
 This document addresses the second topic of these work items.
 
@@ -182,7 +181,7 @@ as previously mentioned. Alternatively, a combined session can also be created a
 a traditional MLS session has already been running. This is done through creating a 
 PQ MLS session with the same group members, sending a Welcome message containing 
 the APQInfo struct in the GroupContext, and then making a FULL Commit as described 
-in {{commit-flow}}.
+in {{commit-flow}}. In either case, PQ group MUST be instantiated with an approved PQ ciphersuite as detailed in {{I-D.ietf-mls-pq-ciphersuites}}. 
 
 ## Commit Flow {#commit-flow}
 
@@ -302,7 +301,7 @@ other. Therefore, the APQInfo struct indicating the GroupID and ciphersuites
 of the two sessions MUST be included in the Welcome message via serialization 
 as a GroupContext Extension in order to validate joining the combined sessions. 
 All members MUST verify group membership is consistent in both sessions after 
-a join and the new member MUST issue a FULL Commit as described in Fig 1b.
+a join and the new member MUST issue a FULL Commit as described in Fig 1b. 
 
 ### External Joins
 
@@ -310,8 +309,8 @@ External joins are used by members who join a group without being explicitly
 added (via an Add-Commit sequence) by another existing member. The external 
 user MUST join both the PQ session and the traditional session. As stated 
 previously, the GroupInfo used to create the External Commit MUST contain 
-the APQInfo struct. After joining, the new member MUST issue a FULL Commit 
-as described in Fig 1b.
+the APQInfo struct. After joining, the new member MUST issue a FULL Commit as their first commit
+as described in Fig 1b (e.g. a joiner SHALL NOT instantiate the protocol with a PARTIAL commit).
 
 ## Removing a Group Member
 
@@ -342,7 +341,7 @@ by the `mode` flag in APQInfo struct and are listed below.
 The default mode of operation is PQ/T Confidentiality Only mode. This mode 
 provides confidentiality and limited authenticity against quantum attackers. 
 More precisely, it provides PQ authenticity against "outsiders", that is, 
-against quantum attackers who do not have acces to (signature) secret keys 
+against quantum attackers who do not have acces to secret keys 
 of any group member. (Authenticity comes from the fact that the traditional 
 session adds AEAD / MAC tags which are not available to outsiders with CRQC.) 
 This mode does not prevent quantum impersonation attacks by other group members. 
@@ -594,7 +593,7 @@ or duplicate cipher suites (e.g. two traditional cipher suites).
 For APQ-MLS sessions, the PQ subsession MUST use a Key Encapsulation 
 Mechanism (KEM) that is standardized for post-quantum cryptography. 
 The use of experimental, non-standardized, or hybrid KEMs in the PQ 
-session is NOT RECOMMENDED and MUST be rejected by compliant clients. 
+session is MUST be rejected by compliant clients. 
 This requirement ensures interoperability and a consistent security 
 baseline across all APQ-MLS deployments.
 
@@ -606,7 +605,7 @@ the PQ subsession depends on the selected mode of operation. If the
 MUST use a digital signature algorithm that is standardized for 
 post-quantum cryptography, such as ML-DSA as specified in FIPS 204. 
 The use of experimental, non-standardized, or hybrid signature 
-algorithms in the PQ session is NOT RECOMMENDED and MUST be rejected 
+algorithms in the PQ session MUST be rejected 
 by compliant clients in this mode. If the `mode` is set to 0 
 (PQ Confidentiality-Only), the PQ session MAY use a standardized 
 classical digital signature algorithm. These requirements ensure 
