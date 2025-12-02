@@ -44,18 +44,8 @@ author:
   email: alwenjo@amazon.com
 
 normative:
-
-I-D.mahy-mls-ratchet-tree-options:
-  title: "Ways to convey the Ratchet Tree in Messaging Layer Security"
-  author:
-    - name: "Rohan Mahy"
-  target: "https://datatracker.ietf.org/doc/draft-mahy-mls-ratchet-tree-options/"
-
-I-D.ietf-mls-pq-ciphersuites:
-  title: "ML-KEM and Hybrid Cipher Suites for Messaging Layer Security"
-  author:
-    - name: "Rohan Mahy and Richard Barnes"
-  target: https://datatracker.ietf.org/doc/draft-ietf-mls-pq-ciphersuites/
+  I-D.mahy-mls-ratchet-tree-options:
+  I-D.ietf-mls-pq-ciphersuites:
 
 informative:
 
