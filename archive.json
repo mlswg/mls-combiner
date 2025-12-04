@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-10-09T01:36:47.076551+00:00",
+  "timestamp": "2025-12-04T01:48:17.277106+00:00",
   "repo": "mlswg/mls-combiner",
   "labels": [
     {
@@ -409,6 +409,69 @@
           "body": "",
           "createdAt": "2025-09-26T16:46:30Z",
           "updatedAt": "2025-09-26T16:46:30Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 8,
+      "id": "PR_kwDONZ9R6862nEzp",
+      "title": "WS removal",
+      "url": "https://github.com/mlswg/mls-combiner/pull/8",
+      "state": "MERGED",
+      "author": "seanturner",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Trimming trailing WS.",
+      "createdAt": "2025-12-02T13:59:19Z",
+      "updatedAt": "2025-12-03T16:18:09Z",
+      "baseRepository": "mlswg/mls-combiner",
+      "baseRefName": "main",
+      "baseRefOid": "72b6f4eacb498c607bd1d50fbf9ad3e8aa586b11",
+      "headRepository": "mlswg/mls-combiner",
+      "headRefName": "seanturner-ws-01",
+      "headRefOid": "c32f14ca387494e8627c6a84fc527f6352d0268c",
+      "closedAt": "2025-12-03T16:18:09Z",
+      "mergedAt": "2025-12-03T16:18:09Z",
+      "mergedBy": "xisentian",
+      "mergeCommit": {
+        "oid": "ac0b5420c4116c3c5a93526aeaecf61ff516277b"
+      },
+      "comments": [
+        {
+          "author": "seanturner",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@xisentian fixed!",
+          "createdAt": "2025-12-02T14:11:43Z",
+          "updatedAt": "2025-12-02T14:11:43Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDONZ9R687SwNJC",
+          "commit": {
+            "abbreviatedOid": "c32f14c"
+          },
+          "author": "xisentian",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-12-03T16:14:25Z",
+          "updatedAt": "2025-12-03T16:14:25Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDONZ9R687SwOSY",
+          "commit": {
+            "abbreviatedOid": "c32f14c"
+          },
+          "author": "xisentian",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-12-03T16:15:14Z",
+          "updatedAt": "2025-12-03T16:15:14Z",
           "comments": []
         }
       ]
