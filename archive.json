@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-12-04T01:48:17.277106+00:00",
+  "timestamp": "2025-12-16T01:51:20.494114+00:00",
   "repo": "mlswg/mls-combiner",
   "labels": [
     {
@@ -86,7 +86,7 @@
       "labels": [],
       "body": "I don't believe the section [Extension updates and validation](https://github.com/mlswg/mls-combiner/blob/main/draft-ietf-mls-combiner.md) is consistent with the AppDataUpdate proposal logic outlined in   https://datatracker.ietf.org/doc/draft-ietf-mls-extensions/\n\nPer Section 4.7 of draft-ietf-mls-extensions: \"The application logic returns either an opaque value new_data that will be stored as the new application data for this component, or else an indication that it considers this update invalid.\"\n\nI read this as the AppDataUpdate contains an opaque value that replaces the entire value for that Component ID. Whereas this proposal includes application logic to update just a particular field within the opaque value. This will necessitate special-casing of this data update logic, rather than the consistent behavior of replacing the opaque value.\n\nTo be consistent, the full HPQMLSInfo struct should be contained in the AppDataUpdate for the Component ID.",
       "createdAt": "2025-10-02T16:50:32Z",
-      "updatedAt": "2025-10-08T06:18:34Z",
+      "updatedAt": "2025-12-15T13:46:19Z",
       "closedAt": null,
       "comments": [
         {
@@ -109,6 +109,13 @@
           "body": "I agree that it can be interpreted both ways. Since we're arguing about the content of another draft at this point, I propose we continue the discussion there. I filed an issue in the corresponding GH repo: https://github.com/mlswg/mls-extensions/issues/74",
           "createdAt": "2025-10-08T06:18:34Z",
           "updatedAt": "2025-10-08T06:18:34Z"
+        },
+        {
+          "author": "rohanmahy",
+          "authorAssociation": "NONE",
+          "body": "> I disagree with the level of granularity you're proposing. It would lead to a cardinality explosion of logic for every Component. The way I read it is the app_data_dictionary is a collection of entries, and the AppDataUpdate is a way to update individual entries instead of having to send the entire dictionary collection. You're taking it a step further and trying to update sub-entries within an individual entry, which I believe is untenable and not the intended scope.\n\n@bitbltr is correct that these structs are all wrong and simply don't work with MLS Extensions as it is written. Fortunately, if I understood the draft well enough it should be pretty easy for the authors to do what they want.\n@kkohbrok is correct that you can do partial updates of components under controlled circumstances, but only if you follow the rules (which this draft hasn't done yet).\n\nEach Component ends up in the `app_data_dictionary` Extension in the MLS Structure(s) in which the component is used (in this case the component is only used in the GroupContext). That's what allows you to have multiple components without conflicting with each other. But it is not the wild west either.\n\nSpecific to the GroupContext, the `app_data_dictionary` extension actually holds the data format of the component inside. In order to make changes to the Component using an AppDataUpdate Proposal, the Component also must have an update format. If the update format is the same as the data format, the change is always a full replacement. If not, the extension needs to define the format of the update. There is NEVER an `ExtensionType` in a Component.\n\nThis probably needs to be rewritten as follows:\n\n```\nstruct{\n     opaque t_session_group_id<V>;\n     opaque PQ_session_group_id<V>;\n     bool mode;\n     CipherSuite t_cipher_suite;\n     CipherSuite pq_cipher_suite;\n     uint64 t_epoch;\n     uint64 pq_epoch;\n} APQInfo;\nAPQInfo APQInfoData;\n\nenum {\n    full_update (0),\n    new_t_epoch(1),\n    new_pq_epoch(2),\n    (255)\n} APQUpdateType;\n\nstruct {\n    APQUpdateType update_type;\n    select (update_type) {\n        case full_update:\n            APQInfo new_apq_info;\n        case new_t_epoch:\n            uint64 epoch;\n        case new_pq_epoch:\n            uint64 epoch;\n} APQInfoUpdate;\n```\n\n",
+          "createdAt": "2025-12-15T13:46:19Z",
+          "updatedAt": "2025-12-15T13:46:19Z"
         }
       ]
     },
@@ -475,6 +482,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 9,
+      "id": "PR_kwDONZ9R68647IaJ",
+      "title": "Add a suggested component value to IANA register",
+      "url": "https://github.com/mlswg/mls-combiner/pull/9",
+      "state": "OPEN",
+      "author": "rohanmahy",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-12-15T13:23:11Z",
+      "updatedAt": "2025-12-15T13:23:12Z",
+      "baseRepository": "mlswg/mls-combiner",
+      "baseRefName": "main",
+      "baseRefOid": "ac0b5420c4116c3c5a93526aeaecf61ff516277b",
+      "headRepository": "rohanmahy/mls-combiner",
+      "headRefName": "iana",
+      "headRefOid": "7b00e7a558397360598af000fed2ed16fd54527f",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
