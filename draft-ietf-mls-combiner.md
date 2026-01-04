@@ -414,32 +414,45 @@ extension struct SHALL be in the following format:
 
 As mentioned in {{welcome-message-validation}}, clients MUST validate that
 the information in the APQInfo extensions of both T and PQ group match.
-As the APQMLSInfo contains the epoch of both groups it MUST be updated
-in both groups when doing a FULL commit. Consequently, when doing a FULL
-commit in both commits MUST contain an AppDataUpdate proposal with `op`
-set to `update`. The `update` payload MUST update the epochs to the new
-epochs of both groups (note that the epoch of the T group may increment
-by more than one if one or more T only commits have been performed in
-the meantime).
+As the APQInfo contains the epoch of both groups it MUST be updated
+in both groups when doing a FULL commit. The `update` payload
+MUST update the epochs to the new epochs of both groups (note that the 
+epoch of the T group may increment by more than one if one or more 
+T only commits have been performed in the interim).
 
 ~~~
+struct{
+     opaque t_session_group_id<V>;
+     opaque PQ_session_group_id<V>;
+     bool mode;
+     CipherSuite t_cipher_suite;
+     CipherSuite pq_cipher_suite;
+     uint64 t_epoch;
+     uint64 pq_epoch;
+} APQInfo;
+APQInfo APQInfoData;
+
 enum {
-  invalid(0),
-  t_epoch(1),
-  pq_epoch(1),
-  (255)
-} APQInfoUpdate
+    full_update (0),
+    new_t_epoch(1),
+    new_pq_epoch(2),
+    (255)
+} APQUpdateType;
 
 struct {
-  APQInfoUpdate update;
-  select (APQInfoUpdate.update)
-    case epoch:
-       uint64 epoch;
-} APQInfoUpdateData
+    APQUpdateType update_type;
+    select (update_type) {
+        case full_update:
+            APQInfo new_apq_info;
+        case new_t_epoch:
+            uint64 epoch;
+        case new_pq_epoch:
+            uint64 epoch;
+} APQInfoUpdate;
 ~~~
 
 Consequently, when processing a FULL commit, recipients MUST verify that
-the epoch set by the APQInfoUpdateData matches the actual (new) epoch of
+the epoch set by the APQInfoUpdate matches the actual (new) epoch of
 both groups.
 
 ## Key Schedule {#key-schedule}
