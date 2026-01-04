@@ -32,12 +32,12 @@ while meeting the requirement of frequent key rotations.
     Python 3.12.12
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
-    intervaltree 3.1.0
+    intervaltree 3.2.1
     Jinja2 3.1.6
-    lxml 5.3.1
-    platformdirs 4.5.0
+    lxml 6.0.2
+    platformdirs 4.5.1
     pycountry 24.6.1
-    PyYAML 6.0.2
+    PyYAML 6.0.3
     requests 2.32.5
     wcwidth 0.2.14
 -->
@@ -1058,11 +1058,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">APQ-MLS</td>
-<td class="right">December 2025</td>
+<td class="right">January 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tian, et al.</td>
-<td class="center">Expires 6 June 2026</td>
+<td class="center">Expires 8 July 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1075,12 +1075,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-mls-combiner-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-12-03" class="published">3 December 2025</time>
+<time datetime="2026-01-04" class="published">4 January 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-06-06">6 June 2026</time></dd>
+<dd class="expires"><time datetime="2026-07-08">8 July 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1151,7 +1151,7 @@ while meeting the requirement of frequent key rotations.<a href="#section-abstra
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 6 June 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 8 July 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1160,7 +1160,7 @@ while meeting the requirement of frequent key rotations.<a href="#section-abstra
 <a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
         </h2>
 <p id="section-boilerplate.2-1">
-            Copyright (c) 2025 IETF Trust and the persons identified as the
+            Copyright (c) 2026 IETF Trust and the persons identified as the
             document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.2-2">
             This document is subject to BCP 78 and the IETF Trust's Legal
@@ -1274,6 +1274,14 @@ while meeting the requirement of frequent key rotations.<a href="#section-abstra
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
             <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1">
+                <p id="section-toc.1-1.10.2.1.1"><a href="#section-10.1" class="auto internal xref">10.1</a>.  <a href="#name-apq_mls_info-mls-component-" class="internal xref">apq_mls_info MLS Component Type</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.2">
+                <p id="section-toc.1-1.10.2.2.1"><a href="#section-10.2" class="auto internal xref">10.2</a>.  <a href="#name-apq_psk-mls-psk-label" class="internal xref">apq_psk MLS PSK label</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
             <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-normative-references" class="internal xref">Normative References</a></p>
@@ -1693,7 +1701,7 @@ extension struct <span class="bcp14">SHALL</span> be in the following format:<a 
         </h3>
 <p id="section-6.1-1">As mentioned in <a href="#welcome-message-validation" class="auto internal xref">Section 4.2.1</a>, clients <span class="bcp14">MUST</span> validate that
 the information in the APQInfo extensions of both T and PQ group match.
-As the HPQMLSInfo contains the epoch of both groups it <span class="bcp14">MUST</span> be updated
+As the APQMLSInfo contains the epoch of both groups it <span class="bcp14">MUST</span> be updated
 in both groups when doing a FULL commit. Consequently, when doing a FULL
 commit in both commits <span class="bcp14">MUST</span> contain an AppDataUpdate proposal with <code>op</code>
 set to <code>update</code>. The <code>update</code> payload <span class="bcp14">MUST</span> update the epochs to the new
@@ -2005,8 +2013,40 @@ restricting transmitted messages are inherited from MLS.<a href="#section-9.4-1"
       <h2 id="name-iana-considerations">
 <a href="#section-10" class="section-number selfRef">10. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<p id="section-10-1">The MLS sessions combined by this protocol conform to the IANA
-registries listed for MLS <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>.<a href="#section-10-1" class="pilcrow">¶</a></p>
+<p id="section-10-1">RFC EDITOR: Please replace XXXX throughout with the RFC number assigned to this document.<a href="#section-10-1" class="pilcrow">¶</a></p>
+<div id="apqmlsinfo-mls-component-type">
+<section id="section-10.1">
+        <h3 id="name-apq_mls_info-mls-component-">
+<a href="#section-10.1" class="section-number selfRef">10.1. </a><a href="#name-apq_mls_info-mls-component-" class="section-name selfRef">apq_mls_info MLS Component Type</a>
+        </h3>
+<p id="section-10.1-1">This document registers the <code>apq_mls_info</code> MLS Component Type per <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-mls-extensions-08#section-7.5" class="relref">Section 7.5</a> of [<a href="#I-D.ietf-mls-extensions" class="cite xref">I-D.ietf-mls-extensions</a>]</span>.<a href="#section-10.1-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-10.1-2.1">
+            <p id="section-10.1-2.1.1">Value: 0x0006<a href="#section-10.1-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-10.1-2.2">
+            <p id="section-10.1-2.2.1">Name: apq_mls_info<a href="#section-10.1-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-10.1-2.3">
+            <p id="section-10.1-2.3.1">Where: GC<a href="#section-10.1-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-10.1-2.4">
+            <p id="section-10.1-2.4.1">Recommended: Y<a href="#section-10.1-2.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-10.1-2.5">
+            <p id="section-10.1-2.5.1">Reference: RFC XXXX<a href="#section-10.1-2.5.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+</section>
+</div>
+<div id="apqpsk-mls-psk-label">
+<section id="section-10.2">
+        <h3 id="name-apq_psk-mls-psk-label">
+<a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-apq_psk-mls-psk-label" class="section-name selfRef">apq_psk MLS PSK label</a>
+        </h3>
+<p id="section-10.2-1">TODO<a href="#section-10.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="sec-normative-references">

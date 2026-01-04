@@ -5,10 +5,10 @@
 Messaging Layer Security                                         X. Tian
 Internet-Draft                                                   B. Hale
 Intended status: Standards Track               Naval Postgraduate School
-Expires: 6 June 2026                                        M. Mularczyk
+Expires: 8 July 2026                                        M. Mularczyk
                                                                 J. Alwen
                                                                      AWS
-                                                         3 December 2025
+                                                          4 January 2026
 
 
                        Amortized PQ MLS Combiner
@@ -61,11 +61,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 June 2026.
+   This Internet-Draft will expire on 8 July 2026.
 
 Copyright Notice
 
-   Copyright (c) 2025 IETF Trust and the persons identified as the
+   Copyright (c) 2026 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -106,6 +106,8 @@ Table of Contents
      9.3.  Forward Secrecy
      9.4.  Transport Security
    10. IANA Considerations
+     10.1.  apq_mls_info MLS Component Type
+     10.2.  apq_psk MLS PSK label
    11. Normative References
    Acknowledgments
      Contributors
@@ -499,7 +501,7 @@ Table of Contents
 
    As mentioned in Section 4.2.1, clients MUST validate that the
    information in the APQInfo extensions of both T and PQ group match.
-   As the HPQMLSInfo contains the epoch of both groups it MUST be
+   As the APQMLSInfo contains the epoch of both groups it MUST be
    updated in both groups when doing a FULL commit.  Consequently, when
    doing a FULL commit in both commits MUST contain an AppDataUpdate
    proposal with op set to update.  The update payload MUST update the
@@ -760,8 +762,27 @@ DeriveSecret(., "psk")
 
 10.  IANA Considerations
 
-   The MLS sessions combined by this protocol conform to the IANA
-   registries listed for MLS [RFC9420].
+   RFC EDITOR: Please replace XXXX throughout with the RFC number
+   assigned to this document.
+
+10.1.  apq_mls_info MLS Component Type
+
+   This document registers the apq_mls_info MLS Component Type per
+   Section 7.5 of [I-D.ietf-mls-extensions].
+
+   *  Value: 0x0006
+
+   *  Name: apq_mls_info
+
+   *  Where: GC
+
+   *  Recommended: Y
+
+   *  Reference: RFC XXXX
+
+10.2.  apq_psk MLS PSK label
+
+   TODO
 
 11.  Normative References
 
