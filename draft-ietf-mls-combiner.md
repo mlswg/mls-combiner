@@ -414,7 +414,7 @@ extension struct SHALL be in the following format:
 
 As mentioned in {{welcome-message-validation}}, clients MUST validate that
 the information in the APQInfo extensions of both T and PQ group match.
-As the HPQMLSInfo contains the epoch of both groups it MUST be updated
+As the APQMLSInfo contains the epoch of both groups it MUST be updated
 in both groups when doing a FULL commit. Consequently, when doing a FULL
 commit in both commits MUST contain an AppDataUpdate proposal with `op`
 set to `update`. The `update` payload MUST update the epochs to the new
@@ -679,8 +679,22 @@ restricting transmitted messages are inherited from MLS.
 
 # IANA Considerations
 
-The MLS sessions combined by this protocol conform to the IANA
-registries listed for MLS {{RFC9420}}.
+RFC EDITOR: Please replace XXXX throughout with the RFC number assigned to this document.
+
+## apq_mls_info MLS Component Type
+
+This document registers the `apq_mls_info` MLS Component Type per {{Section 7.5 of !I-D.ietf-mls-extensions}}.
+
+
+- Value: 0x0006
+- Name: apq_mls_info
+- Where: GC
+- Recommended: Y
+- Reference: RFC XXXX
+
+## apq_psk MLS PSK label
+
+TODO
 
 --- back
 
