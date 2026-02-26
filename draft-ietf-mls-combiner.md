@@ -253,26 +253,25 @@ after joining to achieve PCS. The FULL Commit SHOULD be the first Commit sent by
 the joiner.
 
 ~~~
-                                                         Key Package                                    Group
-    A                                          B          Directory                                    Channel
-    |                                          |              |                                           |
-    |                                          | KeyPackageB' |                                           |
-    |                                          |  KeyPackageB |                                           |
-    |<--------------------------------------------------------+                                           |
-    |                                          |              |                                           |
-    | Commit'(Add'(KeyPackageB'))              |              |                                           |
-    |   PresharedKeyID =                       |              |                                           |
-    |   DeriveExtensionSecret('apq_psk')       |              |                                           |
-    | Commit(Add(KeyPackageB), PreSharedKeyID) |              |                                           |
-    +---------------------------------------------------------------------------------------------------->|
-    |                                          |              |                                           |
-    | Welcome'                                 |              |                                           |
-    | Welcome(PreSharedKeyID)                  |              |                                           |
-    +----------------------------------------->|              |                                           |
-    |                                          |              |                                           |
-    |                                          |              |  Commit'(Add'(KeyPackageB'))              |
-    |                                          |              |  Commit(Add(KeyPackageB), PreSharedKeyID) |
-    |<----------------------------------------------------------------------------------------------------+
+                                          Key Package                  Group
+    A                         B            Directory                  Channel
+    |                         |                |                         |
+    |                         |   KeyPackageB' |                         |
+    |                         |    KeyPackageB |                         |
+    |<-----------------------------------------+                         |
+    | Commit'(Add'(KeyPackageB'))              |                         |
+    |   PresharedKeyID =                       |                         |
+    |   DeriveExtensionSecret('apq_psk')       |                         |
+    | Commit(Add(KeyPackageB), PreSharedKeyID) |                         |
+    +------------------------------------------------------------------->|
+    |                         |                |                         |
+    | Welcome'                |                |                         |
+    | Welcome(PreSharedKeyID) |                |                         |
+    +------------------------>|                |                         |
+    |                         |                |                         |
+    |                         | Commit'(Add'(KeyPackageB'))              |
+    |                         | Commit(Add(KeyPackageB), PreSharedKeyID) |
+    |<-------------------------------------------------------------------+
 
       Figure 2:
       Client A adds client B to the group.
