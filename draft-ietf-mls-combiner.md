@@ -192,7 +192,7 @@ session.
     |                                        |                            |
     | Commit'()                              |                            |
     |    PresharedKeyID =                    |                            |
-    |    DeriveExtensionSecret('apq_psk') |                            |
+    |    DeriveExtensionSecret('apq_psk')    |                            |
     | Commit(PreSharedKeyID)                 |                            |
     |-------------------------------------------------------------------->|
     |                                        |                            |
