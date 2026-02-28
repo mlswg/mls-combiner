@@ -464,7 +464,7 @@ guarantees (see {{security-considerations}}).
 Even though the `apq_psk` PSK is not sent over the wire, members of
 the APQ-MLS session must agree on the value of which PSK to use. In
 alignment with the Safe Extensions API policy for PSKs, APQ-MLS PSKs
-used SHALL set `PSKType = 3` and `component_id = XXX` (see Section
+used SHALL set `PSKType = 3` and `component_id = 0x0006` (see Section
 4.5 Pre-Shared Keys of {{I-D.ietf-mls-extensions}}).
 
 ~~~
@@ -472,7 +472,7 @@ used SHALL set `PSKType = 3` and `component_id = XXX` (see Section
       ----------                       -------------------
 
         [...]
-  SafeExportSecret(XXX)
+  SafeExportSecret(0x0006)
           |
           V
     apq_exporter
@@ -512,14 +512,11 @@ DeriveSecret(., "psk")
 To signal the injection of the PSK derived from the PQ group
 into the key schedule of the T group, each T group commit that
 is part of a FULL Commit MUST include a PreSharedKey proposal
-with `psk_type = application`, `component_id = XXX` and
+with `psk_type = application`, `component_id = 0x0006` and
 `psk_id = apq_psk_id`.
 
 The `apq_exporter` MUST be deleted after both the `apq_psk_id` and
 the `apq_psk` were derived.
-
-TODO: Replace occurences of XXX with the Component ID of this
-combiner.
 
 # Wire formats
 
