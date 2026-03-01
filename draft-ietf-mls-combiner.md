@@ -77,7 +77,7 @@ Module Lattice DSA (ML-DSA) algorithms. While these provide PQ security, ML-KEM
 and ML-DSA have significant overhead in terms of public key size, signature size,
 ciphertext size, and CPU time compared to their traditional counterparts. This
 has made achieving PQ entity and data authenticity particularly challenging. The
-hybrid approach in this draft amortizes the PQ overhead costs enabling practical
+hybrid approach in this document amortizes the PQ overhead costs enabling practical
 PQ confidentiality or PQ confidentiality *and* PQ authenticity.
 
 Moreover, research arms on side-channel attacks, etc., have motivated uses of
@@ -100,15 +100,12 @@ This document addresses the second topic of these work items.
 
 {::boilerplate bcp14-tagged}
 
+We use terms from from MLS {{RFC9420}} and PQ Hybrid Terminology {{!RFC9794}}.
+Below, we have restated relevant terms and define new ones:
+
 The terms MLS client, MLS member, MLS group, Leaf Node, GroupContext, KeyPackage,
 Signature Key, Handshake Message, Private Message, Public Message, and
 RequiredCapabilities have the same meanings as in the MLS protocol {{RFC9420}}.
-
-# Notation
-
-We use terms from from MLS {{RFC9420}} and PQ Hybrid Terminology
-{{!I-D.ietf-pquip-pqt-hybrid-terminology}}. Below, we have restated relevant
-terms and define new ones:
 
 Application Message: A PrivateMessage carrying application data.
 
@@ -150,10 +147,10 @@ combiner protocol design treats both sessions as black-box interfaces so we only
 highlight operations requiring synchronizations in this document.
 
 Specific update frequencies are left to the application. However, there are
-significant security disadvantages to infrequent FULL commits. Notably, if an
+significant security disadvantages to infrequent FULL Commits. Notably, if an
 application that has a threshold activity window for determining 'inactive'
 devices for removal, the frequency of FULL Commits MUST be greater than that
-threshold window; if the span between FULL Commmits exceeds the threshold window,
+threshold window; if the span between FULL Commits exceeds the threshold window,
 the device MUST be considered inactive and removed from the group, even if
 traditional Commits are more frequent. Depending on the PARTIAL update frequency,
 the FULL update frequency may be significantly spread out; e.g., if a traditional
@@ -182,7 +179,7 @@ session and another Commit is applied to the traditional session using a PSK
 derived from the PQ session using the DeriveExtensionSecret and `apq_psk` label
 (see {{key-schedule}}). To ensure the correct PSK is imported into the traditional
 session, the sender includes information about the PSK in a PreSharedKey proposal
-for the traditional session's Commit list of proposals. The information about the
+for the Commit list of proposals from the traditional session. The information about the
 exported PSK is captured (shown '=' in the figures below for illustration purposes)
 by the PreSharedKeyID struct as detailed in {{RFC9420}}. Receivers process the PQ
 Commit to derive a new epoch in the PQ session and then the traditional Commit
@@ -195,7 +192,7 @@ session.
     |                                        |                            |
     | Commit'()                              |                            |
     |    PresharedKeyID =                    |                            |
-    |    DeriveExtensionSecret('apq_psk') |                            |
+    |    DeriveExtensionSecret('apq_psk')    |                            |
     | Commit(PreSharedKeyID)                 |                            |
     |-------------------------------------------------------------------->|
     |                                        |                            |
@@ -256,26 +253,25 @@ after joining to achieve PCS. The FULL Commit SHOULD be the first Commit sent by
 the joiner.
 
 ~~~
-                                                         Key Package                                    Group
-    A                                          B          Directory                                    Channel
-    |                                          |              |                                           |
-    |                                          | KeyPackageB' |                                           |
-    |                                          |  KeyPackageB |                                           |
-    |<--------------------------------------------------------+                                           |
-    |                                          |              |                                           |
-    | Commit'(Add'(KeyPackageB'))              |              |                                           |
-    |   PresharedKeyID =                       |              |                                           |
-    |   DeriveExtensionSecret('apq_psk')       |              |                                           |
-    | Commit(Add(KeyPackageB), PreSharedKeyID) |              |                                           |
-    +---------------------------------------------------------------------------------------------------->|
-    |                                          |              |                                           |
-    | Welcome'                                 |              |                                           |
-    | Welcome(PreSharedKeyID)                  |              |                                           |
-    +----------------------------------------->|              |                                           |
-    |                                          |              |                                           |
-    |                                          |              |  Commit'(Add'(KeyPackageB'))              |
-    |                                          |              |  Commit(Add(KeyPackageB), PreSharedKeyID) |
-    |<----------------------------------------------------------------------------------------------------+
+                                          Key Package                  Group
+    A                         B            Directory                  Channel
+    |                         |                |                         |
+    |                         |   KeyPackageB' |                         |
+    |                         |    KeyPackageB |                         |
+    |<-----------------------------------------+                         |
+    | Commit'(Add'(KeyPackageB'))              |                         |
+    |   PresharedKeyID =                       |                         |
+    |   DeriveExtensionSecret('apq_psk')       |                         |
+    | Commit(Add(KeyPackageB), PreSharedKeyID) |                         |
+    +------------------------------------------------------------------->|
+    |                         |                |                         |
+    | Welcome'                |                |                         |
+    | Welcome(PreSharedKeyID) |                |                         |
+    +------------------------>|                |                         |
+    |                         |                |                         |
+    |                         | Commit'(Add'(KeyPackageB'))              |
+    |                         | Commit(Add(KeyPackageB), PreSharedKeyID) |
+    |<-------------------------------------------------------------------+
 
       Figure 2:
       Client A adds client B to the group.
@@ -300,7 +296,7 @@ added (via an Add-Commit sequence) by another existing member. The external
 user MUST join both the PQ session and the traditional session. As stated
 previously, the GroupInfo used to create the External Commit MUST contain
 the APQInfo struct. After joining, the new member MUST issue a FULL Commit as their first commit
-as described in Fig 1b (e.g. a joiner SHALL NOT instantiate the protocol with a PARTIAL commit).
+as described in Fig 1b (e.g. a joiner SHALL NOT instantiate the protocol with a PARTIAL Commit).
 
 ## Removing a Group Member
 
@@ -333,7 +329,7 @@ provides confidentiality and limited authenticity against quantum attackers.
 More precisely, it provides PQ authenticity against "outsiders", that is,
 against quantum attackers who do not have acces to secret keys
 of any group member. (Authenticity comes from the fact that the traditional
-session adds AEAD / MAC tags which are not available to outsiders with CRQC.)
+session adds AEAD / MAC tags which are not available to outsiders with a CRQC.)
 This mode does not prevent quantum impersonation attacks by other group members.
 That is, a group member with a CRQC can successfully impersonate another
 group member.
@@ -370,7 +366,7 @@ However, it should be noted that PQ non-repudation security for application
 messages as described by (3) is not achieved by this mode. Achieving PQ
 non-repudiation on application messages would require hybrid signatures in
 the traditional session, with considerations to options described in
-{{!I-D.hale-pquip-hybrid-signature-spectrums}}.
+{{!I-D.ietf-pquip-hybrid-signature-spectrums}}.
 
 
 # Extension Requirements to MLS
@@ -415,9 +411,9 @@ extension struct SHALL be in the following format:
 As mentioned in {{welcome-message-validation}}, clients MUST validate that
 the information in the APQInfo extensions of both T and PQ group match.
 As the APQInfo contains the epoch of both groups it MUST be updated
-in both groups when doing a FULL commit. The `update` payload
-MUST update the epochs to the new epochs of both groups (note that the 
-epoch of the T group may increment by more than one if one or more 
+in both groups when doing a FULL Commit. The `update` payload
+MUST update the epochs to the new epochs of both groups (note that the
+epoch of the T group may increment by more than one if one or more
 T only commits have been performed in the interim).
 
 ~~~
@@ -451,7 +447,7 @@ struct {
 } APQInfoUpdate;
 ~~~
 
-Consequently, when processing a FULL commit, recipients MUST verify that
+Consequently, when processing a FULL Commit, recipients MUST verify that
 the epoch set by the APQInfoUpdate matches the actual (new) epoch of
 both groups.
 
@@ -468,7 +464,7 @@ guarantees (see {{security-considerations}}).
 Even though the `apq_psk` PSK is not sent over the wire, members of
 the APQ-MLS session must agree on the value of which PSK to use. In
 alignment with the Safe Extensions API policy for PSKs, APQ-MLS PSKs
-used SHALL set `PSKType = 3` and `component_id = XXX` (see Section
+used SHALL set `PSKType = 3` and `component_id = 0x0006` (see Section
 4.5 Pre-Shared Keys of {{I-D.ietf-mls-extensions}}).
 
 ~~~
@@ -476,7 +472,7 @@ used SHALL set `PSKType = 3` and `component_id = XXX` (see Section
       ----------                       -------------------
 
         [...]
-  SafeExportSecret(XXX)
+  SafeExportSecret(0x0006)
           |
           V
     apq_exporter
@@ -515,21 +511,18 @@ DeriveSecret(., "psk")
 
 To signal the injection of the PSK derived from the PQ group
 into the key schedule of the T group, each T group commit that
-is part of a FULL commit MUST include a PreSharedKey proposal
-with `psk_type = application`, `component_id = XXX` and
+is part of a FULL Commit MUST include a PreSharedKey proposal
+with `psk_type = application`, `component_id = 0x0006` and
 `psk_id = apq_psk_id`.
 
 The `apq_exporter` MUST be deleted after both the `apq_psk_id` and
 the `apq_psk` were derived.
 
-TODO: Replace occurences of XXX with the Component ID of this
-combiner.
-
 # Wire formats
 
 Operating two groups in conjunction requires that certain data are sent
 over the wire in duplictate, for example, two commit messages in the case
-of a FULL commit. This is made easier through the following wire formats.
+of a FULL Commit. This is made easier through the following wire formats.
 The GroupContext of both the PQ and the T group MUST include the
 `required_wire_formats` extension listing the following wire formats.
 
@@ -569,19 +562,17 @@ Where PartialGroupInfo is defined in Section 4 of
 {{!I-D.mahy-mls-ratchet-tree-options}}. Messages in APQPrivateMessage
 MUST NOT be of content type `application`.
 
-TODO: IANA considerations
-
 # Cryptographic Objects
 
 ## Cipher Suites
 There are no changes to *how* cipher suites are used to perform group
-key computations from [RFC9420](https://www.rfc-editor.org/rfc/rfc9420#name-cipher-suites).
+key computations from {{RFC9420, Section 5.1}}.
 However, the choice of *which* primitives are used by the traditional
 and PQ subsessions must be explicitly stated by the CipherSuite objects
 within `APQInfo`. So long as the traditional session only uses classical
 primitives and the PQ session uses PQ primitives for KEM, a APQ-MLS
 session is valid. Specifically, the PQ primitives for APQ-MLS must be
-'pure' (fully) PQ: PQ cost is already being amoritized at the protocol
+'pure' (fully) PQ: PQ cost is already being amortized at the protocol
 level so allowing hybrid PQ cipher suites to be used in the PQ session
 only adds extra overhead and complexity. Furthermore, the `pq_cipher_suite`
 may contain a classical digital signature algorithm used if `mode` is
@@ -634,15 +625,14 @@ session that only uses PQ KEMs or PQ KEM/DSAs. Furthermore, the PQ
 PCS window against quantum attackers can be selected based on an
 application and even variable over time, ranging from e.g. a single
 FULL Commit in PQ/T Confidentiality Only mode followed by PARTIAL
-Commits from that point onwards (enabling general PQ/traditional
-confidentiality, traditional update authenticity, traditional PCS,
-and PQ/traditional forward secrecy) to frequent FULL Commits in the
-same mode (enabling general PQ/traditional confidentiality,
-traditional update authenticity, PQ/traditional PCS, and
-PQ/traditional forward secrecy). In PQ/T Confidentiality+Authenticity
-mode with frequent FULL Commits, the latter case would enable general
-PQ/traditional confidentiality, PQ/traditional update authenticity,
-PQ/traditional PCS, and PQ/traditional forward secrecy.
+Commits from that point onwards (enabling general PQ/T confidentiality,
+traditional update authenticity, traditional PCS, and PQ/T forward
+secrecy) to frequent FULL Commits in the same mode (enabling general
+PQ/T confidentiality, traditional update authenticity, PQ/T PCS, and
+PQ/T forward secrecy). In PQ/T Confidentiality+Authenticity mode with
+frequent FULL Commits, the latter case would enable general PQ/T
+confidentiality, PQ/T update authenticity, PQ/T PCS, and PQ/T forward
+secrecy.
 
 ## Attacks on Non-Repudiation
 
