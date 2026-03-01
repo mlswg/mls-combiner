@@ -5,10 +5,10 @@
 Messaging Layer Security                                         X. Tian
 Internet-Draft                                                   B. Hale
 Intended status: Standards Track               Naval Postgraduate School
-Expires: 8 July 2026                                        M. Mularczyk
+Expires: 2 September 2026                                   M. Mularczyk
                                                                 J. Alwen
                                                                      AWS
-                                                          4 January 2026
+                                                            1 March 2026
 
 
                        Amortized PQ MLS Combiner
@@ -61,7 +61,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 8 July 2026.
+   This Internet-Draft will expire on 2 September 2026.
 
 Copyright Notice
 
@@ -81,34 +81,33 @@ Table of Contents
 
    1.  Introduction
    2.  Terminology
-   3.  Notation
-   4.  The Combiner Protocol Execution
-     4.1.  Commit Flow
-     4.2.  Adding a User
-       4.2.1.  Welcome Message Validation
-       4.2.2.  External Joins
-     4.3.  Removing a Group Member
-     4.4.  Application Messages
-   5.  Modes of Operation
-     5.1.  PQ/T Confidentiality Only
-     5.2.  PQ/T Confidentiality + Authenticity
-   6.  Extension Requirements to MLS
-     6.1.  Extension updates and validation
-     6.2.  Key Schedule
-   7.  Wire formats
-   8.  Cryptographic Objects
-     8.1.  Cipher Suites
-       8.1.1.  Key Encapsulation Mechanism
-       8.1.2.  Signing
-   9.  Security Considerations
-     9.1.  FULL Commit Frequency
-     9.2.  Attacks on Non-Repudiation
-     9.3.  Forward Secrecy
-     9.4.  Transport Security
-   10. IANA Considerations
-     10.1.  apq_mls_info MLS Component Type
-     10.2.  apq_psk MLS PSK label
-   11. Normative References
+   3.  The Combiner Protocol Execution
+     3.1.  Commit Flow
+     3.2.  Adding a User
+       3.2.1.  Welcome Message Validation
+       3.2.2.  External Joins
+     3.3.  Removing a Group Member
+     3.4.  Application Messages
+   4.  Modes of Operation
+     4.1.  PQ/T Confidentiality Only
+     4.2.  PQ/T Confidentiality + Authenticity
+   5.  Extension Requirements to MLS
+     5.1.  Extension updates and validation
+     5.2.  Key Schedule
+   6.  Wire formats
+   7.  Cryptographic Objects
+     7.1.  Cipher Suites
+       7.1.1.  Key Encapsulation Mechanism
+       7.1.2.  Signing
+   8.  Security Considerations
+     8.1.  FULL Commit Frequency
+     8.2.  Attacks on Non-Repudiation
+     8.3.  Forward Secrecy
+     8.4.  Transport Security
+   9.  IANA Considerations
+     9.1.  apq_mls_info MLS Component Type
+     9.2.  apq_psk MLS PSK label
+   10. Normative References
    Acknowledgments
      Contributors
    Authors' Addresses
@@ -127,7 +126,7 @@ Table of Contents
    overhead in terms of public key size, signature size, ciphertext
    size, and CPU time compared to their traditional counterparts.  This
    has made achieving PQ entity and data authenticity particularly
-   challenging.  The hybrid approach in this draft amortizes the PQ
+   challenging.  The hybrid approach in this document amortizes the PQ
    overhead costs enabling practical PQ confidentiality or PQ
    confidentiality _and_ PQ authenticity.
 
@@ -166,16 +165,14 @@ Table of Contents
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
+   We use terms from from MLS [RFC9420] and PQ Hybrid Terminology
+   [RFC9794].  Below, we have restated relevant terms and define new
+   ones:
+
    The terms MLS client, MLS member, MLS group, Leaf Node, GroupContext,
    KeyPackage, Signature Key, Handshake Message, Private Message, Public
    Message, and RequiredCapabilities have the same meanings as in the
    MLS protocol [RFC9420].
-
-3.  Notation
-
-   We use terms from from MLS [RFC9420] and PQ Hybrid Terminology
-   [I-D.ietf-pquip-pqt-hybrid-terminology].  Below, we have restated
-   relevant terms and define new ones:
 
    Application Message: A PrivateMessage carrying application data.
 
@@ -198,7 +195,7 @@ Table of Contents
 
    PQ/T: A Post-Quantum and Traditional hybrid (protocol).
 
-4.  The Combiner Protocol Execution
+3.  The Combiner Protocol Execution
 
    The Amortized PQ MLS (APQ-MLS) combiner protocol runs two MLS
    sessions in parallel, synchronizing their group memberships.  The two
@@ -222,10 +219,10 @@ Table of Contents
 
    Specific update frequencies are left to the application.  However,
    there are significant security disadvantages to infrequent FULL
-   commits.  Notably, if an application that has a threshold activity
+   Commits.  Notably, if an application that has a threshold activity
    window for determining 'inactive' devices for removal, the frequency
    of FULL Commits MUST be greater than that threshold window; if the
-   span between FULL Commmits exceeds the threshold window, the device
+   span between FULL Commits exceeds the threshold window, the device
    MUST be considered inactive and removed from the group, even if
    traditional Commits are more frequent.  Depending on the PARTIAL
    update frequency, the FULL update frequency may be significantly
@@ -248,11 +245,11 @@ Table of Contents
    through creating a PQ MLS session with the same group members,
    sending a Welcome message containing the APQInfo struct in the
    GroupContext, and then making a FULL Commit as described in
-   Section 4.1.  In either case, PQ group MUST be instantiated with an
+   Section 3.1.  In either case, PQ group MUST be instantiated with an
    approved PQ ciphersuite as detailed in
    [I-D.ietf-mls-pq-ciphersuites].
 
-4.1.  Commit Flow
+3.1.  Commit Flow
 
    Commits to proposals MAY be _PARTIAL_ or _FULL_. For a PARTIAL
    Commit, only the traditional session's epoch is updated following the
@@ -260,22 +257,22 @@ Table of Contents
    Commit, a Commit is first applied to the PQ session and another
    Commit is applied to the traditional session using a PSK derived from
    the PQ session using the DeriveExtensionSecret and apq_psk label (see
-   Section 6.2).  To ensure the correct PSK is imported into the
+   Section 5.2).  To ensure the correct PSK is imported into the
    traditional session, the sender includes information about the PSK in
-   a PreSharedKey proposal for the traditional session's Commit list of
-   proposals.  The information about the exported PSK is captured (shown
-   '=' in the figures below for illustration purposes) by the
-   PreSharedKeyID struct as detailed in [RFC9420].  Receivers process
-   the PQ Commit to derive a new epoch in the PQ session and then the
-   traditional Commit (which also includes the PSK proposal) to derive
-   the new epoch in the traditional session.
+   a PreSharedKey proposal for the Commit list of proposals from the
+   traditional session.  The information about the exported PSK is
+   captured (shown '=' in the figures below for illustration purposes)
+   by the PreSharedKeyID struct as detailed in [RFC9420].  Receivers
+   process the PQ Commit to derive a new epoch in the PQ session and
+   then the traditional Commit (which also includes the PSK proposal) to
+   derive the new epoch in the traditional session.
 
                                                                         Group
       A                                      B                         Channel
     |                                        |                            |
     | Commit'()                              |                            |
     |    PresharedKeyID =                    |                            |
-    |    DeriveExtensionSecret('apq_psk') |                            |
+    |    DeriveExtensionSecret('apq_psk')    |                            |
     | Commit(PreSharedKeyID)                 |                            |
     |-------------------------------------------------------------------->|
     |                                        |                            |
@@ -320,7 +317,7 @@ Table of Contents
       |  update proposal Upd(B, f) indicates B's intention for a FULL
       |  Commit to whomever Commits to its proposal.
 
-4.2.  Adding a User
+3.2.  Adding a User
 
    User leaf nodes are first added to the PQ session following the
    sequence described in Section 3 of [RFC9420] except using PQ
@@ -335,33 +332,32 @@ Table of Contents
    after joining to achieve PCS.  The FULL Commit SHOULD be the first
    Commit sent by the joiner.
 
-                                                         Key Package                                    Group
-    A                                          B          Directory                                    Channel
-    |                                          |              |                                           |
-    |                                          | KeyPackageB' |                                           |
-    |                                          |  KeyPackageB |                                           |
-    |<--------------------------------------------------------+                                           |
-    |                                          |              |                                           |
-    | Commit'(Add'(KeyPackageB'))              |              |                                           |
-    |   PresharedKeyID =                       |              |                                           |
-    |   DeriveExtensionSecret('apq_psk')       |              |                                           |
-    | Commit(Add(KeyPackageB), PreSharedKeyID) |              |                                           |
-    +---------------------------------------------------------------------------------------------------->|
-    |                                          |              |                                           |
-    | Welcome'                                 |              |                                           |
-    | Welcome(PreSharedKeyID)                  |              |                                           |
-    +----------------------------------------->|              |                                           |
-    |                                          |              |                                           |
-    |                                          |              |  Commit'(Add'(KeyPackageB'))              |
-    |                                          |              |  Commit(Add(KeyPackageB), PreSharedKeyID) |
-    |<----------------------------------------------------------------------------------------------------+
+                                          Key Package                  Group
+    A                         B            Directory                  Channel
+    |                         |                |                         |
+    |                         |   KeyPackageB' |                         |
+    |                         |    KeyPackageB |                         |
+    |<-----------------------------------------+                         |
+    | Commit'(Add'(KeyPackageB'))              |                         |
+    |   PresharedKeyID =                       |                         |
+    |   DeriveExtensionSecret('apq_psk')       |                         |
+    | Commit(Add(KeyPackageB), PreSharedKeyID) |                         |
+    +------------------------------------------------------------------->|
+    |                         |                |                         |
+    | Welcome'                |                |                         |
+    | Welcome(PreSharedKeyID) |                |                         |
+    +------------------------>|                |                         |
+    |                         |                |                         |
+    |                         | Commit'(Add'(KeyPackageB'))              |
+    |                         | Commit(Add(KeyPackageB), PreSharedKeyID) |
+    |<-------------------------------------------------------------------+
 
       Figure 2:
       Client A adds client B to the group.
       Messages with ' come from the PQ session. Processing Welcome and Commit in the traditional
       session requires the PSK exported from the PQ session.
 
-4.2.1.  Welcome Message Validation
+3.2.1.  Welcome Message Validation
 
    Since a client must join two sessions, the Welcome messages it
    receives to each session must indicate that it is not sufficient to
@@ -372,7 +368,7 @@ Table of Contents
    verify group membership is consistent in both sessions after a join
    and the new member MUST issue a FULL Commit as described in Fig 1b.
 
-4.2.2.  External Joins
+3.2.2.  External Joins
 
    External joins are used by members who join a group without being
    explicitly added (via an Add-Commit sequence) by another existing
@@ -381,23 +377,23 @@ Table of Contents
    create the External Commit MUST contain the APQInfo struct.  After
    joining, the new member MUST issue a FULL Commit as their first
    commit as described in Fig 1b (e.g. a joiner SHALL NOT instantiate
-   the protocol with a PARTIAL commit).
+   the protocol with a PARTIAL Commit).
 
-4.3.  Removing a Group Member
+3.3.  Removing a Group Member
 
    User removals MUST be done in both PQ and traditional sessions
    followed by a FULL Commit Update as as described in Fig 1b.  Members
    MUST verify group membership is consistent in both sessions after a
    removal.
 
-4.4.  Application Messages
+3.4.  Application Messages
 
    APQ-MLS combiner provides PQ security to the traditional MLS session.
    Application messages are therefore only sent in the traditional
    session using the encryption_secret provided by the key schedule of
    the traditional session according to Section 15 of [RFC9420].
 
-5.  Modes of Operation
+4.  Modes of Operation
 
    Security needs vary by organizations and system-specific risk
    tolerance and/or constraints.  While this combiner protocol targets
@@ -409,7 +405,7 @@ Table of Contents
    PQ KEM and a PQ DSA.  The modes of operation are specified by the
    mode flag in APQInfo struct and are listed below.
 
-5.1.  PQ/T Confidentiality Only
+4.1.  PQ/T Confidentiality Only
 
    The default mode of operation is PQ/T Confidentiality Only mode.
    This mode provides confidentiality and limited authenticity against
@@ -417,7 +413,7 @@ Table of Contents
    against "outsiders", that is, against quantum attackers who do not
    have acces to secret keys of any group member.  (Authenticity comes
    from the fact that the traditional session adds AEAD / MAC tags which
-   are not available to outsiders with CRQC.)  This mode does not
+   are not available to outsiders with a CRQC.)  This mode does not
    prevent quantum impersonation attacks by other group members.  That
    is, a group member with a CRQC can successfully impersonate another
    group member.
@@ -427,7 +423,7 @@ Table of Contents
    such, the authenticity guarantees outlined above only hold as long as
    the adversary is passive during the addition of new group members.
 
-5.2.  PQ/T Confidentiality + Authenticity
+4.2.  PQ/T Confidentiality + Authenticity
 
    The elevated mode of operation is the PQ/T Confidentiality +
    Authenticity mode.  Under a use environment of a cryptographically
@@ -458,9 +454,9 @@ Table of Contents
    messages as described by (3) is not achieved by this mode.  Achieving
    PQ non-repudiation on application messages would require hybrid
    signatures in the traditional session, with considerations to options
-   described in [I-D.hale-pquip-hybrid-signature-spectrums].
+   described in [I-D.ietf-pquip-hybrid-signature-spectrums].
 
-6.  Extension Requirements to MLS
+5.  Extension Requirements to MLS
 
    The APQInfo struct contains characterizing information to signal to
    users that they are participating in a hybrid session.  This is
@@ -497,37 +493,50 @@ Table of Contents
              uint64 pq_epoch;
          } APQInfo
 
-6.1.  Extension updates and validation
+5.1.  Extension updates and validation
 
-   As mentioned in Section 4.2.1, clients MUST validate that the
+   As mentioned in Section 3.2.1, clients MUST validate that the
    information in the APQInfo extensions of both T and PQ group match.
-   As the APQMLSInfo contains the epoch of both groups it MUST be
-   updated in both groups when doing a FULL commit.  Consequently, when
-   doing a FULL commit in both commits MUST contain an AppDataUpdate
-   proposal with op set to update.  The update payload MUST update the
-   epochs to the new epochs of both groups (note that the epoch of the T
-   group may increment by more than one if one or more T only commits
-   have been performed in the meantime).
+   As the APQInfo contains the epoch of both groups it MUST be updated
+   in both groups when doing a FULL Commit.  The update payload MUST
+   update the epochs to the new epochs of both groups (note that the
+   epoch of the T group may increment by more than one if one or more T
+   only commits have been performed in the interim).
+
+   struct{
+        opaque t_session_group_id<V>;
+        opaque PQ_session_group_id<V>;
+        bool mode;
+        CipherSuite t_cipher_suite;
+        CipherSuite pq_cipher_suite;
+        uint64 t_epoch;
+        uint64 pq_epoch;
+   } APQInfo;
+   APQInfo APQInfoData;
 
    enum {
-     invalid(0),
-     t_epoch(1),
-     pq_epoch(1),
-     (255)
-   } APQInfoUpdate
+       full_update (0),
+       new_t_epoch(1),
+       new_pq_epoch(2),
+       (255)
+   } APQUpdateType;
 
    struct {
-     APQInfoUpdate update;
-     select (APQInfoUpdate.update)
-       case epoch:
-          uint64 epoch;
-   } APQInfoUpdateData
+       APQUpdateType update_type;
+       select (update_type) {
+           case full_update:
+               APQInfo new_apq_info;
+           case new_t_epoch:
+               uint64 epoch;
+           case new_pq_epoch:
+               uint64 epoch;
+   } APQInfoUpdate;
 
-   Consequently, when processing a FULL commit, recipients MUST verify
-   that the epoch set by the APQInfoUpdateData matches the actual (new)
+   Consequently, when processing a FULL Commit, recipients MUST verify
+   that the epoch set by the APQInfoUpdate matches the actual (new)
    epoch of both groups.
 
-6.2.  Key Schedule
+5.2.  Key Schedule
 
    The apq_psk exporter key derived in the PQ session MUST be derived in
    accordance with the Safe Extensions API guidance (see Exporting
@@ -535,19 +544,19 @@ Table of Contents
    use the extension_secret and MUST be derived using the
    SafeExportSecret function as defined in Section 4.4 Pre-Shared Keys
    of [I-D.ietf-mls-extensions].  This is to ensure forward secrecy
-   guarantees (see Section 9).
+   guarantees (see Section 8).
 
    Even though the apq_psk PSK is not sent over the wire, members of the
    APQ-MLS session must agree on the value of which PSK to use.  In
    alignment with the Safe Extensions API policy for PSKs, APQ-MLS PSKs
-   used SHALL set PSKType = 3 and component_id = XXX (see Section 4.5
+   used SHALL set PSKType = 3 and component_id = 0x0006 (see Section 4.5
    Pre-Shared Keys of [I-D.ietf-mls-extensions]).
 
       PQ Session                       Traditional Session
       ----------                       -------------------
 
         [...]
-  SafeExportSecret(XXX)
+  SafeExportSecret(0x0006)
           |
           V
     apq_exporter
@@ -584,20 +593,17 @@ DeriveSecret(., "psk")
 
    To signal the injection of the PSK derived from the PQ group into the
    key schedule of the T group, each T group commit that is part of a
-   FULL commit MUST include a PreSharedKey proposal with psk_type =
-   application, component_id = XXX and psk_id = apq_psk_id.
+   FULL Commit MUST include a PreSharedKey proposal with psk_type =
+   application, component_id = 0x0006 and psk_id = apq_psk_id.
 
    The apq_exporter MUST be deleted after both the apq_psk_id and the
    apq_psk were derived.
 
-   TODO: Replace occurences of XXX with the Component ID of this
-   combiner.
-
-7.  Wire formats
+6.  Wire formats
 
    Operating two groups in conjunction requires that certain data are
    sent over the wire in duplictate, for example, two commit messages in
-   the case of a FULL commit.  This is made easier through the following
+   the case of a FULL Commit.  This is made easier through the following
    wire formats.  The GroupContext of both the PQ and the T group MUST
    include the required_wire_formats extension listing the following
    wire formats.
@@ -636,22 +642,19 @@ DeriveSecret(., "psk")
    [I-D.mahy-mls-ratchet-tree-options].  Messages in APQPrivateMessage
    MUST NOT be of content type application.
 
-   TODO: IANA considerations
+7.  Cryptographic Objects
 
-8.  Cryptographic Objects
-
-8.1.  Cipher Suites
+7.1.  Cipher Suites
 
    There are no changes to _how_ cipher suites are used to perform group
-   key computations from RFC9420 (https://www.rfc-editor.org/rfc/
-   rfc9420#name-cipher-suites).  However, the choice of _which_
-   primitives are used by the traditional and PQ subsessions must be
-   explicitly stated by the CipherSuite objects within APQInfo.  So long
-   as the traditional session only uses classical primitives and the PQ
-   session uses PQ primitives for KEM, a APQ-MLS session is valid.
-   Specifically, the PQ primitives for APQ-MLS must be 'pure' (fully)
-   PQ: PQ cost is already being amoritized at the protocol level so
-   allowing hybrid PQ cipher suites to be used in the PQ session only
+   key computations from [RFC9420], Section 5.1.  However, the choice of
+   _which_ primitives are used by the traditional and PQ subsessions
+   must be explicitly stated by the CipherSuite objects within APQInfo.
+   So long as the traditional session only uses classical primitives and
+   the PQ session uses PQ primitives for KEM, a APQ-MLS session is
+   valid.  Specifically, the PQ primitives for APQ-MLS must be 'pure'
+   (fully) PQ: PQ cost is already being amortized at the protocol level
+   so allowing hybrid PQ cipher suites to be used in the PQ session only
    adds extra overhead and complexity.  Furthermore, the pq_cipher_suite
    may contain a classical digital signature algorithm used if mode is
    set to 0 (PQ Confidentiality-Only) but MUST be fully PQ if mode is
@@ -661,7 +664,7 @@ DeriveSecret(., "psk")
    with invalid or duplicate cipher suites (e.g. two traditional cipher
    suites).
 
-8.1.1.  Key Encapsulation Mechanism
+7.1.1.  Key Encapsulation Mechanism
 
    For APQ-MLS sessions, the PQ subsession MUST use a Key Encapsulation
    Mechanism (KEM) that is standardized for post-quantum cryptography.
@@ -670,7 +673,7 @@ DeriveSecret(., "psk")
    ensures interoperability and a consistent security baseline across
    all APQ-MLS deployments.
 
-8.1.2.  Signing
+7.1.2.  Signing
 
    For APQ-MLS sessions, the choice of digital signature algorithm in
    the PQ subsession depends on the selected mode of operation.  If the
@@ -686,9 +689,9 @@ DeriveSecret(., "psk")
    consistent baseline for interoperability and security across
    deployments.
 
-9.  Security Considerations
+8.  Security Considerations
 
-9.1.  FULL Commit Frequency
+8.1.  FULL Commit Frequency
 
    So long as the FULL Commit flow is followed for group administration
    actions, PQ security is extended to the traditional session.
@@ -705,17 +708,15 @@ DeriveSecret(., "psk")
    can be selected based on an application and even variable over time,
    ranging from e.g. a single FULL Commit in PQ/T Confidentiality Only
    mode followed by PARTIAL Commits from that point onwards (enabling
-   general PQ/traditional confidentiality, traditional update
-   authenticity, traditional PCS, and PQ/traditional forward secrecy) to
-   frequent FULL Commits in the same mode (enabling general PQ/
-   traditional confidentiality, traditional update authenticity, PQ/
-   traditional PCS, and PQ/traditional forward secrecy).  In PQ/T
+   general PQ/T confidentiality, traditional update authenticity,
+   traditional PCS, and PQ/T forward secrecy) to frequent FULL Commits
+   in the same mode (enabling general PQ/T confidentiality, traditional
+   update authenticity, PQ/T PCS, and PQ/T forward secrecy).  In PQ/T
    Confidentiality+Authenticity mode with frequent FULL Commits, the
-   latter case would enable general PQ/traditional confidentiality, PQ/
-   traditional update authenticity, PQ/traditional PCS, and PQ/
-   traditional forward secrecy.
+   latter case would enable general PQ/T confidentiality, PQ/T update
+   authenticity, PQ/T PCS, and PQ/T forward secrecy.
 
-9.2.  Attacks on Non-Repudiation
+8.2.  Attacks on Non-Repudiation
 
    While PQ message integrity is provided by the symmetric key used in
    AEAD, attacks on non-repudiation (e.g., source forgery) on
@@ -740,7 +741,7 @@ DeriveSecret(., "psk")
    attacks can be achieve through more expeditious means, such a option
    is not considered here.
 
-9.3.  Forward Secrecy
+8.3.  Forward Secrecy
 
    Recall that one of the ways MLS achieves forward secrecy is by
    deleting security sensitive values after they are consumed (e.g. to
@@ -755,17 +756,17 @@ DeriveSecret(., "psk")
    be derived from the epoch_secret created at the _start_ of an epoch
    from the PQ session (see Figure 3) to ensure forward secrecy.
 
-9.4.  Transport Security
+8.4.  Transport Security
 
    Recommendations for preventing denial-of-service attacks or
    restricting transmitted messages are inherited from MLS.
 
-10.  IANA Considerations
+9.  IANA Considerations
 
    RFC EDITOR: Please replace XXXX throughout with the RFC number
    assigned to this document.
 
-10.1.  apq_mls_info MLS Component Type
+9.1.  apq_mls_info MLS Component Type
 
    This document registers the apq_mls_info MLS Component Type per
    Section 7.5 of [I-D.ietf-mls-extensions].
@@ -780,18 +781,11 @@ DeriveSecret(., "psk")
 
    *  Reference: RFC XXXX
 
-10.2.  apq_psk MLS PSK label
+9.2.  apq_psk MLS PSK label
 
    TODO
 
-11.  Normative References
-
-   [I-D.hale-pquip-hybrid-signature-spectrums]
-              Bindel, N., Hale, B., Connolly, D., and F. D, "Hybrid
-              signature spectrums", Work in Progress, Internet-Draft,
-              draft-hale-pquip-hybrid-signature-spectrums-04, 21 March
-              2024, <https://datatracker.ietf.org/doc/html/draft-hale-
-              pquip-hybrid-signature-spectrums-04>.
+10.  Normative References
 
    [I-D.ietf-mls-extensions]
               Robert, R., "The Messaging Layer Security (MLS)
@@ -807,12 +801,12 @@ DeriveSecret(., "psk")
               <https://datatracker.ietf.org/doc/html/draft-ietf-mls-pq-
               ciphersuites-01>.
 
-   [I-D.ietf-pquip-pqt-hybrid-terminology]
-              D, F., P, M., and B. Hale, "Terminology for Post-Quantum
-              Traditional Hybrid Schemes", Work in Progress, Internet-
-              Draft, draft-ietf-pquip-pqt-hybrid-terminology-06, 10
-              January 2025, <https://datatracker.ietf.org/doc/html/
-              draft-ietf-pquip-pqt-hybrid-terminology-06>.
+   [I-D.ietf-pquip-hybrid-signature-spectrums]
+              Bindel, N., Hale, B., Connolly, D., and F. D, "Hybrid
+              signature spectrums", Work in Progress, Internet-Draft,
+              draft-ietf-pquip-hybrid-signature-spectrums-07, 20 June
+              2025, <https://datatracker.ietf.org/doc/html/draft-ietf-
+              pquip-hybrid-signature-spectrums-07>.
 
    [I-D.mahy-mls-ratchet-tree-options]
               Mahy, R., "Ways to convey the Ratchet Tree in Messaging
@@ -843,6 +837,11 @@ DeriveSecret(., "psk")
               Omara, E., and K. Cohn-Gordon, "The Messaging Layer
               Security (MLS) Protocol", RFC 9420, DOI 10.17487/RFC9420,
               July 2023, <https://www.rfc-editor.org/rfc/rfc9420>.
+
+   [RFC9794]  Driscoll, F., Parsons, M., and B. Hale, "Terminology for
+              Post-Quantum Traditional Hybrid Schemes", RFC 9794,
+              DOI 10.17487/RFC9794, June 2025,
+              <https://www.rfc-editor.org/rfc/rfc9794>.
 
 Acknowledgments
 
