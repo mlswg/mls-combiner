@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-03-01T02:33:53.160858+00:00",
+  "timestamp": "2026-03-03T02:26:00.821476+00:00",
   "repo": "mlswg/mls-combiner",
   "labels": [
     {
@@ -566,26 +566,55 @@
       "id": "PR_kwDONZ9R687GOfn-",
       "title": "WGLC Fixes",
       "url": "https://github.com/mlswg/mls-combiner/pull/10",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "lwerrors",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2026-02-25T13:10:24Z",
-      "updatedAt": "2026-02-28T15:02:51Z",
+      "updatedAt": "2026-03-01T19:19:21Z",
       "baseRepository": "mlswg/mls-combiner",
       "baseRefName": "main",
       "baseRefOid": "5566e2164d944091012788cc7074f3676e2fb099",
       "headRepository": "lwerrors/mls-combiner",
       "headRefName": "wglc-fixes",
       "headRefOid": "cf4bfb8b35faf2a19d6bbb436d35a021f39570fa",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-03-01T19:19:21Z",
+      "mergedAt": "2026-03-01T19:19:21Z",
+      "mergedBy": "xisentian",
+      "mergeCommit": {
+        "oid": "c511d87dd77f30001edfa90b04ae6cf25b63b51e"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDONZ9R687m3NtF",
+          "commit": {
+            "abbreviatedOid": "cf4bfb8"
+          },
+          "author": "xisentian",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-03-01T19:16:25Z",
+          "updatedAt": "2026-03-01T19:16:25Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDONZ9R687m3OlA",
+          "commit": {
+            "abbreviatedOid": "cf4bfb8"
+          },
+          "author": "xisentian",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-03-01T19:17:37Z",
+          "updatedAt": "2026-03-01T19:17:37Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
