@@ -450,7 +450,7 @@ A full commit MUST update the epochs to the new epochs of both groups
 (note that the epoch of the T group may increment by more than one if one
 or more T only commits have been performed in the interim). That is, the
 commits of both T and PQ groups each includes two AppDataUpdate proposals,
-one incrementing the T epoch and one incrementing the PQ epoch. 
+one incrementing the T epoch and one incrementing the PQ epoch.
 
 Consequently, when processing a FULL Commit, recipients MUST verify that
 the epoch set by the APQInfoUpdate matches the actual (new) epoch of
