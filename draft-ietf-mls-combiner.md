@@ -371,6 +371,8 @@ the traditional session, with considerations to options described in
 
 # Extension Requirements to MLS
 
+## Group Context Extension
+
 The APQInfo struct contains characterizing information to signal to users that
 they are participating in a hybrid session. This is necessary both functionally
 to allow for group synchronization and as a security measure to prevent
@@ -381,53 +383,38 @@ bookkeeping values to validate and synchronize group operations. The `mode`
 is a boolean value: `0` for the default PQ/T Confidentiality Only mode and
 `1` for the PQ/T Confidentiality + Authenticity mode.
 
-The APQInfo struct conforms to the Safe Extensions API (see
-{{!I-D.ietf-mls-extensions}}). Recall that an extension is called *safe* if
-it does not modify base MLS protocol or other MLS extensions beyond using
-components of the Safe Extension API. This allows security analysis of our
-APQ-MLS Combiner protocol in isolation of the security guarantees of the
-base MLS protocol to enable composability of guarantees. The HPMLSInfo
-extension struct SHALL be in the following format:
+APQInfo is stored in the MLS GroupContext of each T and PQ group using the app
+data dictionary mechanism defined in Section 4.6 of
+{{!I-D.ietf-mls-extensions}}. Specifically, the `ComponentData` contains
+`component_id = 0x0006` and `data` set to the following APQInfo struct encoded
+with TLS:
 
-~~~
-      struct{
-          ExtensionType APQ;
-          opaque extension_data<V>;
-          } ExtensionContent;
-
-      struct{
-          opaque t_session_group_id<V>;
-          opaque PQ_session_group_id<V>;
-          bool mode;
-          CipherSuite t_cipher_suite;
-          CipherSuite pq_cipher_suite;
-          uint64 t_epoch;
-          uint64 pq_epoch;
-      } APQInfo
+~~~tls
+struct{
+    opaque t_session_group_id<V>;
+    opaque PQ_session_group_id<V>;
+    bool mode;
+    CipherSuite t_cipher_suite;
+    CipherSuite pq_cipher_suite;
+    uint64 t_epoch;
+    uint64 pq_epoch;
+} APQInfo
 ~~~
 
-## Extension updates and validation
+### Validating APQInfo
 
 As mentioned in {{welcome-message-validation}}, clients MUST validate that
 the information in the APQInfo extensions of both T and PQ group match.
 As the APQInfo contains the epoch of both groups it MUST be updated
-in both groups when doing a FULL Commit. The `update` payload
-MUST update the epochs to the new epochs of both groups (note that the
-epoch of the T group may increment by more than one if one or more
-T only commits have been performed in the interim).
+in both groups when doing a FULL Commit.
 
-~~~
-struct{
-     opaque t_session_group_id<V>;
-     opaque PQ_session_group_id<V>;
-     bool mode;
-     CipherSuite t_cipher_suite;
-     CipherSuite pq_cipher_suite;
-     uint64 t_epoch;
-     uint64 pq_epoch;
-} APQInfo;
-APQInfo APQInfoData;
+### Updating APQInfo
 
+The APQInfo is updated using AppDataUpdate proposal defined in Section 4.7
+of {{!I-D.ietf-mls-extensions}}. The `update` payload for APQInfo is the
+following struct serialized with TLS:
+
+~~~tls
 enum {
     full_update (0),
     new_t_epoch(1),
@@ -441,11 +428,29 @@ struct {
         case full_update:
             APQInfo new_apq_info;
         case new_t_epoch:
-            uint64 epoch;
+            uint64 new_t_epoch;
         case new_pq_epoch:
-            uint64 epoch;
+            uint64 new_pq_epoch;
 } APQInfoUpdate;
 ~~~
+
+The mechanism for applying AppDataUpdate in {{!I-D.ietf-mls-extensions}}
+is generic over a function to turn an `update` into a new app data object
+provided by the application component. For APQInfo the new APQInfo object
+if determined as follows:
+
+* If `update_type` is `full_update` then the new object is `new_apq_info`.
+* If `update_type` is `new_t_epoch` then the new object is the same as the
+  old object but with `t_epoch` set to `new_t_epoch`.
+* If `update_type` is `new_pq_epoch` then the new object is the same as the
+  old object but with `pq_epoch` and `t_epoch` set to `new_pq_epoch` and
+  `new_t_epoch`, respectively.
+
+A full commit MUST update the epochs to the new epochs of both groups
+(note that the epoch of the T group may increment by more than one if one
+or more T only commits have been performed in the interim). That is, the
+commits of both T and PQ groups each includes two AppDataUpdate proposals,
+one incrementing the T epoch and one incrementing the PQ epoch. 
 
 Consequently, when processing a FULL Commit, recipients MUST verify that
 the epoch set by the APQInfoUpdate matches the actual (new) epoch of
