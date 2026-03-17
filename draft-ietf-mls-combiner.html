@@ -21,25 +21,25 @@ traditional ciphersuite. By supporting on-demand traditional-only key updates
 reduce the bandwidth and computational overhead associated with PQ operations
 while meeting the requirement of frequent key rotations. 
     " name="description">
-<meta content="xml2rfc 3.31.0" name="generator">
+<meta content="xml2rfc 3.32.0" name="generator">
 <meta content="security" name="keyword">
 <meta content="authenticated key exchange" name="keyword">
 <meta content="PCS" name="keyword">
 <meta content="Post-Quantum" name="keyword">
 <meta content="draft-ietf-mls-combiner-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.31.0
+  xml2rfc 3.32.0
     Python 3.12.12
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
     lxml 6.0.2
-    platformdirs 4.5.1
+    platformdirs 4.9.4
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.32.5
-    wcwidth 0.3.0
+    wcwidth 0.6.0
 -->
 <link href="draft-ietf-mls-combiner.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1064,7 +1064,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tian, et al.</td>
-<td class="center">Expires 2 September 2026</td>
+<td class="center">Expires 18 September 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1077,12 +1077,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-mls-combiner-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-03-01" class="published">1 March 2026</time>
+<time datetime="2026-03-17" class="published">17 March 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-09-02">2 September 2026</time></dd>
+<dd class="expires"><time datetime="2026-09-18">18 September 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1153,7 +1153,7 @@ while meeting the requirement of frequent key rotations.<a href="#section-abstra
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 2 September 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 18 September 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1345,7 +1345,7 @@ extensions:<a href="#section-1-3" class="pilcrow">¶</a></p>
 "<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
 described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
 appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
-<p id="section-2-2">We use terms from from MLS <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span> and PQ Hybrid Terminology <span>[<a href="#RFC9794" class="cite xref">RFC9794</a>]</span>.
+<p id="section-2-2">We use terms from MLS <span>[<a href="#RFC9420" class="cite xref">RFC9420</a>]</span> and PQ Hybrid Terminology <span>[<a href="#RFC9794" class="cite xref">RFC9794</a>]</span>.
 Below, we have restated relevant terms and define new ones:<a href="#section-2-2" class="pilcrow">¶</a></p>
 <p id="section-2-3">The terms MLS client, MLS member, MLS group, Leaf Node, GroupContext, KeyPackage,
 Signature Key, Handshake Message, Private Message, Public Message, and
@@ -1393,7 +1393,7 @@ threshold window; if the span between FULL Commits exceeds the threshold window,
 the device <span class="bcp14">MUST</span> be considered inactive and removed from the group, even if
 traditional Commits are more frequent. Depending on the PARTIAL update frequency,
 the FULL update frequency may be significantly spread out; e.g., if a traditional
-update occurs at every message, occuring frequently throughout a day, then a PQ/T
+update occurs at every message, occurring frequently throughout a day, then a PQ/T
 update could occur once every fifty or one hundred messages. In contrast, if a
 traditional update occurs only once a day, then a PQ/T update frequency should
 occur at a far more reduced ratio to the traditional-only update frequency, for
@@ -1441,7 +1441,7 @@ session.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
     |&lt;--------------------------------------------------------------------+
     |                                        |&lt;---------------------------+
     Fig 1a. FULL Commit to an empty proposal list.
-        Messages with ' are sent in the the PQ session.
+        Messages with ' are sent in the PQ session.
         PreSharedKeyID identifies a PSK exported from the PQ
         session in the new epoch following a Commit'(). The
         PreSharedKeyID  is implicitly included in the commit
@@ -1653,7 +1653,7 @@ the traditional session, with considerations to options described in
 <p id="section-5-1">The APQInfo struct contains characterizing information to signal to users that
 they are participating in a hybrid session. This is necessary both functionally
 to allow for group synchronization and as a security measure to prevent
-downgrading attacks to coax users into parcipating in just one of the two
+downgrading attacks to coax users into participating in just one of the two
 sessions. The <code>group_id</code>, <code>cipher_suite</code>, and <code>epoch</code> from both sessions
 (<code>t</code> for the traditional session and <code>pq</code> for the PQ session) are used as
 bookkeeping values to validate and synchronize group operations. The <code>mode</code>
@@ -1809,7 +1809,7 @@ the <code>apq_psk</code> were derived.<a href="#section-5.2-5" class="pilcrow">�
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-wire-formats" class="section-name selfRef">Wire formats</a>
       </h2>
 <p id="section-6-1">Operating two groups in conjunction requires that certain data are sent
-over the wire in duplictate, for example, two commit messages in the case
+over the wire in duplicate, for example, two commit messages in the case
 of a FULL Commit. This is made easier through the following wire formats.
 The GroupContext of both the PQ and the T group <span class="bcp14">MUST</span> include the
 <code>required_wire_formats</code> extension listing the following wire formats.<a href="#section-6-1" class="pilcrow">¶</a></p>
@@ -1972,8 +1972,8 @@ the scope of this protocol.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
 <p id="section-8.2-2">If this is a concern, hybrid PQ DSAs can be used in the traditional
 session to sign application messages. Since this would negate much
 of the efficiency gains from using this protocol and
-enial-of-service attacks can be achieve through more expeditious
-means, such a option is not considered here.<a href="#section-8.2-2" class="pilcrow">¶</a></p>
+denial-of-service attacks can be achieved through more expeditious
+means, such an option is not considered here.<a href="#section-8.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="forward-secrecy">
@@ -2018,7 +2018,7 @@ restricting transmitted messages are inherited from MLS.<a href="#section-8.4-1"
         <h3 id="name-apq_mls_info-mls-component-">
 <a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-apq_mls_info-mls-component-" class="section-name selfRef">apq_mls_info MLS Component Type</a>
         </h3>
-<p id="section-9.1-1">This document registers the <code>apq_mls_info</code> MLS Component Type per <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-mls-extensions-08#section-7.5" class="relref">Section 7.5</a> of [<a href="#I-D.ietf-mls-extensions" class="cite xref">I-D.ietf-mls-extensions</a>]</span>.<a href="#section-9.1-1" class="pilcrow">¶</a></p>
+<p id="section-9.1-1">This document registers the <code>apq_mls_info</code> MLS Component Type per <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-mls-extensions-09#section-7.5" class="relref">Section 7.5</a> of [<a href="#I-D.ietf-mls-extensions" class="cite xref">I-D.ietf-mls-extensions</a>]</span>.<a href="#section-9.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-9.1-2.1">
             <p id="section-9.1-2.1.1">Value: 0x0006<a href="#section-9.1-2.1.1" class="pilcrow">¶</a></p>
@@ -2056,11 +2056,11 @@ restricting transmitted messages are inherited from MLS.<a href="#section-8.4-1"
 <dl class="references">
 <dt id="I-D.ietf-mls-extensions">[I-D.ietf-mls-extensions]</dt>
       <dd>
-<span class="refAuthor">Robert, R.</span>, <span class="refTitle">"The Messaging Layer Security (MLS) Extensions"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-mls-extensions-08</span>, <time datetime="2025-07-21" class="refDate">21 July 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-mls-extensions-08">https://datatracker.ietf.org/doc/html/draft-ietf-mls-extensions-08</a>&gt;</span>. </dd>
+<span class="refAuthor">Robert, R.</span>, <span class="refTitle">"The Messaging Layer Security (MLS) Extensions"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-mls-extensions-09</span>, <time datetime="2026-03-02" class="refDate">2 March 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-mls-extensions-09">https://datatracker.ietf.org/doc/html/draft-ietf-mls-extensions-09</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-mls-pq-ciphersuites">[I-D.ietf-mls-pq-ciphersuites]</dt>
       <dd>
-<span class="refAuthor">Mahy, R.</span> and <span class="refAuthor">R. Barnes</span>, <span class="refTitle">"ML-KEM and Hybrid Cipher Suites for Messaging Layer Security"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-mls-pq-ciphersuites-01</span>, <time datetime="2025-11-04" class="refDate">4 November 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-mls-pq-ciphersuites-01">https://datatracker.ietf.org/doc/html/draft-ietf-mls-pq-ciphersuites-01</a>&gt;</span>. </dd>
+<span class="refAuthor">Mahy, R.</span> and <span class="refAuthor">R. Barnes</span>, <span class="refTitle">"ML-KEM and Hybrid Cipher Suites for Messaging Layer Security"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-mls-pq-ciphersuites-03</span>, <time datetime="2026-03-02" class="refDate">2 March 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-mls-pq-ciphersuites-03">https://datatracker.ietf.org/doc/html/draft-ietf-mls-pq-ciphersuites-03</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-pquip-hybrid-signature-spectrums">[I-D.ietf-pquip-hybrid-signature-spectrums]</dt>
       <dd>
@@ -2068,7 +2068,7 @@ restricting transmitted messages are inherited from MLS.<a href="#section-8.4-1"
 <dd class="break"></dd>
 <dt id="I-D.mahy-mls-ratchet-tree-options">[I-D.mahy-mls-ratchet-tree-options]</dt>
       <dd>
-<span class="refAuthor">Mahy, R.</span>, <span class="refTitle">"Ways to convey the Ratchet Tree in Messaging Layer Security"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-mahy-mls-ratchet-tree-options-03</span>, <time datetime="2025-10-16" class="refDate">16 October 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-mahy-mls-ratchet-tree-options-03">https://datatracker.ietf.org/doc/html/draft-mahy-mls-ratchet-tree-options-03</a>&gt;</span>. </dd>
+<span class="refAuthor">Mahy, R.</span>, <span class="refTitle">"Ways to convey the Ratchet Tree in Messaging Layer Security"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-mahy-mls-ratchet-tree-options-04</span>, <time datetime="2026-03-02" class="refDate">2 March 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-mahy-mls-ratchet-tree-options-04">https://datatracker.ietf.org/doc/html/draft-mahy-mls-ratchet-tree-options-04</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
       <dd>

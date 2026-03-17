@@ -5,10 +5,10 @@
 Messaging Layer Security                                         X. Tian
 Internet-Draft                                                   B. Hale
 Intended status: Standards Track               Naval Postgraduate School
-Expires: 2 September 2026                                   M. Mularczyk
+Expires: 18 September 2026                                  M. Mularczyk
                                                                 J. Alwen
                                                                      AWS
-                                                            1 March 2026
+                                                           17 March 2026
 
 
                        Amortized PQ MLS Combiner
@@ -61,7 +61,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 2 September 2026.
+   This Internet-Draft will expire on 18 September 2026.
 
 Copyright Notice
 
@@ -165,9 +165,8 @@ Table of Contents
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
-   We use terms from from MLS [RFC9420] and PQ Hybrid Terminology
-   [RFC9794].  Below, we have restated relevant terms and define new
-   ones:
+   We use terms from MLS [RFC9420] and PQ Hybrid Terminology [RFC9794].
+   Below, we have restated relevant terms and define new ones:
 
    The terms MLS client, MLS member, MLS group, Leaf Node, GroupContext,
    KeyPackage, Signature Key, Handshake Message, Private Message, Public
@@ -227,7 +226,7 @@ Table of Contents
    traditional Commits are more frequent.  Depending on the PARTIAL
    update frequency, the FULL update frequency may be significantly
    spread out; e.g., if a traditional update occurs at every message,
-   occuring frequently throughout a day, then a PQ/T update could occur
+   occurring frequently throughout a day, then a PQ/T update could occur
    once every fifty or one hundred messages.  In contrast, if a
    traditional update occurs only once a day, then a PQ/T update
    frequency should occur at a far more reduced ratio to the
@@ -281,7 +280,7 @@ Table of Contents
     |<--------------------------------------------------------------------+
     |                                        |<---------------------------+
     Fig 1a. FULL Commit to an empty proposal list.
-        Messages with ' are sent in the the PQ session.
+        Messages with ' are sent in the PQ session.
         PreSharedKeyID identifies a PSK exported from the PQ
         session in the new epoch following a Commit'(). The
         PreSharedKeyID  is implicitly included in the commit
@@ -462,7 +461,7 @@ Table of Contents
    users that they are participating in a hybrid session.  This is
    necessary both functionally to allow for group synchronization and as
    a security measure to prevent downgrading attacks to coax users into
-   parcipating in just one of the two sessions.  The group_id,
+   participating in just one of the two sessions.  The group_id,
    cipher_suite, and epoch from both sessions (t for the traditional
    session and pq for the PQ session) are used as bookkeeping values to
    validate and synchronize group operations.  The mode is a boolean
@@ -602,7 +601,7 @@ DeriveSecret(., "psk")
 6.  Wire formats
 
    Operating two groups in conjunction requires that certain data are
-   sent over the wire in duplictate, for example, two commit messages in
+   sent over the wire in duplicate, for example, two commit messages in
    the case of a FULL Commit.  This is made easier through the following
    wire formats.  The GroupContext of both the PQ and the T group MUST
    include the required_wire_formats extension listing the following
@@ -737,9 +736,9 @@ DeriveSecret(., "psk")
 
    If this is a concern, hybrid PQ DSAs can be used in the traditional
    session to sign application messages.  Since this would negate much
-   of the efficiency gains from using this protocol and enial-of-service
-   attacks can be achieve through more expeditious means, such a option
-   is not considered here.
+   of the efficiency gains from using this protocol and denial-of-
+   service attacks can be achieved through more expeditious means, such
+   an option is not considered here.
 
 8.3.  Forward Secrecy
 
@@ -790,16 +789,16 @@ DeriveSecret(., "psk")
    [I-D.ietf-mls-extensions]
               Robert, R., "The Messaging Layer Security (MLS)
               Extensions", Work in Progress, Internet-Draft, draft-ietf-
-              mls-extensions-08, 21 July 2025,
+              mls-extensions-09, 2 March 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-mls-
-              extensions-08>.
+              extensions-09>.
 
    [I-D.ietf-mls-pq-ciphersuites]
               Mahy, R. and R. Barnes, "ML-KEM and Hybrid Cipher Suites
               for Messaging Layer Security", Work in Progress, Internet-
-              Draft, draft-ietf-mls-pq-ciphersuites-01, 4 November 2025,
+              Draft, draft-ietf-mls-pq-ciphersuites-03, 2 March 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-mls-pq-
-              ciphersuites-01>.
+              ciphersuites-03>.
 
    [I-D.ietf-pquip-hybrid-signature-spectrums]
               Bindel, N., Hale, B., Connolly, D., and F. D, "Hybrid
@@ -811,9 +810,9 @@ DeriveSecret(., "psk")
    [I-D.mahy-mls-ratchet-tree-options]
               Mahy, R., "Ways to convey the Ratchet Tree in Messaging
               Layer Security", Work in Progress, Internet-Draft, draft-
-              mahy-mls-ratchet-tree-options-03, 16 October 2025,
+              mahy-mls-ratchet-tree-options-04, 2 March 2026,
               <https://datatracker.ietf.org/doc/html/draft-mahy-mls-
-              ratchet-tree-options-03>.
+              ratchet-tree-options-04>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
