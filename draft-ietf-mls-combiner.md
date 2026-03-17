@@ -100,7 +100,7 @@ This document addresses the second topic of these work items.
 
 {::boilerplate bcp14-tagged}
 
-We use terms from from MLS {{RFC9420}} and PQ Hybrid Terminology {{!RFC9794}}.
+We use terms from MLS {{RFC9420}} and PQ Hybrid Terminology {{!RFC9794}}.
 Below, we have restated relevant terms and define new ones:
 
 The terms MLS client, MLS member, MLS group, Leaf Node, GroupContext, KeyPackage,
@@ -154,7 +154,7 @@ threshold window; if the span between FULL Commits exceeds the threshold window,
 the device MUST be considered inactive and removed from the group, even if
 traditional Commits are more frequent. Depending on the PARTIAL update frequency,
 the FULL update frequency may be significantly spread out; e.g., if a traditional
-update occurs at every message, occuring frequently throughout a day, then a PQ/T
+update occurs at every message, occurring frequently throughout a day, then a PQ/T
 update could occur once every fifty or one hundred messages. In contrast, if a
 traditional update occurs only once a day, then a PQ/T update frequency should
 occur at a far more reduced ratio to the traditional-only update frequency, for
@@ -201,7 +201,7 @@ session.
     |<--------------------------------------------------------------------+
     |                                        |<---------------------------+
     Fig 1a. FULL Commit to an empty proposal list.
-        Messages with ' are sent in the the PQ session.
+        Messages with ' are sent in the PQ session.
         PreSharedKeyID identifies a PSK exported from the PQ
         session in the new epoch following a Commit'(). The
         PreSharedKeyID  is implicitly included in the commit
@@ -374,7 +374,7 @@ the traditional session, with considerations to options described in
 The APQInfo struct contains characterizing information to signal to users that
 they are participating in a hybrid session. This is necessary both functionally
 to allow for group synchronization and as a security measure to prevent
-downgrading attacks to coax users into parcipating in just one of the two
+downgrading attacks to coax users into participating in just one of the two
 sessions. The `group_id`, `cipher_suite`, and `epoch` from both sessions
 (`t` for the traditional session and `pq` for the PQ session) are used as
 bookkeeping values to validate and synchronize group operations. The `mode`
@@ -521,7 +521,7 @@ the `apq_psk` were derived.
 # Wire formats
 
 Operating two groups in conjunction requires that certain data are sent
-over the wire in duplictate, for example, two commit messages in the case
+over the wire in duplicate, for example, two commit messages in the case
 of a FULL Commit. This is made easier through the following wire formats.
 The GroupContext of both the PQ and the T group MUST include the
 `required_wire_formats` extension listing the following wire formats.
@@ -656,8 +656,8 @@ the scope of this protocol.
 If this is a concern, hybrid PQ DSAs can be used in the traditional
 session to sign application messages. Since this would negate much
 of the efficiency gains from using this protocol and
-enial-of-service attacks can be achieve through more expeditious
-means, such a option is not considered here.
+denial-of-service attacks can be achieved through more expeditious
+means, such an option is not considered here.
 
 ## Forward Secrecy
 
