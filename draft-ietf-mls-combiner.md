@@ -392,7 +392,7 @@ with TLS:
 ~~~tls
 struct{
     opaque t_session_group_id<V>;
-    opaque PQ_session_group_id<V>;
+    opaque pq_session_group_id<V>;
     bool mode;
     CipherSuite t_cipher_suite;
     CipherSuite pq_cipher_suite;
@@ -452,9 +452,9 @@ in the proposal payload.
 
 A Commit can include either a single AppDataUpdate with a `full_update` or
 two proposals; one with `new_t_epoch` and one with `new_pq_epoch`. In the
-later case, the Commit MUST be applied to applied to an old epoch that already
+latter case, the Commit MUST be applied to an old epoch that already
 has an APQInfo in its GroupContext and applying the two proposals produces the
-same APQInfo for the new epoch, except that the epoch fields are over written
+same APQInfo for the new epoch, except that the epoch fields are overwritten
 with those in the proposals.
 
 If this is the first FULL Commit in the APQ-MLS group, then the corresponding
@@ -463,11 +463,11 @@ AppDataUpdate proposal and the epochs in `new_pq_info` MUST be set to the
 epochs of the two MLS groups after the respective Commit was applied.
 
 In subsequent FULL Commits, the APQInfo in both MLS groups' GroupContext
-structs MUST be updated to reflect the new epochs and any changes to cipher
-suites and APQ mode (PARTIAL or FULL). This can be done using a `full_update`
-AppDataUpdate proposal. Alternatively, if no changes are being made to the
-cipher suites or APQ-MLS mode, than the second method using `new_t_epoch` and
-`new_pq_epoch` can be used.
+structs MUST be updated to reflect the new epochs and any changes to APQ mode
+(PQ Confidentiality-Only or PQ Confidentiality+Authenticity). This can be done
+using a `full_update` AppDataUpdate proposal. Alternatively, if no changes are
+being made to the cipher suites or APQ-MLS mode, than the second method using
+`new_t_epoch` and `new_pq_epoch` can be used.
 
 Either way, for any FULL Commit, recipients MUST verify that the epoch
 fields in the APQInfo structs included in the GroupContext of the new epochs
