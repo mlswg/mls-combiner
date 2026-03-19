@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-03-03T02:26:00.821476+00:00",
+  "timestamp": "2026-03-19T02:30:08.565010+00:00",
   "repo": "mlswg/mls-combiner",
   "labels": [
     {
@@ -152,15 +152,15 @@
       "id": "I_kwDONZ9R687PU1u4",
       "title": "Secret used in PSK derivation",
       "url": "https://github.com/mlswg/mls-combiner/issues/7",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xisentian",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Reminder to revisit the use of `epoch_secret` to derive the PSK as it is usually not directly accessible (see PR #3). ",
       "createdAt": "2025-10-02T17:35:10Z",
-      "updatedAt": "2026-01-04T20:39:48Z",
-      "closedAt": null,
+      "updatedAt": "2026-03-17T19:29:09Z",
+      "closedAt": "2026-03-17T19:29:09Z",
       "comments": [
         {
           "author": "br-hale",
@@ -168,6 +168,13 @@
           "body": "@xisentian Can you create a PR for this?",
           "createdAt": "2026-01-04T20:39:48Z",
           "updatedAt": "2026-01-04T20:39:48Z"
+        },
+        {
+          "author": "xisentian",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I believe this has been resolved with @kkohbrok's commit in the PR linked",
+          "createdAt": "2026-03-17T19:29:09Z",
+          "updatedAt": "2026-03-17T19:29:09Z"
         }
       ]
     }
