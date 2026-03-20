@@ -373,15 +373,16 @@ the traditional session, with considerations to options described in
 
 ## Group Context Extension
 
-The APQInfo struct contains characterizing information to signal to users that
-they are participating in a hybrid session. This is necessary both functionally
-to allow for group synchronization and as a security measure to prevent
-downgrading attacks that coax users into parcipating in just one of the two
-sessions. The `group_id`, `cipher_suite`, and `epoch` from both sessions
-(`t` for the traditional session and `pq` for the PQ session) are used as
-bookkeeping values to validate and synchronize group operations. The `mode`
-is a boolean value: `0` for the default PQ/T Confidentiality Only mode and
-`1` for the PQ/T Confidentiality + Authenticity mode.
+The APQInfo struct contains information characterizing the APQInfo session to
+signal to users that they are participating in a hybrid session. This is
+necessary both functionally to allow for group synchronization and as a
+security measure to prevent downgrading attacks that coax users into
+parcipating in just one of the two sessions. The `group_id`, `cipher_suite`,
+and `epoch` from both sessions (`t` for the traditional session and `pq` for
+the PQ session) are used as bookkeeping values to validate and synchronize
+group operations. The `mode` is a boolean value: `0` for the default PQ/T
+Confidentiality Only mode and `1` for the PQ/T Confidentiality + Authenticity
+mode.
 
 APQInfo is stored in the MLS GroupContext of both the T and PQ groups using the
 app data dictionary mechanism defined in Section 4.6 of
@@ -390,7 +391,7 @@ app data dictionary mechanism defined in Section 4.6 of
 with TLS:
 
 ~~~tls
-struct{
+struct {
     opaque t_session_group_id<V>;
     opaque pq_session_group_id<V>;
     bool mode;
@@ -439,11 +440,12 @@ For APQ-MLS, the `update` field in the AppDataUpdate proposal defines either
 an entirely new APQInfo, or modifies an existing one, using one of following
 two methods.
 
-1. If the AppDataUpdate has (`component_id = 0x0006` and) `update_type` set
-to `full_update`, then it's `new_apq_info` field MUST contain a TLS serialize
-instance of a complete APQInfo for inclusion in the GroupContext.
+1. If the AppDataUpdate has its `component_id` set to `0x0006` and
+`update_type` set to `full_update`, then it's `new_apq_info` field MUST contain
+a TLS serialize instance of a complete APQInfo for inclusion in the
+GroupContext.
 
-2. If instead AppDataUpdate proposal has (`component_id = 0x0006` and)
+2. If instead AppDataUpdate proposal its `component_id` set to `0x0006` and its
 `update_type` set to `new_t_epoch` then an existing APQInfo is modified by
 replacing the `t_epoch` field with the `uint64 new_t_epoch` field from the
 proposal. Similarly, using the `new_pq_epoch` update type, the AppDataUpdate
@@ -454,15 +456,15 @@ A Commit can include either a single AppDataUpdate with a `full_update` or
 two proposals; one with `new_t_epoch` and one with `new_pq_epoch`. In the
 latter case, the Commit MUST be applied to an old epoch that already
 has an APQInfo in its GroupContext and applying the two proposals produces the
-same APQInfo for the new epoch, except that the epoch fields are overwritten
-with those in the proposals.
+same APQInfo for the new epoch, except that the two epoch fields are
+overwritten with those in the proposals.
 
 If this is the first FULL Commit in the APQ-MLS group, then the corresponding
 Commits to the T and to the PQ MLS groups MUST contain a `full_update`
 AppDataUpdate proposal and the epochs in `new_pq_info` MUST be set to the
 epochs of the two MLS groups after the respective Commit was applied.
 
-In subsequent FULL Commits, the APQInfo in both MLS groups' GroupContext
+In all subsequent FULL Commits, the APQInfo in both MLS groups' GroupContext
 structs MUST be updated to reflect the new epochs and any changes to APQ mode
 (PQ Confidentiality-Only or PQ Confidentiality+Authenticity). This can be done
 using a `full_update` AppDataUpdate proposal. Alternatively, if no changes are
