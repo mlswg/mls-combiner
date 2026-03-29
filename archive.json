@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-03-22T02:30:52.124277+00:00",
+  "timestamp": "2026-03-29T02:40:23.817975+00:00",
   "repo": "mlswg/mls-combiner",
   "labels": [
     {
@@ -635,7 +635,7 @@
       "labels": [],
       "body": "Addresses #6 \r\n\r\nThe PR also removes duplicate definition of APQInfo and adds a more precise description of how the extension is updated (the mechanism was implicit before).",
       "createdAt": "2026-03-20T13:05:11Z",
-      "updatedAt": "2026-03-20T13:05:11Z",
+      "updatedAt": "2026-03-26T13:29:29Z",
       "baseRepository": "mlswg/mls-combiner",
       "baseRefName": "main",
       "baseRefOid": "2c0006ebd904aed61bef0ac85bf6eb5b77b4b501",
@@ -647,7 +647,28 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDONZ9R687vQ15U",
+          "commit": {
+            "abbreviatedOid": "7843e0c"
+          },
+          "author": "xisentian",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-26T13:29:29Z",
+          "updatedAt": "2026-03-26T13:29:29Z",
+          "comments": [
+            {
+              "originalPosition": 134,
+              "body": "Does `new_apq_info` imply \"new_t_epoch\u201d and \u201cnew_pq_epoch\u201d? ",
+              "createdAt": "2026-03-26T13:29:29Z",
+              "updatedAt": "2026-03-26T13:29:29Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
