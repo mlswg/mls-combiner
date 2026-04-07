@@ -5,10 +5,9 @@
 Messaging Layer Security                                         X. Tian
 Internet-Draft                                                   B. Hale
 Intended status: Standards Track               Naval Postgraduate School
-Expires: 18 September 2026                                  M. Mularczyk
-                                                                J. Alwen
+Expires: 9 October 2026                                     M. Mularczyk
                                                                      AWS
-                                                           17 March 2026
+                                                            7 April 2026
 
 
                        Amortized PQ MLS Combiner
@@ -61,7 +60,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 September 2026.
+   This Internet-Draft will expire on 9 October 2026.
 
 Copyright Notice
 
@@ -796,9 +795,9 @@ DeriveSecret(., "psk")
    [I-D.ietf-mls-pq-ciphersuites]
               Mahy, R. and R. Barnes, "ML-KEM and Hybrid Cipher Suites
               for Messaging Layer Security", Work in Progress, Internet-
-              Draft, draft-ietf-mls-pq-ciphersuites-03, 2 March 2026,
+              Draft, draft-ietf-mls-pq-ciphersuites-04, 18 March 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-mls-pq-
-              ciphersuites-03>.
+              ciphersuites-04>.
 
    [I-D.ietf-pquip-hybrid-signature-spectrums]
               Bindel, N., Hale, B., Connolly, D., and F. D, "Hybrid
@@ -848,6 +847,10 @@ Contributors
 
    Konrad Kohbrok Phoenix R&D Email: konrad.kohbrok@datashrine.de
 
+   Joël Alwen AWS Email: alwenjo@amazon.com
+
+   John Gray Entrust Email: john.gray@entrust.com
+
 Authors' Addresses
 
    Xisen Tian
@@ -863,8 +866,3 @@ Authors' Addresses
    Marta Mularczyk
    AWS
    Email: mulmarta@amazon.ch
-
-
-   Joël Alwen
-   AWS
-   Email: alwenjo@amazon.com
