@@ -38,10 +38,7 @@ author:
   name: "Marta Mularczyk"
   organization: "AWS"
   email: mulmarta@amazon.ch
-- ins: "J. Alwen"
-  name: "Joël Alwen"
-  organization: "AWS"
-  email: alwenjo@amazon.com
+
 
 normative:
   I-D.mahy-mls-ratchet-tree-options:
@@ -709,3 +706,11 @@ TODO
 Konrad Kohbrok
 Phoenix R&D
 Email: konrad.kohbrok@datashrine.de
+
+Joël Alwen
+AWS
+Email: alwenjo@amazon.com
+
+John Gray
+Entrust
+Email: john.gray@entrust.com
