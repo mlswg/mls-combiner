@@ -1063,7 +1063,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tian, et al.</td>
-<td class="center">Expires 9 October 2026</td>
+<td class="center">Expires 11 October 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1076,12 +1076,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-mls-combiner-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-04-07" class="published">7 April 2026</time>
+<time datetime="2026-04-09" class="published">9 April 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-10-09">9 October 2026</time></dd>
+<dd class="expires"><time datetime="2026-10-11">11 October 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1148,7 +1148,7 @@ while meeting the requirement of frequent key rotations.<a href="#section-abstra
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 9 October 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 11 October 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1223,7 +1223,15 @@ while meeting the requirement of frequent key rotations.<a href="#section-abstra
             <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-extension-requirements-to-m" class="internal xref">Extension Requirements to MLS</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
-                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-extension-updates-and-valid" class="internal xref">Extension updates and validation</a></p>
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-group-context-extension" class="internal xref">Group Context Extension</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.1">
+                    <p id="section-toc.1-1.5.2.1.2.1.1"><a href="#section-5.1.1" class="auto internal xref">5.1.1</a>.  <a href="#name-updating-apqinfo" class="internal xref">Updating APQInfo</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.2">
+                    <p id="section-toc.1-1.5.2.1.2.2.1"><a href="#section-5.1.2" class="auto internal xref">5.1.2</a>.  <a href="#name-validating-apqinfo" class="internal xref">Validating APQInfo</a></p>
+</li>
+                </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
                 <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-key-schedule" class="internal xref">Key Schedule</a></p>
@@ -1645,65 +1653,50 @@ the traditional session, with considerations to options described in
       <h2 id="name-extension-requirements-to-m">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-extension-requirements-to-m" class="section-name selfRef">Extension Requirements to MLS</a>
       </h2>
-<p id="section-5-1">The APQInfo struct contains characterizing information to signal to users that
-they are participating in a hybrid session. This is necessary both functionally
-to allow for group synchronization and as a security measure to prevent
-downgrading attacks to coax users into participating in just one of the two
-sessions. The <code>group_id</code>, <code>cipher_suite</code>, and <code>epoch</code> from both sessions
-(<code>t</code> for the traditional session and <code>pq</code> for the PQ session) are used as
-bookkeeping values to validate and synchronize group operations. The <code>mode</code>
-is a boolean value: <code>0</code> for the default PQ/T Confidentiality Only mode and
-<code>1</code> for the PQ/T Confidentiality + Authenticity mode.<a href="#section-5-1" class="pilcrow">¶</a></p>
-<p id="section-5-2">The APQInfo struct conforms to the Safe Extensions API (see
-<span>[<a href="#I-D.ietf-mls-extensions" class="cite xref">I-D.ietf-mls-extensions</a>]</span>). Recall that an extension is called <em>safe</em> if
-it does not modify base MLS protocol or other MLS extensions beyond using
-components of the Safe Extension API. This allows security analysis of our
-APQ-MLS Combiner protocol in isolation of the security guarantees of the
-base MLS protocol to enable composability of guarantees. The HPMLSInfo
-extension struct <span class="bcp14">SHALL</span> be in the following format:<a href="#section-5-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5-3">
-<pre>
-      struct{
-          ExtensionType APQ;
-          opaque extension_data&lt;V&gt;;
-          } ExtensionContent;
-
-      struct{
-          opaque t_session_group_id&lt;V&gt;;
-          opaque PQ_session_group_id&lt;V&gt;;
-          bool mode;
-          CipherSuite t_cipher_suite;
-          CipherSuite pq_cipher_suite;
-          uint64 t_epoch;
-          uint64 pq_epoch;
-      } APQInfo
-</pre><a href="#section-5-3" class="pilcrow">¶</a>
-</div>
-<div id="extension-updates-and-validation">
+<div id="group-context-extension">
 <section id="section-5.1">
-        <h3 id="name-extension-updates-and-valid">
-<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-extension-updates-and-valid" class="section-name selfRef">Extension updates and validation</a>
+        <h3 id="name-group-context-extension">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-group-context-extension" class="section-name selfRef">Group Context Extension</a>
         </h3>
-<p id="section-5.1-1">As mentioned in <a href="#welcome-message-validation" class="auto internal xref">Section 3.2.1</a>, clients <span class="bcp14">MUST</span> validate that
-the information in the APQInfo extensions of both T and PQ group match.
-As the APQInfo contains the epoch of both groups it <span class="bcp14">MUST</span> be updated
-in both groups when doing a FULL Commit. The <code>update</code> payload
-<span class="bcp14">MUST</span> update the epochs to the new epochs of both groups (note that the
-epoch of the T group may increment by more than one if one or more
-T only commits have been performed in the interim).<a href="#section-5.1-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.1-2">
+<p id="section-5.1-1">The APQInfo struct contains information characterizing the APQInfo session to
+signal to users that they are participating in a hybrid session. This is
+necessary both functionally to allow for group synchronization and as a
+security measure to prevent downgrading attacks that coax users into
+parcipating in just one of the two sessions. The <code>group_id</code>, <code>cipher_suite</code>,
+and <code>epoch</code> from both sessions (<code>t</code> for the traditional session and <code>pq</code> for
+the PQ session) are used as bookkeeping values to validate and synchronize
+group operations. The <code>mode</code> is a boolean value: <code>0</code> for the default PQ/T
+Confidentiality Only mode and <code>1</code> for the PQ/T Confidentiality + Authenticity
+mode.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.1-2">APQInfo is stored in the MLS GroupContext of both the T and PQ groups using the
+app data dictionary mechanism defined in Section 4.6 of
+<span>[<a href="#I-D.ietf-mls-extensions" class="cite xref">I-D.ietf-mls-extensions</a>]</span>. Specifically, the ComponentData contains
+<code>component_id = 0x0006</code> and <code>data</code> set to the following APQInfo struct encoded
+with TLS:<a href="#section-5.1-2" class="pilcrow">¶</a></p>
+<div class="lang-tls sourcecode" id="section-5.1-3">
 <pre>
-struct{
-     opaque t_session_group_id&lt;V&gt;;
-     opaque PQ_session_group_id&lt;V&gt;;
-     bool mode;
-     CipherSuite t_cipher_suite;
-     CipherSuite pq_cipher_suite;
-     uint64 t_epoch;
-     uint64 pq_epoch;
-} APQInfo;
-APQInfo APQInfoData;
-
+struct {
+    opaque t_session_group_id&lt;V&gt;;
+    opaque pq_session_group_id&lt;V&gt;;
+    bool mode;
+    CipherSuite t_cipher_suite;
+    CipherSuite pq_cipher_suite;
+    uint64 t_epoch;
+    uint64 pq_epoch;
+} APQInfo
+</pre><a href="#section-5.1-3" class="pilcrow">¶</a>
+</div>
+<div id="updating-apqinfo">
+<section id="section-5.1.1">
+          <h4 id="name-updating-apqinfo">
+<a href="#section-5.1.1" class="section-number selfRef">5.1.1. </a><a href="#name-updating-apqinfo" class="section-name selfRef">Updating APQInfo</a>
+          </h4>
+<p id="section-5.1.1-1">The APQInfo structs in both groups are created and modified using AppDataUpdate
+proposals defined in Section 4.7 of <span>[<a href="#I-D.ietf-mls-extensions" class="cite xref">I-D.ietf-mls-extensions</a>]</span>. For this,
+the <code>update</code> field in an AppDataUpdate  contains a TLS serialized instance of
+the APQInfoUpdate struct:<a href="#section-5.1.1-1" class="pilcrow">¶</a></p>
+<div class="lang-tls sourcecode" id="section-5.1.1-2">
+<pre>
 enum {
     full_update (0),
     new_t_epoch(1),
@@ -1717,15 +1710,70 @@ struct {
         case full_update:
             APQInfo new_apq_info;
         case new_t_epoch:
-            uint64 epoch;
+            uint64 new_t_epoch;
         case new_pq_epoch:
-            uint64 epoch;
+            uint64 new_pq_epoch;
 } APQInfoUpdate;
-</pre><a href="#section-5.1-2" class="pilcrow">¶</a>
+</pre><a href="#section-5.1.1-2" class="pilcrow">¶</a>
 </div>
-<p id="section-5.1-3">Consequently, when processing a FULL Commit, recipients <span class="bcp14">MUST</span> verify that
-the epoch set by the APQInfoUpdate matches the actual (new) epoch of
-both groups.<a href="#section-5.1-3" class="pilcrow">¶</a></p>
+<p id="section-5.1.1-3">To apply an AppDataUpdate proposal, the mechanism in
+<span>[<a href="#I-D.ietf-mls-extensions" class="cite xref">I-D.ietf-mls-extensions</a>]</span> requires that the application provide a function
+to convert an <code>update</code> from the proposal's payload into a new ComponentData
+object. For APQ-MLS, the resulting ComponentData object is then included in
+the AppDataDictionary struct which is part of the GroupContext as specified
+in <span>[<a href="#I-D.ietf-mls-extensions" class="cite xref">I-D.ietf-mls-extensions</a>]</span>.<a href="#section-5.1.1-3" class="pilcrow">¶</a></p>
+<p id="section-5.1.1-4">For APQ-MLS, the <code>update</code> field in the AppDataUpdate proposal defines either
+an entirely new APQInfo, or modifies an existing one, using one of following
+two methods.<a href="#section-5.1.1-4" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-5.1.1-5">
+<li id="section-5.1.1-5.1">
+              <p id="section-5.1.1-5.1.1">If the AppDataUpdate has its <code>component_id</code> set to <code>0x0006</code> and
+<code>update_type</code> set to <code>full_update</code>, then it's <code>new_apq_info</code> field <span class="bcp14">MUST</span> contain
+a TLS serialize instance of a complete APQInfo for inclusion in the
+GroupContext.<a href="#section-5.1.1-5.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li id="section-5.1.1-5.2">
+              <p id="section-5.1.1-5.2.1">If instead AppDataUpdate proposal its <code>component_id</code> set to <code>0x0006</code> and its
+<code>update_type</code> set to <code>new_t_epoch</code> then an existing APQInfo is modified by
+replacing the <code>t_epoch</code> field with the <code>uint64 new_t_epoch</code> field from the
+proposal. Similarly, using the <code>new_pq_epoch</code> update type, the AppDataUpdate
+proposal replaces the PQ MLS group's epoch with the <code>uint64 new_pq_epoch</code> value
+in the proposal payload.<a href="#section-5.1.1-5.2.1" class="pilcrow">¶</a></p>
+</li>
+          </ol>
+<p id="section-5.1.1-6">A Commit can include either a single AppDataUpdate with a <code>full_update</code> or
+two proposals; one with <code>new_t_epoch</code> and one with <code>new_pq_epoch</code>. In the
+latter case, the Commit <span class="bcp14">MUST</span> be applied to an old epoch that already
+has an APQInfo in its GroupContext and applying the two proposals produces the
+same APQInfo for the new epoch, except that the two epoch fields are
+overwritten with those in the proposals.<a href="#section-5.1.1-6" class="pilcrow">¶</a></p>
+<p id="section-5.1.1-7">If this is the first FULL Commit in the APQ-MLS group, then the corresponding
+Commits to the T and to the PQ MLS groups <span class="bcp14">MUST</span> contain a <code>full_update</code>
+AppDataUpdate proposal and the epochs in <code>new_pq_info</code> <span class="bcp14">MUST</span> be set to the
+epochs of the two MLS groups after the respective Commit was applied.<a href="#section-5.1.1-7" class="pilcrow">¶</a></p>
+<p id="section-5.1.1-8">In all subsequent FULL Commits, the APQInfo in both MLS groups' GroupContext
+structs <span class="bcp14">MUST</span> be updated to reflect the new epochs and any changes to APQ mode
+(PQ Confidentiality-Only or PQ Confidentiality+Authenticity). This can be done
+using a <code>full_update</code> AppDataUpdate proposal. Alternatively, if no changes are
+being made to the cipher suites or APQ-MLS mode, than the second method using
+<code>new_t_epoch</code> and <code>new_pq_epoch</code> can be used.<a href="#section-5.1.1-8" class="pilcrow">¶</a></p>
+<p id="section-5.1.1-9">Either way, for any FULL Commit, recipients <span class="bcp14">MUST</span> verify that the epoch
+fields in the APQInfo structs included in the GroupContext of the new epochs
+both have cipher suites and epochs matching those of the two new epochs
+created by the FULL Commit.<a href="#section-5.1.1-9" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="validating-apqinfo">
+<section id="section-5.1.2">
+          <h4 id="name-validating-apqinfo">
+<a href="#section-5.1.2" class="section-number selfRef">5.1.2. </a><a href="#name-validating-apqinfo" class="section-name selfRef">Validating APQInfo</a>
+          </h4>
+<p id="section-5.1.2-1">As mentioned in <a href="#welcome-message-validation" class="auto internal xref">Section 3.2.1</a>, clients <span class="bcp14">MUST</span> validate that
+the information in the APQInfo extensions of both T and PQ group match.
+As the APQInfo contains the epoch of both groups it <span class="bcp14">MUST</span> be updated
+in both groups when doing a FULL Commit.<a href="#section-5.1.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="key-schedule">
