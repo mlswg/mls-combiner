@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-03-29T02:40:23.817975+00:00",
+  "timestamp": "2026-04-09T02:33:55.635082+00:00",
   "repo": "mlswg/mls-combiner",
   "labels": [
     {
@@ -635,13 +635,13 @@
       "labels": [],
       "body": "Addresses #6 \r\n\r\nThe PR also removes duplicate definition of APQInfo and adds a more precise description of how the extension is updated (the mechanism was implicit before).",
       "createdAt": "2026-03-20T13:05:11Z",
-      "updatedAt": "2026-03-26T13:29:29Z",
+      "updatedAt": "2026-04-08T09:01:29Z",
       "baseRepository": "mlswg/mls-combiner",
       "baseRefName": "main",
-      "baseRefOid": "2c0006ebd904aed61bef0ac85bf6eb5b77b4b501",
+      "baseRefOid": "6c5887fd8d04b78d7c6911bc042d4eeda5a47f17",
       "headRepository": "mulmarta/mls-combiner",
       "headRefName": "mulmarta/appdata",
-      "headRefOid": "11b3133f726ea26a4d81a92d25df6bea25d38c4a",
+      "headRefOid": "d2b0792a669c2888c0ddaedfc40ea2aa7c8141d6",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -665,6 +665,26 @@
               "body": "Does `new_apq_info` imply \"new_t_epoch\u201d and \u201cnew_pq_epoch\u201d? ",
               "createdAt": "2026-03-26T13:29:29Z",
               "updatedAt": "2026-03-26T13:29:29Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDONZ9R687y0-VL",
+          "commit": {
+            "abbreviatedOid": "7843e0c"
+          },
+          "author": "mulmarta",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-04-08T09:01:29Z",
+          "updatedAt": "2026-04-08T09:01:29Z",
+          "comments": [
+            {
+              "originalPosition": 134,
+              "body": "Yes, I think so.",
+              "createdAt": "2026-04-08T09:01:29Z",
+              "updatedAt": "2026-04-08T09:01:30Z"
             }
           ]
         }
