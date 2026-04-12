@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-04-09T02:33:55.635082+00:00",
+  "timestamp": "2026-04-12T02:49:09.364657+00:00",
   "repo": "mlswg/mls-combiner",
   "labels": [
     {
@@ -628,25 +628,42 @@
       "id": "PR_kwDONZ9R687MJBTH",
       "title": "Make Group Context Extension updates consistent with MLS extensions draft",
       "url": "https://github.com/mlswg/mls-combiner/pull/11",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "mulmarta",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Addresses #6 \r\n\r\nThe PR also removes duplicate definition of APQInfo and adds a more precise description of how the extension is updated (the mechanism was implicit before).",
       "createdAt": "2026-03-20T13:05:11Z",
-      "updatedAt": "2026-04-08T09:01:29Z",
+      "updatedAt": "2026-04-09T20:38:06Z",
       "baseRepository": "mlswg/mls-combiner",
       "baseRefName": "main",
       "baseRefOid": "6c5887fd8d04b78d7c6911bc042d4eeda5a47f17",
       "headRepository": "mulmarta/mls-combiner",
       "headRefName": "mulmarta/appdata",
       "headRefOid": "d2b0792a669c2888c0ddaedfc40ea2aa7c8141d6",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "closedAt": "2026-04-09T20:38:06Z",
+      "mergedAt": "2026-04-09T20:38:06Z",
+      "mergedBy": "xisentian",
+      "mergeCommit": {
+        "oid": "4d8c6d69050417821e9a6b4c27cf178f775d54a3"
+      },
+      "comments": [
+        {
+          "author": "mulmarta",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@xisentian @br-hale are there any blockers on this PR? I'm happy to make / undo changes.",
+          "createdAt": "2026-04-09T11:01:49Z",
+          "updatedAt": "2026-04-09T11:01:49Z"
+        },
+        {
+          "author": "xisentian",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> @xisentian @br-hale are there any blockers on this PR? I'm happy to make / undo changes.\r\n\r\nNo, thank you for the edits and fixes!",
+          "createdAt": "2026-04-09T20:37:44Z",
+          "updatedAt": "2026-04-09T20:37:44Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDONZ9R687vQ15U",
@@ -674,7 +691,7 @@
             "abbreviatedOid": "7843e0c"
           },
           "author": "mulmarta",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2026-04-08T09:01:29Z",
