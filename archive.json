@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-04-12T02:49:09.364657+00:00",
+  "timestamp": "2026-04-14T02:46:51.974556+00:00",
   "repo": "mlswg/mls-combiner",
   "labels": [
     {
@@ -93,15 +93,15 @@
       "id": "I_kwDONZ9R687PUTZZ",
       "title": "Extension updates inconsistent with draft proposal",
       "url": "https://github.com/mlswg/mls-combiner/issues/6",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "bitbltr",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "I don't believe the section [Extension updates and validation](https://github.com/mlswg/mls-combiner/blob/main/draft-ietf-mls-combiner.md) is consistent with the AppDataUpdate proposal logic outlined in   https://datatracker.ietf.org/doc/draft-ietf-mls-extensions/\n\nPer Section 4.7 of draft-ietf-mls-extensions: \"The application logic returns either an opaque value new_data that will be stored as the new application data for this component, or else an indication that it considers this update invalid.\"\n\nI read this as the AppDataUpdate contains an opaque value that replaces the entire value for that Component ID. Whereas this proposal includes application logic to update just a particular field within the opaque value. This will necessitate special-casing of this data update logic, rather than the consistent behavior of replacing the opaque value.\n\nTo be consistent, the full HPQMLSInfo struct should be contained in the AppDataUpdate for the Component ID.",
       "createdAt": "2025-10-02T16:50:32Z",
-      "updatedAt": "2026-01-04T20:56:15Z",
-      "closedAt": null,
+      "updatedAt": "2026-04-13T14:09:44Z",
+      "closedAt": "2026-04-13T14:09:44Z",
       "comments": [
         {
           "author": "kkohbrok",
@@ -144,6 +144,13 @@
           "body": "@rohanmahy Thank you for the proposed text. The document has been updated with the described struct etc. changes. \nAll, please take a look if the changes reflect as anticipated and comment if you notice any further associated items. ",
           "createdAt": "2026-01-04T20:56:15Z",
           "updatedAt": "2026-01-04T20:56:15Z"
+        },
+        {
+          "author": "xisentian",
+          "authorAssociation": "COLLABORATOR",
+          "body": "All, the latest PR by @mulmarta and @psyoptix has been merged - thanks! It essentially lets us update APQInfo in both ways (replacement AND patching) to support doing FULL/PARTIAL updates and limits the patching updates style to only the associated epoch numbers. I believe this sufficiently addresses this issue - if you disagree, please comment. \n\nFurthermore, it is not in conflict with the update granularity discussion over at https://github.com/mlswg/mls-extensions/issues/74. Since consensus on APQInfo must be maintained in both PQ and T groups, we have no use for the `opaque_data_dictionary` here.",
+          "createdAt": "2026-04-13T14:09:44Z",
+          "updatedAt": "2026-04-13T14:09:44Z"
         }
       ]
     },
