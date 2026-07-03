@@ -34,10 +34,14 @@ author:
   name: "Britta Hale"
   organization: "Naval Postgraduate School"
   email: britta.hale@nps.edu
+- ins: "J. Alwen"
+  name: "Joël Alwen"
+  organization: "AWS"
+  email: alwenjo@amazon.com
 - ins: "M. Mularczyk"
   name: "Marta Mularczyk"
   organization: "AWS"
-  email: mulmarta@amazon.ch
+  email: mulmarta@amazon.com
 
 
 normative:
@@ -706,10 +710,6 @@ TODO
 Konrad Kohbrok
 Phoenix R&D
 Email: konrad.kohbrok@datashrine.de
-
-Joël Alwen
-AWS
-Email: alwenjo@amazon.com
 
 John Gray
 Entrust
