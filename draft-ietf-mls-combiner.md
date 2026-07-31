@@ -591,6 +591,14 @@ Where PartialGroupInfo is defined in Section 4 of
 {{!I-D.mahy-mls-ratchet-tree-options}}. Messages in APQPrivateMessage
 MUST NOT be of content type `application`.
 
+Each struct is sent as the payload of an MLSMessage with the
+corresponding wire format: `apq_key_package` for APQKeyPackage,
+`apq_public_message` for APQPublicMessage, `apq_private_message` for
+APQPrivateMessage, `apq_welcome` for APQWelcome, `apq_group_info` for
+APQGroupInfo, and `apq_partial_group_info` for APQPartialGroupInfo.
+The code points for these wire formats are registered in
+{{iana-wire-formats}}.
+
 # Cryptographic Objects
 
 ## Cipher Suites
@@ -723,6 +731,20 @@ This document registers the `apq_mls_info` MLS Component Type per {{Section 7.5 
 - Where: GC
 - Recommended: Y
 - Reference: RFC XXXX
+
+## MLS Wire Formats {#iana-wire-formats}
+
+This document requests the addition of the following entries to the
+MLS Wire Formats registry defined in {{Section 17.2 of RFC9420}}.
+
+| Value  | Name                   | Recommended | Reference |
+|:-------|:-----------------------|:------------|:----------|
+| 0x0006 | apq_key_package        | Y           | RFC XXXX  |
+| 0x0007 | apq_public_message     | Y           | RFC XXXX  |
+| 0x0008 | apq_private_message    | Y           | RFC XXXX  |
+| 0x0009 | apq_welcome            | Y           | RFC XXXX  |
+| 0x000A | apq_group_info         | Y           | RFC XXXX  |
+| 0x000B | apq_partial_group_info | Y           | RFC XXXX  |
 
 ## apq_psk MLS PSK label
 
