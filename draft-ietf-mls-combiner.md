@@ -462,11 +462,12 @@ AppDataUpdate proposal and the epochs in `new_pq_info` MUST be set to the
 epochs of the two MLS groups after the respective Commit was applied.
 
 In all subsequent FULL Commits, the APQInfo in both MLS groups' GroupContext
-structs MUST be updated to reflect the new epochs and any changes to APQ mode
-(PQ Confidentiality-Only or PQ Confidentiality+Authenticity). This can be done
-using a `full_update` AppDataUpdate proposal. Alternatively, if no changes are
-being made to the cipher suites or APQ-MLS mode, than the second method using
-`new_t_epoch` and `new_pq_epoch` can be used.
+structs MUST be updated to reflect the new epochs. This can be done using
+either a `full_update` AppDataUpdate proposal or the second method using
+`new_t_epoch` and `new_pq_epoch`. All fields other than the two epoch
+fields are immutable for the lifetime of the APQ-MLS session (see
+{{cipher-suites}}). Recipients MUST reject an AppDataUpdate proposal that
+modifies any field of an existing APQInfo other than the two epoch fields.
 
 Either way, for any FULL Commit, recipients MUST verify that the epoch
 fields in the APQInfo structs included in the GroupContext of the new epochs
@@ -607,8 +608,9 @@ only adds extra overhead and complexity. Furthermore, the `pq_cipher_suite`
 may contain a classical digital signature algorithm used if `mode` is
 set to 0 (PQ Confidentiality-Only) but MUST be fully PQ if `mode` is
 set to 1 (PQ Confidentiality+Authenticity). These cipher suite
-combinations and modes MUST not be toggled or modified after a APQ-MLS
-session has commenced. Clients MUST reject a APQ-MLS session with invalid
+combinations and modes MUST NOT be toggled or modified after a APQ-MLS
+session has commenced. Changing the mode or the cipher suites requires
+reinitializing the APQ-MLS session. Clients MUST reject a APQ-MLS session with invalid
 or duplicate cipher suites (e.g. two traditional cipher suites).
 
 ### Key Encapsulation Mechanism
