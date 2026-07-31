@@ -490,6 +490,14 @@ function as defined in Section 4.4 Pre-Shared Keys of
 {{I-D.ietf-mls-extensions}}. This is to ensure forward secrecy
 guarantees (see {{security-considerations}}).
 
+The SafeExportSecret computation takes place in the PQ session and
+therefore uses the KDF of the PQ session's cipher suite. The two
+subsequent derivations of `apq_psk_id` and `apq_psk` (marked with `*`
+in Fig 3) MUST use the KDF of the traditional session's cipher suite.
+This is because the resulting `apq_psk` is consumed by the key
+schedule of the traditional session and the PreSharedKeyID
+identifying it is an object of the traditional session.
+
 Even though the `apq_psk` PSK is not sent over the wire, members of
 the APQ-MLS session must agree on the value of which PSK to use. In
 alignment with the Safe Extensions API policy for PSKs, APQ-MLS PSKs
@@ -506,10 +514,10 @@ used SHALL set `PSKType = 3` and `component_id = 0x0006` (see Section
           V
     apq_exporter
           |
-          +--> DeriveSecret(., "psk_id")
+          +--> DeriveSecret(., "psk_id")*
           |    = apq_psk_id
           V
-DeriveSecret(., "psk")
+DeriveSecret(., "psk")*
           |
           V                            [...]
        apq_psk                     joiner_secret
