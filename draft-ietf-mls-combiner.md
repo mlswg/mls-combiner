@@ -290,10 +290,36 @@ a join and the new member MUST issue a FULL Commit as described in Fig 1b.
 
 External joins are used by members who join a group without being explicitly
 added (via an Add-Commit sequence) by another existing member. The external
-user MUST join both the PQ session and the traditional session. As stated
-previously, the GroupInfo used to create the External Commit MUST contain
-the APQInfo struct. After joining, the new member MUST issue a FULL Commit as their first commit
-as described in Fig 1b (e.g. a joiner SHALL NOT instantiate the protocol with a PARTIAL Commit).
+user MUST join both the PQ session and the traditional session using one
+external Commit per session. As stated previously, the GroupInfo used to
+create each external Commit MUST contain the APQInfo struct.
+
+The joiner proceeds as follows:
+
+1. The joiner creates the external Commit for the PQ session and applies
+   it locally to derive the new epoch of the PQ session.
+
+2. From the new PQ epoch, the joiner derives the `apq_psk_id` and the
+   `apq_psk` as described in {{key-schedule}}.
+
+3. The joiner creates the external Commit for the traditional session.
+   The two external Commits together constitute a FULL Commit, so this
+   Commit MUST include a PreSharedKey proposal with
+   `psk_type = application`, `component_id = 0x0006` and
+   `psk_id = apq_psk_id`. PreSharedKey proposals are permitted in external
+   Commits (see {{Section 12.2 of RFC9420}}).
+
+Both external Commits MUST include the AppDataUpdate proposals updating
+the APQInfo struct as described in {{updating-apqinfo}}. AppDataUpdate
+proposals are permitted in external Commits (see Section 4.7 of
+{{I-D.ietf-mls-extensions}}).
+
+External Commits are framed as PublicMessage ({{Section 6 of RFC9420}}).
+The joiner therefore sends the two external Commits together as a single
+APQPublicMessage (see {{wire-formats}}), with the traditional session's
+Commit in `t_message` and the PQ session's Commit in `pq_message`.
+Receivers process the PQ external Commit first to derive the new PQ epoch
+and the `apq_psk`, and then process the traditional external Commit.
 
 ## Removing a Group Member
 
