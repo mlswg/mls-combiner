@@ -41,7 +41,6 @@ author:
 
 
 normative:
-  I-D.mahy-mls-ratchet-tree-options:
   I-D.ietf-mls-pq-ciphersuites:
 
 informative:
@@ -551,53 +550,32 @@ the `apq_psk` were derived.
 
 Operating two groups in conjunction requires that certain data are sent
 over the wire in duplicate, for example, two commit messages in the case
-of a FULL Commit. This is made easier through the following wire formats.
-The GroupContext of both the PQ and the T group MUST include the
-`required_wire_formats` extension listing the following wire formats.
+of a FULL Commit. This is made easier through the APQMessagePair wire
+format, which carries a pair of MLS messages of the same type, one for
+the traditional session and one for the PQ session. The GroupContext of
+both the PQ and the T group MUST include the `required_wire_formats`
+extension listing the `apq_message_pair` wire format.
 
-~~~
+~~~tls
 struct {
-  KeyPackage t_key_package;
-  KeyPackage pq_key_package;
-} APQKeyPackage
-
-struct {
-  MLSPublicMessage t_message;
-  MLSPublicMessage pq_message;
-} APQPublicMessage
-
-struct {
-  MLSPrivateMessage t_message;
-  MLSPrivateMessage pq_message;
-} APQPrivateMessage
-
-struct {
-  Welcome t_welcome;
-  Welcome pq_welcome;
-} APQWelcome
-
-struct {
-  GroupInfo t_group_info;
-  GroupInfo pq_group_info;
-} APQGroupInfo
-
-struct {
-  PartialGroupInfo t_group_info;
-  PartialGroupInfo pq_group_info;
-} APQPartialGroupInfo
+  WireFormat wire_format;
+  MLSMessage t_message;
+  MLSMessage pq_message;
+} APQMessagePair;
 ~~~
 
-Where PartialGroupInfo is defined in Section 4 of
-{{!I-D.mahy-mls-ratchet-tree-options}}. Messages in APQPrivateMessage
-MUST NOT be of content type `application`.
+The `wire_format` field indicates the wire format of the two contained
+messages. The wire formats of both `t_message` and `pq_message` MUST
+match the value of the `wire_format` field. The `wire_format` field
+MUST NOT be `apq_message_pair`. Recipients MUST reject an
+APQMessagePair that violates either of these requirements.
 
-Each struct is sent as the payload of an MLSMessage with the
-corresponding wire format: `apq_key_package` for APQKeyPackage,
-`apq_public_message` for APQPublicMessage, `apq_private_message` for
-APQPrivateMessage, `apq_welcome` for APQWelcome, `apq_group_info` for
-APQGroupInfo, and `apq_partial_group_info` for APQPartialGroupInfo.
-The code points for these wire formats are registered in
-{{iana-wire-formats}}.
+Messages with wire format `mls_private_message` MUST NOT be of content
+type `application`.
+
+An APQMessagePair is sent as the payload of an MLSMessage with the
+wire format `apq_message_pair`. The code point for this wire format is
+registered in {{iana-wire-formats}}.
 
 # Cryptographic Objects
 
@@ -732,19 +710,14 @@ This document registers the `apq_mls_info` MLS Component Type per {{Section 7.5 
 - Recommended: Y
 - Reference: RFC XXXX
 
-## MLS Wire Formats {#iana-wire-formats}
+## apq_message_pair MLS Wire Format {#iana-wire-formats}
 
-This document requests the addition of the following entries to the
+This document requests the addition of the following entry to the
 MLS Wire Formats registry defined in {{Section 17.2 of RFC9420}}.
 
-| Value  | Name                   | Recommended | Reference |
-|:-------|:-----------------------|:------------|:----------|
-| 0x0006 | apq_key_package        | Y           | RFC XXXX  |
-| 0x0007 | apq_public_message     | Y           | RFC XXXX  |
-| 0x0008 | apq_private_message    | Y           | RFC XXXX  |
-| 0x0009 | apq_welcome            | Y           | RFC XXXX  |
-| 0x000A | apq_group_info         | Y           | RFC XXXX  |
-| 0x000B | apq_partial_group_info | Y           | RFC XXXX  |
+| Value  | Name             | Recommended | Reference |
+|:-------|:-----------------|:------------|:----------|
+| 0x0007 | apq_message_pair | Y           | RFC XXXX  |
 
 ## apq_psk MLS PSK label
 
