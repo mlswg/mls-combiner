@@ -1549,10 +1549,38 @@ a join and the new member <span class="bcp14">MUST</span> issue a FULL Commit as
           </h4>
 <p id="section-3.2.2-1">External joins are used by members who join a group without being explicitly
 added (via an Add-Commit sequence) by another existing member. The external
-user <span class="bcp14">MUST</span> join both the PQ session and the traditional session. As stated
-previously, the GroupInfo used to create the External Commit <span class="bcp14">MUST</span> contain
-the APQInfo struct. After joining, the new member <span class="bcp14">MUST</span> issue a FULL Commit as their first commit
-as described in Fig 1b (e.g. a joiner <span class="bcp14">SHALL NOT</span> instantiate the protocol with a PARTIAL Commit).<a href="#section-3.2.2-1" class="pilcrow">¶</a></p>
+user <span class="bcp14">MUST</span> join both the PQ session and the traditional session using one
+external Commit per session. As stated previously, the GroupInfo used to
+create each external Commit <span class="bcp14">MUST</span> contain the APQInfo struct.<a href="#section-3.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.2-2">The joiner proceeds as follows:<a href="#section-3.2.2-2" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-3.2.2-3">
+<li id="section-3.2.2-3.1">
+              <p id="section-3.2.2-3.1.1">The joiner creates the external Commit for the PQ session and applies
+it locally to derive the new epoch of the PQ session.<a href="#section-3.2.2-3.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li id="section-3.2.2-3.2">
+              <p id="section-3.2.2-3.2.1">From the new PQ epoch, the joiner derives the <code>apq_psk_id</code> and the
+<code>apq_psk</code> as described in <a href="#key-schedule" class="auto internal xref">Section 5.2</a>.<a href="#section-3.2.2-3.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li id="section-3.2.2-3.3">
+              <p id="section-3.2.2-3.3.1">The joiner creates the external Commit for the traditional session.
+The two external Commits together constitute a FULL Commit, so this
+Commit <span class="bcp14">MUST</span> include a PreSharedKey proposal with
+<code>psk_type = application</code>, <code>component_id = 0x0006</code> and
+<code>psk_id = apq_psk_id</code>. PreSharedKey proposals are permitted in external
+Commits (see <span><a href="https://rfc-editor.org/rfc/rfc9420#section-12.2" class="relref">Section 12.2</a> of [<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>).<a href="#section-3.2.2-3.3.1" class="pilcrow">¶</a></p>
+</li>
+          </ol>
+<p id="section-3.2.2-4">Both external Commits <span class="bcp14">MUST</span> include the AppDataUpdate proposals updating
+the APQInfo struct as described in <a href="#updating-apqinfo" class="auto internal xref">Section 5.1.1</a>. AppDataUpdate
+proposals are permitted in external Commits (see Section 4.7 of
+<span>[<a href="#I-D.ietf-mls-extensions" class="cite xref">I-D.ietf-mls-extensions</a>]</span>).<a href="#section-3.2.2-4" class="pilcrow">¶</a></p>
+<p id="section-3.2.2-5">External Commits are framed as PublicMessage (<span><a href="https://rfc-editor.org/rfc/rfc9420#section-6" class="relref">Section 6</a> of [<a href="#RFC9420" class="cite xref">RFC9420</a>]</span>).
+The joiner therefore sends the two external Commits together as a single
+APQPublicMessage (see <a href="#wire-formats" class="auto internal xref">Section 6</a>), with the traditional session's
+Commit in <code>t_message</code> and the PQ session's Commit in <code>pq_message</code>.
+Receivers process the PQ external Commit first to derive the new PQ epoch
+and the <code>apq_psk</code>, and then process the traditional external Commit.<a href="#section-3.2.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
