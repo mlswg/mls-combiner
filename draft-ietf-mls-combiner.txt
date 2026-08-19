@@ -5,9 +5,9 @@
 Messaging Layer Security                                         X. Tian
 Internet-Draft                                                   B. Hale
 Intended status: Standards Track               Naval Postgraduate School
-Expires: 11 October 2026                                    M. Mularczyk
+Expires: 20 February 2027                                   M. Mularczyk
                                                                      AWS
-                                                            9 April 2026
+                                                          19 August 2026
 
 
                        Amortized PQ MLS Combiner
@@ -60,7 +60,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 11 October 2026.
+   This Internet-Draft will expire on 20 February 2027.
 
 Copyright Notice
 
@@ -107,7 +107,8 @@ Table of Contents
      8.4.  Transport Security
    9.  IANA Considerations
      9.1.  apq_mls_info MLS Component Type
-     9.2.  apq_psk MLS PSK label
+     9.2.  apq_message_pair MLS Wire Format
+     9.3.  apq_psk MLS PSK label
    10. Normative References
    Acknowledgments
      Contributors
@@ -637,44 +638,31 @@ DeriveSecret(., "psk")
 
    Operating two groups in conjunction requires that certain data are
    sent over the wire in duplicate, for example, two commit messages in
-   the case of a FULL Commit.  This is made easier through the following
-   wire formats.  The GroupContext of both the PQ and the T group MUST
-   include the required_wire_formats extension listing the following
-   wire formats.
+   the case of a FULL Commit.  This is made easier through the
+   APQMessagePair wire format, which carries a pair of MLS messages of
+   the same type, one for the traditional session and one for the PQ
+   session.  The GroupContext of both the PQ and the T group MUST
+   include the required_wire_formats extension listing the
+   apq_message_pair wire format.
 
    struct {
-     KeyPackage t_key_package;
-     KeyPackage pq_key_package;
-   } APQKeyPackage
+     WireFormat wire_format;
+     MLSMessage t_message;
+     MLSMessage pq_message;
+   } APQMessagePair;
 
-   struct {
-     MLSPublicMessage t_message;
-     MLSPublicMessage pq_message;
-   } APQPublicMessage
+   The wire_format field indicates the wire format of the two contained
+   messages.  The wire formats of both t_message and pq_message MUST
+   match the value of the wire_format field.  The wire_format field MUST
+   NOT be apq_message_pair.  Recipients MUST reject an APQMessagePair
+   that violates either of these requirements.
 
-   struct {
-     MLSPrivateMessage t_message;
-     MLSPrivateMessage pq_message;
-   } APQPrivateMessage
+   Messages with wire format mls_private_message MUST NOT be of content
+   type application.
 
-   struct {
-     Welcome t_welcome;
-     Welcome pq_welcome;
-   } APQWelcome
-
-   struct {
-     GroupInfo t_group_info;
-     GroupInfo pq_group_info;
-   } APQGroupInfo
-
-   struct {
-     PartialGroupInfo t_group_info;
-     PartialGroupInfo pq_group_info;
-   } APQPartialGroupInfo
-
-   Where PartialGroupInfo is defined in Section 4 of
-   [I-D.mahy-mls-ratchet-tree-options].  Messages in APQPrivateMessage
-   MUST NOT be of content type application.
+   An APQMessagePair is sent as the payload of an MLSMessage with the
+   wire format apq_message_pair.  The code point for this wire format is
+   registered in Section 9.2.
 
 7.  Cryptographic Objects
 
@@ -815,7 +803,20 @@ DeriveSecret(., "psk")
 
    *  Reference: RFC XXXX
 
-9.2.  apq_psk MLS PSK label
+9.2.  apq_message_pair MLS Wire Format
+
+   This document requests the addition of the following entry to the MLS
+   Wire Formats registry defined in Section 17.2 of [RFC9420].
+
+          +========+==================+=============+===========+
+          | Value  | Name             | Recommended | Reference |
+          +========+==================+=============+===========+
+          | 0x0007 | apq_message_pair | Y           | RFC XXXX  |
+          +--------+------------------+-------------+-----------+
+
+                                  Table 1
+
+9.3.  apq_psk MLS PSK label
 
    TODO
 
@@ -824,16 +825,16 @@ DeriveSecret(., "psk")
    [I-D.ietf-mls-extensions]
               Robert, R., "The Messaging Layer Security (MLS)
               Extensions", Work in Progress, Internet-Draft, draft-ietf-
-              mls-extensions-09, 2 March 2026,
+              mls-extensions-10, 6 July 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-mls-
-              extensions-09>.
+              extensions-10>.
 
    [I-D.ietf-mls-pq-ciphersuites]
               Mahy, R. and R. Barnes, "ML-KEM and Hybrid Cipher Suites
               for Messaging Layer Security", Work in Progress, Internet-
-              Draft, draft-ietf-mls-pq-ciphersuites-04, 18 March 2026,
+              Draft, draft-ietf-mls-pq-ciphersuites-06, 21 July 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-mls-pq-
-              ciphersuites-04>.
+              ciphersuites-06>.
 
    [I-D.ietf-pquip-hybrid-signature-spectrums]
               Bindel, N., Hale, B., Connolly, D., and F. D, "Hybrid
@@ -841,13 +842,6 @@ DeriveSecret(., "psk")
               draft-ietf-pquip-hybrid-signature-spectrums-07, 20 June
               2025, <https://datatracker.ietf.org/doc/html/draft-ietf-
               pquip-hybrid-signature-spectrums-07>.
-
-   [I-D.mahy-mls-ratchet-tree-options]
-              Mahy, R., "Ways to convey the Ratchet Tree in Messaging
-              Layer Security", Work in Progress, Internet-Draft, draft-
-              mahy-mls-ratchet-tree-options-04, 2 March 2026,
-              <https://datatracker.ietf.org/doc/html/draft-mahy-mls-
-              ratchet-tree-options-04>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
