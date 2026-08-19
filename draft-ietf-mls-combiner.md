@@ -172,8 +172,8 @@ Commits to proposals MAY be *PARTIAL* or *FULL*. For a PARTIAL Commit, only the
 traditional session's epoch is updated following the Propose-Commit sequence from
 Section 12 of {{RFC9420}}. For a FULL Commit, a Commit is first applied to the PQ
 session and another Commit is applied to the traditional session using a PSK
-derived from the PQ session using the DeriveExtensionSecret and `apq_psk` label
-(see {{key-schedule}}). To ensure the correct PSK is imported into the traditional
+derived from the PQ session using SafeExportSecret with the `apq_mls_info`
+component ID `0x0006` (see {{key-schedule}}). To ensure the correct PSK is imported into the traditional
 session, the sender includes information about the PSK in a PreSharedKey proposal
 for the Commit list of proposals from the traditional session. The information about the
 exported PSK is captured (shown '=' in the figures below for illustration purposes)
@@ -188,7 +188,7 @@ session.
     |                                        |                            |
     | Commit'()                              |                            |
     |    PresharedKeyID =                    |                            |
-    |    DeriveExtensionSecret('apq_psk')    |                            |
+    |    SafeExportSecret(0x0006)            |                            |
     | Commit(PreSharedKeyID)                 |                            |
     |-------------------------------------------------------------------->|
     |                                        |                            |
@@ -218,7 +218,7 @@ session.
     |                                        |                                |
     | Commit'(Upd')                          |                                |
     |    PresharedKeyID =                    |                                |
-    |    DeriveExtensionSecret('apq_psk')    |                                |
+    |    SafeExportSecret(0x0006)            |                                |
     | Commit(Upd, PreSharedKeyID)            |                                |
     |------------------------------------------------------------------------>|
     |                                        |                                |
@@ -257,7 +257,7 @@ the joiner.
     |<-----------------------------------------+                         |
     | Commit'(Add'(KeyPackageB'))              |                         |
     |   PresharedKeyID =                       |                         |
-    |   DeriveExtensionSecret('apq_psk')       |                         |
+    |   SafeExportSecret(0x0006)               |                         |
     | Commit(Add(KeyPackageB), PreSharedKeyID) |                         |
     +------------------------------------------------------------------->|
     |                         |                |                         |
@@ -533,7 +533,7 @@ DeriveSecret(., "psk")
                                         |    = <secret>
                                       [...]
     Fig 3: The apq_psk of the PQ session is injected into the key schedule of the
-    traditional session using the safe extensions API DeriveExtensionSecret.
+    traditional session using the safe extensions API SafeExportSecret.
 ~~~
 
 
