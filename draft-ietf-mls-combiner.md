@@ -41,7 +41,6 @@ author:
 
 
 normative:
-  I-D.mahy-mls-ratchet-tree-options:
   I-D.ietf-mls-pq-ciphersuites:
 
 informative:
@@ -173,8 +172,8 @@ Commits to proposals MAY be *PARTIAL* or *FULL*. For a PARTIAL Commit, only the
 traditional session's epoch is updated following the Propose-Commit sequence from
 Section 12 of {{RFC9420}}. For a FULL Commit, a Commit is first applied to the PQ
 session and another Commit is applied to the traditional session using a PSK
-derived from the PQ session using the DeriveExtensionSecret and `apq_psk` label
-(see {{key-schedule}}). To ensure the correct PSK is imported into the traditional
+derived from the PQ session using SafeExportSecret with the `apq_mls_info`
+component ID `0x0006` (see {{key-schedule}}). To ensure the correct PSK is imported into the traditional
 session, the sender includes information about the PSK in a PreSharedKey proposal
 for the Commit list of proposals from the traditional session. The information about the
 exported PSK is captured (shown '=' in the figures below for illustration purposes)
@@ -189,7 +188,7 @@ session.
     |                                        |                            |
     | Commit'()                              |                            |
     |    PresharedKeyID =                    |                            |
-    |    DeriveExtensionSecret('apq_psk')    |                            |
+    |    SafeExportSecret(0x0006)            |                            |
     | Commit(PreSharedKeyID)                 |                            |
     |-------------------------------------------------------------------->|
     |                                        |                            |
@@ -219,7 +218,7 @@ session.
     |                                        |                                |
     | Commit'(Upd')                          |                                |
     |    PresharedKeyID =                    |                                |
-    |    DeriveExtensionSecret('apq_psk')    |                                |
+    |    SafeExportSecret(0x0006)            |                                |
     | Commit(Upd, PreSharedKeyID)            |                                |
     |------------------------------------------------------------------------>|
     |                                        |                                |
@@ -258,7 +257,7 @@ the joiner.
     |<-----------------------------------------+                         |
     | Commit'(Add'(KeyPackageB'))              |                         |
     |   PresharedKeyID =                       |                         |
-    |   DeriveExtensionSecret('apq_psk')       |                         |
+    |   SafeExportSecret(0x0006)               |                         |
     | Commit(Add(KeyPackageB), PreSharedKeyID) |                         |
     +------------------------------------------------------------------->|
     |                         |                |                         |
@@ -290,10 +289,36 @@ a join and the new member MUST issue a FULL Commit as described in Fig 1b.
 
 External joins are used by members who join a group without being explicitly
 added (via an Add-Commit sequence) by another existing member. The external
-user MUST join both the PQ session and the traditional session. As stated
-previously, the GroupInfo used to create the External Commit MUST contain
-the APQInfo struct. After joining, the new member MUST issue a FULL Commit as their first commit
-as described in Fig 1b (e.g. a joiner SHALL NOT instantiate the protocol with a PARTIAL Commit).
+user MUST join both the PQ session and the traditional session using one
+external Commit per session. As stated previously, the GroupInfo used to
+create each external Commit MUST contain the APQInfo struct.
+
+The joiner proceeds as follows:
+
+1. The joiner creates the external Commit for the PQ session and applies
+   it locally to derive the new epoch of the PQ session.
+
+2. From the new PQ epoch, the joiner derives the `apq_psk_id` and the
+   `apq_psk` as described in {{key-schedule}}.
+
+3. The joiner creates the external Commit for the traditional session.
+   The two external Commits together constitute a FULL Commit, so this
+   Commit MUST include a PreSharedKey proposal with
+   `psk_type = application`, `component_id = 0x0006` and
+   `psk_id = apq_psk_id`. PreSharedKey proposals are permitted in external
+   Commits (see {{Section 12.2 of RFC9420}}).
+
+Both external Commits MUST include the AppDataUpdate proposals updating
+the APQInfo struct as described in {{updating-apqinfo}}. AppDataUpdate
+proposals are permitted in external Commits (see Section 4.7 of
+{{I-D.ietf-mls-extensions}}).
+
+External Commits are framed as PublicMessage ({{Section 6 of RFC9420}}).
+The joiner therefore sends the two external Commits together as a single
+APQPublicMessage (see {{wire-formats}}), with the traditional session's
+Commit in `t_message` and the PQ session's Commit in `pq_message`.
+Receivers process the PQ external Commit first to derive the new PQ epoch
+and the `apq_psk`, and then process the traditional external Commit.
 
 ## Removing a Group Member
 
@@ -462,11 +487,12 @@ AppDataUpdate proposal and the epochs in `new_pq_info` MUST be set to the
 epochs of the two MLS groups after the respective Commit was applied.
 
 In all subsequent FULL Commits, the APQInfo in both MLS groups' GroupContext
-structs MUST be updated to reflect the new epochs and any changes to APQ mode
-(PQ Confidentiality-Only or PQ Confidentiality+Authenticity). This can be done
-using a `full_update` AppDataUpdate proposal. Alternatively, if no changes are
-being made to the cipher suites or APQ-MLS mode, than the second method using
-`new_t_epoch` and `new_pq_epoch` can be used.
+structs MUST be updated to reflect the new epochs. This can be done using
+either a `full_update` AppDataUpdate proposal or the second method using
+`new_t_epoch` and `new_pq_epoch`. All fields other than the two epoch
+fields are immutable for the lifetime of the APQ-MLS session (see
+{{cipher-suites}}). Recipients MUST reject an AppDataUpdate proposal that
+modifies any field of an existing APQInfo other than the two epoch fields.
 
 Either way, for any FULL Commit, recipients MUST verify that the epoch
 fields in the APQInfo structs included in the GroupContext of the new epochs
@@ -542,7 +568,7 @@ DeriveSecret(., "psk")*
                                         |    = <secret>
                                       [...]
     Fig 3: The apq_psk of the PQ session is injected into the key schedule of the
-    traditional session using the safe extensions API DeriveExtensionSecret.
+    traditional session using the safe extensions API SafeExportSecret.
 ~~~
 
 
@@ -559,45 +585,32 @@ the `apq_psk` were derived.
 
 Operating two groups in conjunction requires that certain data are sent
 over the wire in duplicate, for example, two commit messages in the case
-of a FULL Commit. This is made easier through the following wire formats.
-The GroupContext of both the PQ and the T group MUST include the
-`required_wire_formats` extension listing the following wire formats.
+of a FULL Commit. This is made easier through the APQMessagePair wire
+format, which carries a pair of MLS messages of the same type, one for
+the traditional session and one for the PQ session. The GroupContext of
+both the PQ and the T group MUST include the `required_wire_formats`
+extension listing the `apq_message_pair` wire format.
 
-~~~
+~~~tls
 struct {
-  KeyPackage t_key_package;
-  KeyPackage pq_key_package;
-} APQKeyPackage
-
-struct {
-  MLSPublicMessage t_message;
-  MLSPublicMessage pq_message;
-} APQPublicMessage
-
-struct {
-  MLSPrivateMessage t_message;
-  MLSPrivateMessage pq_message;
-} APQPrivateMessage
-
-struct {
-  Welcome t_welcome;
-  Welcome pq_welcome;
-} APQWelcome
-
-struct {
-  GroupInfo t_group_info;
-  GroupInfo pq_group_info;
-} APQGroupInfo
-
-struct {
-  PartialGroupInfo t_group_info;
-  PartialGroupInfo pq_group_info;
-} APQPartialGroupInfo
+  WireFormat wire_format;
+  MLSMessage t_message;
+  MLSMessage pq_message;
+} APQMessagePair;
 ~~~
 
-Where PartialGroupInfo is defined in Section 4 of
-{{!I-D.mahy-mls-ratchet-tree-options}}. Messages in APQPrivateMessage
-MUST NOT be of content type `application`.
+The `wire_format` field indicates the wire format of the two contained
+messages. The wire formats of both `t_message` and `pq_message` MUST
+match the value of the `wire_format` field. The `wire_format` field
+MUST NOT be `apq_message_pair`. Recipients MUST reject an
+APQMessagePair that violates either of these requirements.
+
+Messages with wire format `mls_private_message` MUST NOT be of content
+type `application`.
+
+An APQMessagePair is sent as the payload of an MLSMessage with the
+wire format `apq_message_pair`. The code point for this wire format is
+registered in {{iana-wire-formats}}.
 
 # Cryptographic Objects
 
@@ -615,8 +628,9 @@ only adds extra overhead and complexity. Furthermore, the `pq_cipher_suite`
 may contain a classical digital signature algorithm used if `mode` is
 set to 0 (PQ Confidentiality-Only) but MUST be fully PQ if `mode` is
 set to 1 (PQ Confidentiality+Authenticity). These cipher suite
-combinations and modes MUST not be toggled or modified after a APQ-MLS
-session has commenced. Clients MUST reject a APQ-MLS session with invalid
+combinations and modes MUST NOT be toggled or modified after a APQ-MLS
+session has commenced. Changing the mode or the cipher suites requires
+reinitializing the APQ-MLS session. Clients MUST reject a APQ-MLS session with invalid
 or duplicate cipher suites (e.g. two traditional cipher suites).
 
 ### Key Encapsulation Mechanism
@@ -731,6 +745,15 @@ This document registers the `apq_mls_info` MLS Component Type per {{Section 7.5 
 - Where: GC
 - Recommended: Y
 - Reference: RFC XXXX
+
+## apq_message_pair MLS Wire Format {#iana-wire-formats}
+
+This document requests the addition of the following entry to the
+MLS Wire Formats registry defined in {{Section 17.2 of RFC9420}}.
+
+| Value  | Name             | Recommended | Reference |
+|:-------|:-----------------|:------------|:----------|
+| 0x0007 | apq_message_pair | Y           | RFC XXXX  |
 
 ## apq_psk MLS PSK label
 
