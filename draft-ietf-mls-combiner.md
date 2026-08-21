@@ -187,7 +187,7 @@ session.
       A                                      B                         Channel
     |                                        |                            |
     | Commit'()                              |                            |
-    |    PresharedKeyID =                    |                            |
+    |    PreSharedKeyID =                    |                            |
     |    SafeExportSecret(0x0006)            |                            |
     | Commit(PreSharedKeyID)                 |                            |
     |-------------------------------------------------------------------->|
@@ -217,7 +217,7 @@ session.
     |                                        |<-------------------------------+
     |                                        |                                |
     | Commit'(Upd')                          |                                |
-    |    PresharedKeyID =                    |                                |
+    |    PreSharedKeyID =                    |                                |
     |    SafeExportSecret(0x0006)            |                                |
     | Commit(Upd, PreSharedKeyID)            |                                |
     |------------------------------------------------------------------------>|
@@ -256,7 +256,7 @@ the joiner.
     |                         |    KeyPackageB |                         |
     |<-----------------------------------------+                         |
     | Commit'(Add'(KeyPackageB'))              |                         |
-    |   PresharedKeyID =                       |                         |
+    |   PreSharedKeyID =                       |                         |
     |   SafeExportSecret(0x0006)               |                         |
     | Commit(Add(KeyPackageB), PreSharedKeyID) |                         |
     +------------------------------------------------------------------->|
@@ -509,12 +509,17 @@ in both groups when doing a FULL Commit.
 ## Key Schedule {#key-schedule}
 
 The `apq_psk` exporter key derived in the PQ session MUST be derived in
-accordance with the Safe Extensions API guidance (see Exporting Secrets
+accordance with the Safe Extensions API guidance (see Exported Secrets
 in {{I-D.ietf-mls-extensions}}). In particular, it SHALL NOT use the
 `extension_secret` and MUST be derived using the SafeExportSecret
-function as defined in Section 4.4 Pre-Shared Keys of
+function as defined in Section 4.4 Exported Secrets of
 {{I-D.ietf-mls-extensions}}. This is to ensure forward secrecy
 guarantees (see {{security-considerations}}).
+
+The SafeExportSecret computation takes place in the PQ session and
+therefore uses the KDF of the PQ session's cipher suite. The two
+subsequent derivations of `apq_psk_id` and `apq_psk` MUST use the KDF
+of the traditional session's cipher suite.
 
 Even though the `apq_psk` PSK is not sent over the wire, members of
 the APQ-MLS session must agree on the value of which PSK to use. In
@@ -532,18 +537,20 @@ used SHALL set `PSKType = 3` and `component_id = 0x0006` (see Section
           V
     apq_exporter
           |
-          +--> DeriveSecret(., "psk_id")
-          |    = apq_psk_id
-          V
-DeriveSecret(., "psk")
+          +-----------> DeriveSecret(apq_exporter, "psk_id")
+          |             = apq_psk_id
           |
-          V                            [...]
-       apq_psk                     joiner_secret
-          |                             |
-          |                             |
-          |                             V
-          +--> <psk_secret (or 0)> --> KDF.Extract
-        [...]                           |
+          +-----------> DeriveSecret(apq_exporter, "psk")
+        [...]           |
+                        V
+                     apq_psk
+                        |
+                        |              [...]
+                        |          joiner_secret
+                        |               |
+                        V               V
+               <psk_secret (or 0)> --> KDF.Extract
+                                        |
                                         |
                                         +--> DeriveSecret(., "welcome")
                                         |    = welcome_secret
