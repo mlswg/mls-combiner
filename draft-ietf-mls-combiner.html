@@ -1059,7 +1059,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tian, et al.</td>
-<td class="center">Expires 20 February 2027</td>
+<td class="center">Expires 22 February 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1072,12 +1072,12 @@ svg {
 <dd class="internet-draft">draft-ietf-mls-combiner-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-08-19" class="published">19 August 2026</time>
+<time datetime="2026-08-21" class="published">21 August 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-02-20">20 February 2027</time></dd>
+<dd class="expires"><time datetime="2027-02-22">22 February 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1144,7 +1144,7 @@ while meeting the requirement of frequent key rotations.<a href="#section-abstra
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 20 February 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 22 February 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1433,7 +1433,7 @@ session.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
       A                                      B                         Channel
     |                                        |                            |
     | Commit'()                              |                            |
-    |    PresharedKeyID =                    |                            |
+    |    PreSharedKeyID =                    |                            |
     |    SafeExportSecret(0x0006)            |                            |
     | Commit(PreSharedKeyID)                 |                            |
     |--------------------------------------------------------------------&gt;|
@@ -1465,7 +1465,7 @@ session.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
     |                                        |&lt;-------------------------------+
     |                                        |                                |
     | Commit'(Upd')                          |                                |
-    |    PresharedKeyID =                    |                                |
+    |    PreSharedKeyID =                    |                                |
     |    SafeExportSecret(0x0006)            |                                |
     | Commit(Upd, PreSharedKeyID)            |                                |
     |------------------------------------------------------------------------&gt;|
@@ -1509,7 +1509,7 @@ the joiner.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
     |                         |    KeyPackageB |                         |
     |&lt;-----------------------------------------+                         |
     | Commit'(Add'(KeyPackageB'))              |                         |
-    |   PresharedKeyID =                       |                         |
+    |   PreSharedKeyID =                       |                         |
     |   SafeExportSecret(0x0006)               |                         |
     | Commit(Add(KeyPackageB), PreSharedKeyID) |                         |
     +-------------------------------------------------------------------&gt;|
@@ -1810,18 +1810,22 @@ in both groups when doing a FULL Commit.<a href="#section-5.1.2-1" class="pilcro
 <a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-key-schedule" class="section-name selfRef">Key Schedule</a>
         </h3>
 <p id="section-5.2-1">The <code>apq_psk</code> exporter key derived in the PQ session <span class="bcp14">MUST</span> be derived in
-accordance with the Safe Extensions API guidance (see Exporting Secrets
+accordance with the Safe Extensions API guidance (see Exported Secrets
 in <span>[<a href="#I-D.ietf-mls-extensions" class="cite xref">I-D.ietf-mls-extensions</a>]</span>). In particular, it <span class="bcp14">SHALL NOT</span> use the
 <code>extension_secret</code> and <span class="bcp14">MUST</span> be derived using the SafeExportSecret
-function as defined in Section 4.4 Pre-Shared Keys of
+function as defined in Section 4.4 Exported Secrets of
 <span>[<a href="#I-D.ietf-mls-extensions" class="cite xref">I-D.ietf-mls-extensions</a>]</span>. This is to ensure forward secrecy
 guarantees (see <a href="#security-considerations" class="auto internal xref">Section 8</a>).<a href="#section-5.2-1" class="pilcrow">¶</a></p>
-<p id="section-5.2-2">Even though the <code>apq_psk</code> PSK is not sent over the wire, members of
+<p id="section-5.2-2">The SafeExportSecret computation takes place in the PQ session and
+therefore uses the KDF of the PQ session's cipher suite. The two
+subsequent derivations of <code>apq_psk_id</code> and <code>apq_psk</code> <span class="bcp14">MUST</span> use the KDF
+of the traditional session's cipher suite.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
+<p id="section-5.2-3">Even though the <code>apq_psk</code> PSK is not sent over the wire, members of
 the APQ-MLS session must agree on the value of which PSK to use. In
 alignment with the Safe Extensions API policy for PSKs, APQ-MLS PSKs
 used <span class="bcp14">SHALL</span> set <code>PSKType = 3</code> and <code>component_id = 0x0006</code> (see Section
-4.5 Pre-Shared Keys of <span>[<a href="#I-D.ietf-mls-extensions" class="cite xref">I-D.ietf-mls-extensions</a>]</span>).<a href="#section-5.2-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.2-3">
+4.5 Pre-Shared Keys of <span>[<a href="#I-D.ietf-mls-extensions" class="cite xref">I-D.ietf-mls-extensions</a>]</span>).<a href="#section-5.2-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2-4">
 <pre>
       PQ Session                       Traditional Session
       ----------                       -------------------
@@ -1832,18 +1836,20 @@ used <span class="bcp14">SHALL</span> set <code>PSKType = 3</code> and <code>com
           V
     apq_exporter
           |
-          +--&gt; DeriveSecret(., "psk_id")
-          |    = apq_psk_id
-          V
-DeriveSecret(., "psk")
+          +-----------&gt; DeriveSecret(apq_exporter, "psk_id")
+          |             = apq_psk_id
           |
-          V                            [...]
-       apq_psk                     joiner_secret
-          |                             |
-          |                             |
-          |                             V
-          +--&gt; &lt;psk_secret (or 0)&gt; --&gt; KDF.Extract
-        [...]                           |
+          +-----------&gt; DeriveSecret(apq_exporter, "psk")
+        [...]           |
+                        V
+                     apq_psk
+                        |
+                        |              [...]
+                        |          joiner_secret
+                        |               |
+                        V               V
+               &lt;psk_secret (or 0)&gt; --&gt; KDF.Extract
+                                        |
                                         |
                                         +--&gt; DeriveSecret(., "welcome")
                                         |    = welcome_secret
@@ -1861,15 +1867,15 @@ DeriveSecret(., "psk")
                                       [...]
     Fig 3: The apq_psk of the PQ session is injected into the key schedule of the
     traditional session using the safe extensions API SafeExportSecret.
-</pre><a href="#section-5.2-3" class="pilcrow">¶</a>
+</pre><a href="#section-5.2-4" class="pilcrow">¶</a>
 </div>
-<p id="section-5.2-4">To signal the injection of the PSK derived from the PQ group
+<p id="section-5.2-5">To signal the injection of the PSK derived from the PQ group
 into the key schedule of the T group, each T group commit that
 is part of a FULL Commit <span class="bcp14">MUST</span> include a PreSharedKey proposal
 with <code>psk_type = application</code>, <code>component_id = 0x0006</code> and
-<code>psk_id = apq_psk_id</code>.<a href="#section-5.2-4" class="pilcrow">¶</a></p>
-<p id="section-5.2-5">The <code>apq_exporter</code> <span class="bcp14">MUST</span> be deleted after both the <code>apq_psk_id</code> and
-the <code>apq_psk</code> were derived.<a href="#section-5.2-5" class="pilcrow">¶</a></p>
+<code>psk_id = apq_psk_id</code>.<a href="#section-5.2-5" class="pilcrow">¶</a></p>
+<p id="section-5.2-6">The <code>apq_exporter</code> <span class="bcp14">MUST</span> be deleted after both the <code>apq_psk_id</code> and
+the <code>apq_psk</code> were derived.<a href="#section-5.2-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
