@@ -322,9 +322,13 @@ and the `apq_psk`, and then process the traditional external Commit.
 
 ## Removing a Group Member
 
-User removals MUST be done in both PQ and traditional sessions followed by
-a FULL Commit Update as as described in Fig 1b. Members MUST verify group
-membership is consistent in both sessions after a removal.
+User removals MUST be done with a single FULL Commit (see
+{{commit-flow}}): the PQ Commit includes a Remove proposal for the
+member's leaf in the PQ session, and the traditional Commit includes a
+Remove proposal for the member's leaf in the traditional session together
+with the PreSharedKey proposal described in {{key-schedule}}. Members
+MUST verify group membership is consistent in both sessions after a
+removal.
 
 ## Application Messages
 
