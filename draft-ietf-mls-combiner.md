@@ -182,6 +182,17 @@ Commit to derive a new epoch in the PQ session and then the traditional Commit
 (which also includes the PSK proposal) to derive the new epoch in the traditional
 session.
 
+The two Commits of a FULL Commit MUST be sent together as one
+APQMessagePair (see {{wire-formats}}), and the DS MUST accept or reject
+the two Commits as a unit. Receivers MUST reject a FULL Commit unless the
+`psk_id` of the PreSharedKey proposal with `component_id = 0x0006` in the
+traditional Commit equals the `apq_psk_id` derived from the PQ epoch
+created by the paired PQ Commit, and both Commits come from the same
+member. If the PQ Commit of a FULL Commit was applied but the traditional
+Commit was not, for example because a competing PARTIAL Commit was
+accepted in the traditional session, the next Commit in the traditional
+session MUST be a FULL Commit with a new PQ Commit.
+
 ~~~
                                                                         Group
       A                                      B                         Channel
