@@ -331,7 +331,9 @@ membership is consistent in both sessions after a removal.
 APQ-MLS combiner provides PQ security to the traditional MLS session.
 Application messages are therefore only sent in the traditional session
 using the `encryption_secret` provided by the key schedule of the traditional
-session according to Section 15 of {{RFC9420}}.
+session according to Section 15 of {{RFC9420}}. Members MUST NOT send
+application messages in the PQ session. Receivers MUST reject any message
+in the PQ session whose content type is `application`.
 
 # Modes of Operation
 
@@ -682,7 +684,10 @@ PQ/T confidentiality, traditional update authenticity, PQ/T PCS, and
 PQ/T forward secrecy). In PQ/T Confidentiality+Authenticity mode with
 frequent FULL Commits, the latter case would enable general PQ/T
 confidentiality, PQ/T update authenticity, PQ/T PCS, and PQ/T forward
-secrecy.
+secrecy. PQ/T update authenticity applies only to FULL Commits. PARTIAL
+Commits exist only in the traditional session and carry only traditional
+signatures, so in either mode they have traditional update authenticity
+only.
 
 ## Attacks on Non-Repudiation
 
