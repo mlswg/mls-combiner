@@ -629,8 +629,27 @@ set to 0 (PQ Confidentiality-Only) but MUST be fully PQ if `mode` is
 set to 1 (PQ Confidentiality+Authenticity). These cipher suite
 combinations and modes MUST NOT be toggled or modified after a APQ-MLS
 session has commenced. Changing the mode or the cipher suites requires
-reinitializing the APQ-MLS session. Clients MUST reject a APQ-MLS session with invalid
-or duplicate cipher suites (e.g. two traditional cipher suites).
+reinitializing the APQ-MLS session.
+
+The `t_cipher_suite` MUST be one of the cipher suites defined in
+{{Section 17.1 of RFC9420}}, all of which use only traditional primitives.
+The `pq_cipher_suite` MUST be one of the following cipher suites defined
+in {{I-D.ietf-mls-pq-ciphersuites}}, all of which use a pure PQ KEM:
+
+- If `mode` is 0: `MLS_128_MLKEM768_AES256GCM_SHA384_Ed25519`,
+  `MLS_128_MLKEM768_AES256GCM_SHA384_P256`,
+  `MLS_192_MLKEM1024_AES256GCM_SHA384_P384`,
+  `MLS_192_MLKEM768_AES256GCM_SHA384_MLDSA65` or
+  `MLS_256_MLKEM1024_AES256GCM_SHA384_MLDSA87`.
+
+- If `mode` is 1: `MLS_192_MLKEM768_AES256GCM_SHA384_MLDSA65` or
+  `MLS_256_MLKEM1024_AES256GCM_SHA384_MLDSA87`, which also use a PQ
+  signature algorithm.
+
+Clients MUST reject an APQ-MLS session whose cipher suites do not meet
+these requirements. In particular, this rejects duplicate cipher suites,
+i.e., an APQInfo whose `t_cipher_suite` and `pq_cipher_suite` are both
+traditional or both PQ cipher suites.
 
 ### Key Encapsulation Mechanism
 
