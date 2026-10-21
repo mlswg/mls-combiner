@@ -285,6 +285,16 @@ as a GroupContext Extension in order to validate joining the combined sessions.
 All members MUST verify group membership is consistent in both sessions after
 a join and the new member MUST issue a FULL Commit as described in Fig 1b.
 
+Group membership is consistent in both sessions if each member of one
+session corresponds to exactly one member of the other session, where two
+members correspond if their credentials present the same identity as
+determined by the application (see {{Section 5.3.1 of RFC9420}}). Leaf
+indices, signature keys and, in PQ/T Confidentiality + Authenticity mode,
+signature algorithms may differ between corresponding members and are not
+compared. A new member MUST reject a pair of Welcome messages, and a member
+MUST reject a FULL Commit, after which group membership is not consistent
+in both sessions.
+
 ### External Joins
 
 External joins are used by members who join a group without being explicitly
