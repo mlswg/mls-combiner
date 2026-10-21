@@ -166,6 +166,14 @@ PQ MLS session with the same group members, sending a Welcome message containing
 the APQInfo struct in the GroupContext, and then making a FULL Commit as described
 in {{commit-flow}}. In either case, PQ group MUST be instantiated with an approved PQ ciphersuite as detailed in {{I-D.ietf-mls-pq-ciphersuites}}.
 
+Either way, the GroupContext of both groups MUST include the
+`required_wire_formats` extension described in {{wire-formats}}. A newly
+created group includes it from the start. When a combined session is
+created from a running traditional session, the traditional Commit of the
+first FULL Commit MUST include a GroupContextExtensions proposal that adds
+it, alongside the `full_update` AppDataUpdate proposal described in
+{{updating-apqinfo}}.
+
 ## Commit Flow {#commit-flow}
 
 Commits to proposals MAY be *PARTIAL* or *FULL*. For a PARTIAL Commit, only the
@@ -610,6 +618,30 @@ type `application`.
 An APQMessagePair is sent as the payload of an MLSMessage with the
 wire format `apq_message_pair`. The code point for this wire format is
 registered in {{iana-wire-formats}}.
+
+The MLSMessage struct defined in {{Section 6 of RFC9420}} is extended as
+follows:
+
+~~~tls
+struct {
+    ProtocolVersion version = mls10;
+    WireFormat wire_format;
+    select (MLSMessage.wire_format) {
+        case mls_public_message:
+            PublicMessage public_message;
+        case mls_private_message:
+            PrivateMessage private_message;
+        case mls_welcome:
+            Welcome welcome;
+        case mls_group_info:
+            GroupInfo group_info;
+        case mls_key_package:
+            KeyPackage key_package;
+        case apq_message_pair:
+            APQMessagePair apq_message_pair;
+    };
+} MLSMessage;
+~~~
 
 # Cryptographic Objects
 
