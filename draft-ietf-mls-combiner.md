@@ -474,12 +474,16 @@ proposal. Similarly, using the `new_pq_epoch` update type, the AppDataUpdate
 proposal replaces the PQ MLS group's epoch with the `uint64 new_pq_epoch` value
 in the proposal payload.
 
-A Commit can include either a single AppDataUpdate with a `full_update` or
-two proposals; one with `new_t_epoch` and one with `new_pq_epoch`. In the
+The AppDataUpdate proposals with `component_id = 0x0006` in a Commit MUST
+be either a single AppDataUpdate with a `full_update` or two proposals; one
+with `new_t_epoch` and one with `new_pq_epoch`. In the
 latter case, the Commit MUST be applied to an old epoch that already
 has an APQInfo in its GroupContext and applying the two proposals produces the
 same APQInfo for the new epoch, except that the two epoch fields are
-overwritten with those in the proposals.
+overwritten with those in the proposals. Only the Commits of a FULL Commit
+can contain such proposals. Recipients MUST consider any other list of
+AppDataUpdate proposals with `component_id = 0x0006`, or such proposals in
+a PARTIAL Commit, invalid.
 
 If this is the first FULL Commit in the APQ-MLS group, then the corresponding
 Commits to the T and to the PQ MLS groups MUST contain a `full_update`
@@ -493,6 +497,13 @@ either a `full_update` AppDataUpdate proposal or the second method using
 fields are immutable for the lifetime of the APQ-MLS session (see
 {{cipher-suites}}). Recipients MUST reject an AppDataUpdate proposal that
 modifies any field of an existing APQInfo other than the two epoch fields.
+Recipients MUST also reject an AppDataUpdate proposal with `op = remove`
+and `component_id = 0x0006`. The GroupContext of both groups MUST include
+the `required_capabilities` extension listing the AppDataUpdate proposal
+type in `proposal_types`, so that a GroupContextExtensions proposal cannot
+modify the APQInfo (see Section 4.7 of {{I-D.ietf-mls-extensions}}), and
+the `app_components` component of its `app_data_dictionary` extension
+listing `0x0006` (see Section 5 of {{I-D.ietf-mls-extensions}}).
 
 Either way, for any FULL Commit, recipients MUST verify that the epoch
 fields in the APQInfo structs included in the GroupContext of the new epochs
