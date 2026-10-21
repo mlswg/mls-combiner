@@ -577,6 +577,13 @@ is part of a FULL Commit MUST include a PreSharedKey proposal
 with `psk_type = application`, `component_id = 0x0006` and
 `psk_id = apq_psk_id`.
 
+Receivers MUST reject a T group Commit that includes an Add, Remove or
+ExternalInit proposal unless it is part of a FULL Commit, i.e., unless it
+arrives with the paired PQ group Commit and includes a PreSharedKey
+proposal with `psk_type = application`, `component_id = 0x0006` and a
+`psk_id` equal to the `apq_psk_id` derived from the PQ epoch created by
+that paired Commit.
+
 The `apq_exporter` MUST be deleted after both the `apq_psk_id` and
 the `apq_psk` were derived.
 
