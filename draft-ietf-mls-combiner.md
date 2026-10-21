@@ -86,7 +86,7 @@ the adoption of PQ security in existing protocols, including the MLS protocol
 Within the MLS working group, there are various ways to approach PQ security
 extensions:
 
-1. A single MLS ciphersuite for a hybrid post-quantum/traditional KEM.  The ciphersuite can act as a drop-in replacement for the KEM, focusing on hybrid confidentiality but not authenticity, and does not incur changes elsewhere in the MLS stack. As a confidentiality focus, it addresses the the harvest-now/decrypt-later threat model. However, every key epoch incurs a PQ overhead cost.
+1. A single MLS ciphersuite for a hybrid post-quantum/traditional KEM.  The ciphersuite can act as a drop-in replacement for the KEM, focusing on hybrid confidentiality but not authenticity, and does not incur changes elsewhere in the MLS stack. As a confidentiality focus, it addresses the harvest-now/decrypt-later threat model. However, every key epoch incurs a PQ overhead cost.
 
 2. Mechanisms that leverage hybridization as a means to not only address the security balance between PQ and traditional components and achieve resistance to harvest-now / decrypt-later attacks, but also use it as a means to improve performance of PQ use while achieving PQ authenticity as well.
 
@@ -108,8 +108,8 @@ Application Message: A PrivateMessage carrying application data.
 Handshake Message: A PublicMessage or PrivateMessage carrying an MLS Proposal or
 Commit object, as opposed to application data.
 
-Key Derivation Function (KDF): A Hashed Message Authentication Code (HMAC)-based
-expand-and-extract key derivation function (HKDF) as described in {{!RFC5869}}.
+Key Derivation Function (KDF): An HMAC-based Extract-and-Expand
+Key Derivation Function (HKDF) as described in {{!RFC5869}}.
 
 Key Encapsulation Mechanism (KEM): A key transport protocol that allows two
 parties to obtain a shared secret based on the receiver's public key.
@@ -158,7 +158,7 @@ example a PQ/T update once every one or two weeks. A critical consideration is
 the PCS threat window of a quantum attacker within the context of the given
 application; FULL Commit frequencies should be calibrated accordingly.
 
-The default way to start a APQ-MLS combined session is to create a PQ MLS session
+The default way to start an APQ-MLS combined session is to create a PQ MLS session
 and then start a traditional MLS session with the exported PSK from the PQ session,
 as previously mentioned. Alternatively, a combined session can also be created after
 a traditional MLS session has already been running. This is done through creating a
@@ -201,7 +201,7 @@ session.
         PreSharedKeyID identifies a PSK exported from the PQ
         session in the new epoch following a Commit'(). The
         PreSharedKeyID  is implicitly included in the commit
-        in the classical session via the PreSharedKey Proposal.
+        in the traditional session via the PreSharedKey Proposal.
 ~~~
 ~~~
                                                                             Group
@@ -227,11 +227,11 @@ session.
     |<------------------------------------------------------------------------+
     |                                        |<-------------------------------+
     Fig 1b. FULL Commit to an Update proposal from Client B.
-        Messages with ' are sent in the the PQ session.
+        Messages with ' are sent in the PQ session.
 ~~~
 <aside markdown="block">
 REMARK: Fig 1b shows Client A accepting the update proposals from Client B as a
-  FULL Commit. The flag `f` in the classical update proposal `Upd(B, f)` indicates
+  FULL Commit. The flag `f` in the traditional update proposal `Upd(B, f)` indicates
   B's intention for a FULL Commit to whomever Commits to its proposal.
 </aside>
 
@@ -242,8 +242,8 @@ in Section 3 of {{RFC9420}} except using PQ algorithms where HPKE algorithms exi
 For example, a PQ-DSA signed PQ KeyPackage, i.e. containing a PQ public key, must
 first be published via the Distribution Service (DS). Then the associated Commit
 and Welcome messages will be sent and processed in the PQ session according to
-Section 12 of {{RFC9420}}. The same sequence is repeated in the standard session
-except following the FULL Commit combining sequence where a PreSharedKeyID proposal
+Section 12 of {{RFC9420}}. The same sequence is repeated in the traditional session
+except following the FULL Commit combining sequence where a PreSharedKey proposal
 is additionally committed. The joiner MUST issue a FULL Commit as soon as possible
 after joining to achieve PCS. The FULL Commit SHOULD be the first Commit sent by
 the joiner.
@@ -315,7 +315,7 @@ proposals are permitted in external Commits (see Section 4.7 of
 
 External Commits are framed as PublicMessage ({{Section 6 of RFC9420}}).
 The joiner therefore sends the two external Commits together as a single
-APQPublicMessage (see {{wire-formats}}), with the traditional session's
+APQMessagePair (see {{wire-formats}}), with the traditional session's
 Commit in `t_message` and the PQ session's Commit in `pq_message`.
 Receivers process the PQ external Commit first to derive the new PQ epoch
 and the `apq_psk`, and then process the traditional external Commit.
@@ -349,7 +349,7 @@ by the `mode` flag in APQInfo struct and are listed below.
 The default mode of operation is PQ/T Confidentiality Only mode. This mode
 provides confidentiality and limited authenticity against quantum attackers.
 More precisely, it provides PQ authenticity against "outsiders", that is,
-against quantum attackers who do not have acces to secret keys
+against quantum attackers who do not have access to secret keys
 of any group member. (Authenticity comes from the fact that the traditional
 session adds AEAD / MAC tags which are not available to outsiders with a CRQC.)
 This mode does not prevent quantum impersonation attacks by other group members.
@@ -384,7 +384,7 @@ MLS commit messages, strengthening assurance for (1) and ensuring (2). These in
 turn provide PQ assurance for the key schedule from which application keys are
 derived in the traditional session. Application keys are used in an AEAD for
 protection of MLS application messages and thereby inherit the PQ security.
-However, it should be noted that PQ non-repudation security for application
+However, it should be noted that PQ non-repudiation security for application
 messages as described by (3) is not achieved by this mode. Achieving PQ
 non-repudiation on application messages would require hybrid signatures in
 the traditional session, with considerations to options described in
@@ -395,11 +395,11 @@ the traditional session, with considerations to options described in
 
 ## Group Context Extension
 
-The APQInfo struct contains information characterizing the APQInfo session to
+The APQInfo struct contains information characterizing the APQ-MLS session to
 signal to users that they are participating in a hybrid session. This is
 necessary both functionally to allow for group synchronization and as a
 security measure to prevent downgrading attacks that coax users into
-parcipating in just one of the two sessions. The `group_id`, `cipher_suite`,
+participating in just one of the two sessions. The `group_id`, `cipher_suite`,
 and `epoch` from both sessions (`t` for the traditional session and `pq` for
 the PQ session) are used as bookkeeping values to validate and synchronize
 group operations. The `mode` is a boolean value: `0` for the default PQ/T
@@ -421,7 +421,7 @@ struct {
     CipherSuite pq_cipher_suite;
     uint64 t_epoch;
     uint64 pq_epoch;
-} APQInfo
+} APQInfo;
 ~~~
 
 ### Updating APQInfo
@@ -433,7 +433,7 @@ the APQInfoUpdate struct:
 
 ~~~tls
 enum {
-    full_update (0),
+    full_update(0),
     new_t_epoch(1),
     new_pq_epoch(2),
     (255)
@@ -448,6 +448,7 @@ struct {
             uint64 new_t_epoch;
         case new_pq_epoch:
             uint64 new_pq_epoch;
+    };
 } APQInfoUpdate;
 ~~~
 
@@ -459,15 +460,15 @@ the AppDataDictionary struct which is part of the GroupContext as specified
 in {{!I-D.ietf-mls-extensions}}.
 
 For APQ-MLS, the `update` field in the AppDataUpdate proposal defines either
-an entirely new APQInfo, or modifies an existing one, using one of following
+an entirely new APQInfo, or modifies an existing one, using one of the following
 two methods.
 
 1. If the AppDataUpdate has its `component_id` set to `0x0006` and
-`update_type` set to `full_update`, then it's `new_apq_info` field MUST contain
-a TLS serialize instance of a complete APQInfo for inclusion in the
+`update_type` set to `full_update`, then its `new_apq_info` field MUST contain
+a TLS serialized instance of a complete APQInfo for inclusion in the
 GroupContext.
 
-2. If instead AppDataUpdate proposal its `component_id` set to `0x0006` and its
+2. If instead the AppDataUpdate proposal has its `component_id` set to `0x0006` and its
 `update_type` set to `new_t_epoch` then an existing APQInfo is modified by
 replacing the `t_epoch` field with the `uint64 new_t_epoch` field from the
 proposal. Similarly, using the `new_pq_epoch` update type, the AppDataUpdate
@@ -483,7 +484,7 @@ overwritten with those in the proposals.
 
 If this is the first FULL Commit in the APQ-MLS group, then the corresponding
 Commits to the T and to the PQ MLS groups MUST contain a `full_update`
-AppDataUpdate proposal and the epochs in `new_pq_info` MUST be set to the
+AppDataUpdate proposal and the epochs in `new_apq_info` MUST be set to the
 epochs of the two MLS groups after the respective Commit was applied.
 
 In all subsequent FULL Commits, the APQInfo in both MLS groups' GroupContext
@@ -508,7 +509,7 @@ in both groups when doing a FULL Commit.
 
 ## Key Schedule {#key-schedule}
 
-The `apq_psk` exporter key derived in the PQ session MUST be derived in
+The `apq_exporter` secret derived in the PQ session MUST be derived in
 accordance with the Safe Extensions API guidance (see Exported Secrets
 in {{I-D.ietf-mls-extensions}}). In particular, it SHALL NOT use the
 `extension_secret` and MUST be derived using the SafeExportSecret
@@ -619,15 +620,15 @@ key computations from {{RFC9420, Section 5.1}}.
 However, the choice of *which* primitives are used by the traditional
 and PQ subsessions must be explicitly stated by the CipherSuite objects
 within `APQInfo`. So long as the traditional session only uses classical
-primitives and the PQ session uses PQ primitives for KEM, a APQ-MLS
+primitives and the PQ session uses PQ primitives for KEM, an APQ-MLS
 session is valid. Specifically, the PQ primitives for APQ-MLS must be
 'pure' (fully) PQ: PQ cost is already being amortized at the protocol
 level so allowing hybrid PQ cipher suites to be used in the PQ session
 only adds extra overhead and complexity. Furthermore, the `pq_cipher_suite`
 may contain a classical digital signature algorithm used if `mode` is
-set to 0 (PQ Confidentiality-Only) but MUST be fully PQ if `mode` is
-set to 1 (PQ Confidentiality+Authenticity). These cipher suite
-combinations and modes MUST NOT be toggled or modified after a APQ-MLS
+set to 0 (PQ/T Confidentiality Only) but MUST be fully PQ if `mode` is
+set to 1 (PQ/T Confidentiality + Authenticity). These cipher suite
+combinations and modes MUST NOT be toggled or modified after an APQ-MLS
 session has commenced. Changing the mode or the cipher suites requires
 reinitializing the APQ-MLS session. Clients MUST reject a APQ-MLS session with invalid
 or duplicate cipher suites (e.g. two traditional cipher suites).
@@ -637,7 +638,7 @@ or duplicate cipher suites (e.g. two traditional cipher suites).
 For APQ-MLS sessions, the PQ subsession MUST use a Key Encapsulation
 Mechanism (KEM) that is standardized for post-quantum cryptography.
 The use of experimental, non-standardized, or hybrid KEMs in the PQ
-session is MUST be rejected by compliant clients.
+session MUST be rejected by compliant clients.
 This requirement ensures interoperability and a consistent security
 baseline across all APQ-MLS deployments.
 
@@ -645,13 +646,13 @@ baseline across all APQ-MLS deployments.
 
 For APQ-MLS sessions, the choice of digital signature algorithm in
 the PQ subsession depends on the selected mode of operation. If the
-`mode` is set to 1 (PQ Confidentiality+Authenticity), the PQ session
+`mode` is set to 1 (PQ/T Confidentiality + Authenticity), the PQ session
 MUST use a digital signature algorithm that is standardized for
 post-quantum cryptography, such as ML-DSA as specified in FIPS 204.
 The use of experimental, non-standardized, or hybrid signature
 algorithms in the PQ session MUST be rejected
 by compliant clients in this mode. If the `mode` is set to 0
-(PQ Confidentiality-Only), the PQ session MAY use a standardized
+(PQ/T Confidentiality Only), the PQ session MAY use a standardized
 classical digital signature algorithm. These requirements ensure
 that the authenticity guarantees of APQ-MLS sessions are aligned
 with the intended security level and provide a consistent
@@ -689,7 +690,7 @@ secrecy.
 While PQ message integrity is provided by the symmetric key used in
 AEAD, attacks on non-repudiation (e.g., source forgery) on application
 messages may still be possible by a CRQC adversary since only
-traditional signatures on used after the AEAD. However, in terms of
+traditional signatures are used after the AEAD. However, in terms of
 group key agreement, this is insufficient to mount anything more
 than a denial-of-service attack (e.g. via group state
 desynchronization). In terms of application messages, a traditional
@@ -698,7 +699,7 @@ content (including sender information) is still protected by AEAD
 which uses the symmetric group key. Thus, an external CRQC adversary
 can only conduct a false-framing attack, where group members are
 assured of the authenticity of a message being sent by a group
-member for the adversary has changed the signature to imply a
+member but the adversary has changed the signature to imply a
 different sender; it would require an insider CRQC adversary to
 actually mount a masquerading or forgery attack, which is beyond
 the scope of this protocol.
